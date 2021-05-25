@@ -2,14 +2,16 @@
 using MySql.Data.MySqlClient;
 
 
-namespace crunch
+namespace Crunch
 {
     class Program
     {
         static void Main(string[] args)
         {
-            string ko = "koskos";
-            Console.WriteLine($"{ko}");
+            var ko = new Crunch.Env.Variables();
+            string Fmp = Env.Variables.FmpApiKey;
+
+            Console.WriteLine($"dasd {Fmp}");
 
 
         }
