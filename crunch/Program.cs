@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using MySql.Data.MySqlClient;
 
 
@@ -8,12 +9,10 @@ namespace Crunch
     {
         static void Main(string[] args)
         {
-            var ko = new Crunch.Env.Variables();
-            string Fmp = Env.Variables.FmpApiKey;
+            var lo = new Database.Groups();
+            lo.Select();
 
-            Console.WriteLine($"dasd {Fmp}");
-
-
+           
         }
     }
 
