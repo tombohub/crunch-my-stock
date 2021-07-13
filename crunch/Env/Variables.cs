@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 /// </summary>
 namespace Crunch.Env
 {
+    /// <summary>
+    /// Provides the variables from .env file
+    /// </summary>
     class Variables
     {
         private const string _FmpApiKeyName = "FMP_API_KEY";

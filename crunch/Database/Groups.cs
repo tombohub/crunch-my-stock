@@ -10,7 +10,7 @@ namespace Crunch.Database
     {
         public void Select()
         {
-            using (var context = new Models.Context())
+            using (var context = new Context())
             {
                 var groups = context.Groups.ToList();
                 groups.ForEach(group => Console.WriteLine($" amama {group.Industry}"));
