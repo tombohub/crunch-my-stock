@@ -58,10 +58,7 @@ namespace Crunch.UseCases
                     }
                     catch (Exception e)
                     {
-
-                        Console.WriteLine(e.Message);
                         Console.WriteLine(e.Source);
-                        Console.WriteLine(e.StackTrace);
                     }
 
                     Console.WriteLine($"Symbol {stock.Symbol} saved");
