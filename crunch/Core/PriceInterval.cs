@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Crunch.Core
+﻿namespace Crunch.Core
 {
     /// <summary>
     /// Available price data intervals
     /// </summary>
-    static class PriceInterval
+    enum PriceInterval
     {
         /// <summary>
         /// Daily price interval
         /// </summary>
-        public const string OneDay = "1d";
+        OneDay,
 
         /// <summary>
         /// 30 minutes price interval
         /// </summary>
-        public const string ThirtyMinutes = "30m";
+        ThirtyMinutes
     }
 }

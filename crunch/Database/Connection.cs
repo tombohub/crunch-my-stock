@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Crunch.Core.Entities;
+using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MySql.Data;
-using MySql.Data.MySqlClient;
 
 
 namespace Crunch.Database
@@ -31,6 +29,23 @@ namespace Crunch.Database
             }
             rdr.Close();
             conn.Close();
+        }
+
+        public void SavePrices(List<Price> prices)
+        {
+            string sql = "insert into ";
+            var cmd = new MySqlCommand(sql, conn);
+            conn.Close();
+        }
+
+        public void Insert(string text)
+        {
+            conn.Open();
+            string sql = "insert into `test` values(@text)";
+            var cmd = new MySqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@text", text);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
         }
     }
 }

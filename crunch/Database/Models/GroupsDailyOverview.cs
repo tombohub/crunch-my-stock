@@ -20,5 +20,6 @@ namespace Crunch.Database.Models
         public double Change { get; set; }
         public long Volume { get; set; }
         public DateTime CreatedAt { get; set; }
+        public long Id { get; set; }
     }
 }

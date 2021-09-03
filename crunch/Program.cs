@@ -1,46 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
+using Crunch.DataSource;
 using Crunch.Core;
-using MySql.Data.MySqlClient;
-
+using Crunch.Database;
+using Microsoft.Data.Analysis;
+using Crunch.Database.Models;
+using Crunch.UseCases;
 
 namespace Crunch
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            
-            Console.Write(PriceInterval.OneDay);
-            DateTime k = new DateTime();
-            LocalDataStoreSlot l = new LocalDataStoreSlot();
 
-
+            UseCase.ImportPrices();
 
         }
-    }
 
-    
-    class Go
-    {
-        public string ko;
-        public string lo;
-
-        public Go()
-        {
-            ko = "kosko";
-            lo = "kosko";
-        }
-
-    }
-
-    class Mo<T>
-    {
-        public T l;
-        public Mo(T col)
-        {
-            l = col;
-        }
     }
 }
+
+

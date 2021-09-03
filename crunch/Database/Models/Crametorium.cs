@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 #nullable disable
 
-
 namespace Crunch.Database.Models
 {
     public partial class Crametorium

@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Crunch.UseCases
+namespace Crunch.Core
 {
-    interface IDataSourceAPI
+    static class GroupsDataColumns
     {
-                
-              GroupsData GetGroupsData();
+        public readonly static string Name = "Name";
     }
 }
