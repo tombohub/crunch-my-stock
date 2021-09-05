@@ -1,6 +1,7 @@
 ﻿using Crunch.Core;
 using Crunch.Database.Models;
 using Crunch.DataSource;
+using Crunch.Strategies.Overnight;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,21 +12,23 @@ namespace Crunch.UseCases
 {
     class UseCase
     {
-        public static void ImportPrices()
+        public static void ImportPricesForOvernight(int weekNum)
         {
+            var options = new PriceDownloadOptions(weekNum);
             var fmp = new Fmp();
-            List<Security> stocks;
+            List<Security> securities;
+
             using (var db = new stock_analyticsContext())
             {
-                stocks = db.Securities
-                    .Where(s => s.Type == "stocks")
-                    .ToList();
-                foreach (var stock in stocks)
+                securities = db.Securities.ToList();
+                foreach (var security in securities)
                 {
-                    Console.WriteLine($"Downloading {stock.Symbol}");
+                    Console.WriteLine($"Downloading {security.Symbol}");
                     try
                     {
-                        var prices = fmp.GetPrices(stock.Symbol, PriceInterval.OneDay, "2021-08-09");
+                        var prices = fmp.GetPrices(security.Symbol, options.Interval,
+                                                   options.Start.ToString("yyyy-MM-dd"),
+                                                   options.End.ToString("yyyy-MM-dd"));
                         foreach (var price in prices)
                         {
                             string interval;
@@ -61,7 +64,7 @@ namespace Crunch.UseCases
                         Console.WriteLine(e.Source);
                     }
 
-                    Console.WriteLine($"Symbol {stock.Symbol} saved");
+                    Console.WriteLine($"Symbol {security.Symbol} saved");
 
 
                 }
