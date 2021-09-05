@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Crunch": {
+      "commandName": "Project",
+      "commandLineArgs": "plot"
+    }
+  }
+}
