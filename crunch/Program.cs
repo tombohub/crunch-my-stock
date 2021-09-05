@@ -10,6 +10,9 @@ using Crunch.Database;
 using Microsoft.Data.Analysis;
 using Crunch.Database.Models;
 using Crunch.UseCases;
+using CommandLine;
+using ScottPlot;
+using Crunch.Strategies.Overnight;
 
 namespace Crunch
 {
@@ -17,8 +20,16 @@ namespace Crunch
     {
         private static void Main(string[] args)
         {
+            if (args[0] == "import:prices")
+            {
+                UseCase.ImportPrices();
 
-            UseCase.ImportPrices();
+            }
+            else if (args[0] == "plot")
+            {
+                var p = new PriceDownloadOptions(36);
+                Console.Write(p.Start);
+            }
 
         }
 
