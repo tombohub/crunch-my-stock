@@ -12,6 +12,10 @@ namespace Crunch.UseCases
 {
     class UseCase
     {
+        /// <summary>
+        /// Import prices needed for Weekly Overnight strategy into the database
+        /// </summary>
+        /// <param name="weekNum">calendar week number</param>
         public static void ImportPricesForOvernight(int weekNum)
         {
             var options = new PriceDownloadOptions(weekNum);
@@ -27,8 +31,8 @@ namespace Crunch.UseCases
                     try
                     {
                         var prices = fmp.GetPrices(security.Symbol, options.Interval,
-                                                   options.Start.ToString("yyyy-MM-dd"),
-                                                   options.End.ToString("yyyy-MM-dd"));
+                                                   options.Start,
+                                                   options.End);
                         foreach (var price in prices)
                         {
                             string interval;
@@ -61,7 +65,7 @@ namespace Crunch.UseCases
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.Source);
+                        Console.WriteLine(e.StackTrace);
                     }
 
                     Console.WriteLine($"Symbol {security.Symbol} saved");

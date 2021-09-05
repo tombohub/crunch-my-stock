@@ -22,13 +22,14 @@ namespace Crunch
         {
             if (args[0] == "import:prices")
             {
-                UseCase.ImportPrices();
+                UseCase.ImportPricesForOvernight(35);
 
             }
             else if (args[0] == "plot")
             {
-                var p = new PriceDownloadOptions(36);
-                Console.Write(p.Start);
+                var p = new PriceDownloadOptions(35);
+                Console.WriteLine(p.Start);
+                Console.WriteLine(p.End);
             }
 
         }
