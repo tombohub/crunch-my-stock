@@ -26,17 +26,6 @@ namespace Crunch.UseCases
             var groupsData = _dataSource.GetGroupsData();
             _database.SaveGroups(groupsData);
         }
-
-        /// <summary>
-        /// Import security prices data into database
-        /// </summary>
-        public static void ImportPrices(string symbol, PriceInterval interval, string start)
-        {
-            // data source, get prices,
-            var dataSource = new Fmp();
-            var data = dataSource.GetPrices(symbol, interval, start);
-            // insert into database
-        }
     }
 
  }

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Net;
-using System.Collections.Generic;
-using System.Text.Json;
-using Crunch.Core;
+﻿using Crunch.Core;
 using Crunch.Core.Entities;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Text.Json;
 
 namespace Crunch.DataSource
 {
@@ -118,23 +118,6 @@ namespace Crunch.DataSource
             string json = RequestPricesData(url);
             var prices = JsonToPriceObject(json, interval);
             return prices;
-        }
-
-        /// <summary>
-        /// Get historical prices data from start till now
-        /// </summary>
-        /// <param name="symbol">security symbol</param>
-        /// <param name="interval">price time interval</param>
-        /// <param name="start">start date to get prices from</param>
-        /// <returns></returns>
-        public List<Price> GetPrices(string symbol, PriceInterval interval, string start)
-        {
-            string end = _today;
-            string url = BuildPricesUrl(symbol, interval, start, end);
-            string json = RequestPricesData(url);
-            var prices = JsonToPriceObject(json, interval);
-            return prices;
-
         }
 
     }
