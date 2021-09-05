@@ -21,9 +21,9 @@ namespace Crunch.DataSource
         private readonly string _baseUrl = "https://financialmodelingprep.com/api/v4/";
 
         /// <summary>
-        /// Today's date in yyyy-mm-dd format
+        /// Date format when converting DateTime to string
         /// </summary>
-        private readonly string _today = DateTime.Today.ToString("yyyy-MM-dd");
+        private readonly string _dateStringFormat = "yyyy-MM-dd";
 
         /// <summary>
         /// Client instance for API requests
@@ -39,10 +39,10 @@ namespace Crunch.DataSource
         /// </summary>
         /// <param name="symbol">stock symbol</param>
         /// <param name="interval">single price time interval</param>
-        /// <param name="start">start date in format yyyy-mm-dd</param>
-        /// <param name="end">end date in format yyyy-mm-dd</param>
+        /// <param name="start">start date</param>
+        /// <param name="end">end date</param>
         /// <returns>API url</returns>
-        private string BuildPricesUrl(string symbol, PriceInterval interval, string start, string end)
+        private string BuildPricesUrl(string symbol, PriceInterval interval, DateTime start, DateTime end)
         {
             string intervalQuery;
             if (interval == PriceInterval.OneDay)
@@ -53,7 +53,9 @@ namespace Crunch.DataSource
             else
                 throw new ArgumentException($"Accepted values are '1d' or '30m', not {interval}", nameof(interval));
 
-            string query = $"historical-price/{symbol}/{intervalQuery}/{start}/{end}?apikey=";
+            string startParam = start.ToString(_dateStringFormat);
+            string endParam = end.ToString(_dateStringFormat);
+            string query = $"historical-price/{symbol}/{intervalQuery}/{startParam}/{endParam}?apikey=";
             string url = _baseUrl + query + _apiKey;
             return url;
         }
@@ -112,7 +114,7 @@ namespace Crunch.DataSource
         /// <param name="start">start date to get prices from</param>
         /// <param name="end">end date to get prices to</param>
         /// <returns></returns>
-        public List<Price> GetPrices(string symbol, PriceInterval interval, string start, string end)
+        public List<Price> GetPrices(string symbol, PriceInterval interval, DateTime start, DateTime end)
         {
             string url = BuildPricesUrl(symbol, interval, start, end);
             string json = RequestPricesData(url);
