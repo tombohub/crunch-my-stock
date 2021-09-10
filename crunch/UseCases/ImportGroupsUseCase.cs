@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Crunch.Core;
 using Crunch.Infrastructure.Database;
-using Crunch.Infrastructure.DataSource;
+using Crunch.Infrastructure.DataSources;
 
 namespace Crunch.UseCases
 {
