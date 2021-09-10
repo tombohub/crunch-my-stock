@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 
-namespace Crunch.Infrastructure.DataSource
+namespace Crunch.Infrastructure.DataSources
 {
     /// <summary>
     /// Financial Modeling Prep API data source

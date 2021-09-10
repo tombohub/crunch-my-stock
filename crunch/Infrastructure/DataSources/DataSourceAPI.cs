@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Crunch.Core;
 using Crunch.UseCases;
 
 
-namespace Crunch.Infrastructure.DataSource
+namespace Crunch.Infrastructure.DataSources
 
 {
     /// <summary>
