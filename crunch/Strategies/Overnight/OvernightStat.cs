@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Crunch.UseCases;
 
-namespace Crunch.Database
+namespace Crunch.Strategies.Overnight
 {
-    class DatabaseAPI
+    class OvernightStat
     {
-        public void SaveGroups(string data) { }
     }
 }

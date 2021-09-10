@@ -1,11 +1,11 @@
-﻿using Crunch.Core;
-using Crunch.Core.Entities;
+﻿using Crunch.Domain;
+using Crunch.Domain.OhlcPrice;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 
-namespace Crunch.DataSource
+namespace Crunch.Infrastructure.DataSource
 {
     /// <summary>
     /// Financial Modeling Prep API data source
@@ -100,7 +100,7 @@ namespace Crunch.DataSource
                         );
                     prices.Add(price);
                 }
-                
+
                 return prices;
             }
 

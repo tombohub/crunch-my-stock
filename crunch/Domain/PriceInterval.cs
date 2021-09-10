@@ -1,4 +1,4 @@
-﻿namespace Crunch.Core
+﻿namespace Crunch.Domain
 {
     /// <summary>
     /// Available price data intervals

@@ -1,6 +1,7 @@
-﻿using Crunch.Core;
-using Crunch.Database.Models;
+﻿using Crunch.Database.Models;
 using Crunch.DataSource;
+using Crunch.Domain;
+using Crunch.Infrastructure.Database.Models;
 using Crunch.Strategies.Overnight;
 using System;
 using System.Collections.Generic;

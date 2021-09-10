@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
 
-namespace Crunch.Core
+namespace Crunch.Domain
 {
     /// <summary>
     /// Group (sector, industry) performance overview entity

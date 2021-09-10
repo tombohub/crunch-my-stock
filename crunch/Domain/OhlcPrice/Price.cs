@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace Crunch.Core.Entities
+namespace Crunch.Domain.OhlcPrice
 {
     record Price(
-        string symbol, 
+        string symbol,
         DateTime timestamp,
         double open,
         double high,

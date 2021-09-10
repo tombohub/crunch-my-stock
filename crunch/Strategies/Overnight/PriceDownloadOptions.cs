@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
-using Crunch.Core;
+using Crunch.Domain;
 
 namespace Crunch.Strategies.Overnight
 {

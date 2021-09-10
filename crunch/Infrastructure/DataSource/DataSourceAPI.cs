@@ -7,7 +7,7 @@ using Crunch.Core;
 using Crunch.UseCases;
 
 
-namespace Crunch.DataSource
+namespace Crunch.Infrastructure.DataSource
 
 {
     /// <summary>

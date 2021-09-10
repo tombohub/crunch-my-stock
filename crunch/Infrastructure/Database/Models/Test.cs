@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Crunch.Database.Models
+namespace Crunch.Infrastructure.Database.Models
 {
     public partial class Test
     {

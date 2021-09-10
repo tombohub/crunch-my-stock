@@ -1,4 +1,4 @@
-﻿namespace Crunch.Core
+﻿namespace Crunch.Domain
 {
     /// <summary>
     /// Type of the given security (stock, etf...)
