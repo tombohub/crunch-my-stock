@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="Domain\Security\" />
+    <Folder Include="Infrastructure\DataSources\Fmp\Responses\" />
   </ItemGroup>
 
 </Project>
