@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace Crunch.Domain
 {
-    public record Security
+    public class Security
     {
-        public string Symbol;
-        public SecurityType Type;
-    }
+        public string Symbol { get; init; }
+        public SecurityType Type { get; init; }
 
-    class ko
-    {
-        public void k()
+        public Security(string symbol, SecurityType type)
         {
-            var s = new Security
+            Symbol = symbol;
+            Type = type;
         }
     }
 }

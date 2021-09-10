@@ -3,7 +3,7 @@
     /// <summary>
     /// Type of the given security (stock, etf...)
     /// </summary>
-    enum SecurityType
+    public enum SecurityType
     {
         Stock,
         Etf
