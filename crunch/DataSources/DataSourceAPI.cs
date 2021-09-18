@@ -5,7 +5,7 @@ using System.Text;
 using Crunch.UseCases;
 
 
-namespace Crunch.Infrastructure.DataSources
+namespace Crunch.DataSources
 
 {
     /// <summary>

@@ -1,13 +1,15 @@
-﻿using Crunch.Database.Models;
-using Crunch.DataSource;
-using Crunch.Domain;
-using Crunch.Infrastructure.Database.Models;
+﻿using Crunch.Domain;
+using Crunch.Database.Models;
+using Crunch.DataSources;
 using Crunch.Strategies.Overnight;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Crunch.DataSources.Fmp.Endpoints;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Crunch.UseCases
 {
@@ -20,8 +22,8 @@ namespace Crunch.UseCases
         public static void ImportPricesForOvernight(int weekNum)
         {
             var options = new PriceDownloadOptions(weekNum);
-            var fmp = new Fmp();
-            List<Security> securities;
+            var fmp = new FmpDataSource();
+            List<Database.Models.Security> securities;
 
             using (var db = new stock_analyticsContext())
             {
@@ -48,7 +50,7 @@ namespace Crunch.UseCases
                                 default:
                                     throw new ArgumentException("Interval doesn't exist");
                             }
-                            var dbPrice = new Price()
+                            var dbPrice = new Price
                             {
                                 Close = price.close,
                                 High = price.high,
@@ -70,10 +72,70 @@ namespace Crunch.UseCases
                     }
 
                     Console.WriteLine($"Symbol {security.Symbol} saved");
-
-
                 }
             }
+        }
+
+        /// <summary>
+        /// Update the list of securities in database
+        /// </summary>
+        public static void SynchronizeSecurities()
+        {
+            #region data source
+            // instantiate sources
+            var stocksSource = new StocksListEndpoint();
+            var etfSource = new EtfListEndpoint();
+            var symbolSource = new TradableSymbolsListEndpoint();
+            // get symbols
+            var updatedStocks = stocksSource.GetStocks();
+            var updatedEtfs = etfSource.GetEtfs();
+            var symbols = symbolSource.GetSymbols();
+            // filter symbols from result
+            var newStockSymbols = updatedStocks
+                .Where(s => s.Symbol.Length <= 4)
+                .Select(s => s.Symbol).ToList();
+            var newEtfSymbols = updatedEtfs
+                .Where(s => s.Symbol.Length <= 4)
+                .Select(s => s.Symbol).ToList();
+            var newTradablSymbols = symbols
+                .Where(s => s.Symbol.Length <= 4)
+                .Select(s => s.Symbol).ToList();
+            // filter separate new stocks and new Etfs
+            var newTradableStockSymbols = newTradablSymbols.Intersect(newStockSymbols).ToList();
+            var newTradableEtfSymbols = newTradablSymbols.Intersect(newEtfSymbols).ToList();
+            #endregion 
+
+            #region database
+            // initialize database context
+            var db = new stock_analyticsContext();
+            // truncate the table
+            db.Database.ExecuteSqlRaw("TRUNCATE TABLE securities");
+            
+            // insert symbols
+            foreach (var symbol in newTradableStockSymbols)
+            {
+                var security = new Crunch.Database.Models.Security
+                {
+                    Symbol = symbol,
+                    Type = "stocks"
+                };
+                db.Securities.Add(security);
+                Console.Write("s");
+            }
+            foreach (var symbol in newTradableEtfSymbols)
+            {
+                var security = new Crunch.Database.Models.Security
+                {
+                    Symbol = symbol,
+                    Type = "etfs"
+                };
+                db.Securities.Add(security);
+                Console.Write('e');
+            }
+            db.SaveChanges();
+            #endregion
+
+
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Crunch.Infrastructure.Database.Models
+namespace Crunch.Database.Models
 {
     public partial class IntranightStat
     {

@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 
-namespace Crunch.Infrastructure.DataSources
+namespace Crunch.DataSources
 {
     /// <summary>
     /// Financial Modeling Prep API data source
     /// https://financialmodelingprep.com/developer/docs
     /// </summary>
-    class Fmp
+    class FmpDataSource
     {
         private readonly string _apiKey = Env.Variables.FmpApiKey;
 

@@ -12,8 +12,8 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.11.36" />
     <PackageReference Include="HtmlAgilityPack.CssSelectors" Version="1.0.2" />
     <PackageReference Include="Microsoft.Data.Analysis" Version="0.18.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.9">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -29,7 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Security\" />
+    <Folder Include="Domain\Securities\" />
+    <Folder Include="Infrastructure\" />
   </ItemGroup>
 
 </Project>

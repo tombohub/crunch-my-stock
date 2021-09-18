@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Crunch.Infrastructure.Database
+namespace Crunch.Database
 {
     class Connection
     {

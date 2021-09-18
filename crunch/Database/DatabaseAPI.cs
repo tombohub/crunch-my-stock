@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Crunch.UseCases;
 
-namespace Crunch.Infrastructure.Database
+namespace Crunch.Database
 {
     class DatabaseAPI
     {

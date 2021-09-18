@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace Crunch.Infrastructure.Database.Models
+namespace Crunch.Database.Models
 {
     public partial class stock_analyticsContext : DbContext
     {
@@ -265,14 +265,6 @@ namespace Crunch.Infrastructure.Database.Models
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Industry)
-                    .HasColumnType("text")
-                    .HasColumnName("industry");
-
-                entity.Property(e => e.Sector)
-                    .HasColumnType("text")
-                    .HasColumnName("sector");
 
                 entity.Property(e => e.Symbol)
                     .IsRequired()

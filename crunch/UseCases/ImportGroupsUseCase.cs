@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Crunch.Core;
-using Crunch.Infrastructure.Database;
-using Crunch.Infrastructure.DataSources;
+using Crunch.Database;
+using Crunch.DataSources;
 
 namespace Crunch.UseCases
 {
