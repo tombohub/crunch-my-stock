@@ -15,12 +15,14 @@ namespace Crunch.UseCases
 {
     class UseCase
     {
+        #region weekly overnight
         /// <summary>
         /// Import prices needed for Weekly Overnight strategy into the database
         /// </summary>
         /// <param name="weekNum">calendar week number</param>
         public static void ImportPricesForOvernight(int weekNum)
         {
+            // initialize
             var options = new PriceDownloadOptions(weekNum);
             var fmp = new FmpDataSource();
             List<Database.Models.Security> securities;
@@ -76,10 +78,33 @@ namespace Crunch.UseCases
             }
         }
 
+        public static void CalculateWinnersLosers(int weekNum)
+        {
+            #region database
+            var db = new stock_analyticsContext();
+            var stats = db.WeeklyOvernightStats
+                .Where(s => s.WeekNum == weekNum).ToList();
+            #endregion
+
+            #region calculation
+            var winnersCount = stats.Where(s => s.ReturnOnInitialCapital >= 0)
+                .Where(s=> s.SecurityType == "stocks")
+                .Where(s=> s.Strategy == "overnight")
+                .Count();
+            var losersCount = stats.Where(s => s.ReturnOnInitialCapital < 0)
+                .Where(s => s.SecurityType == "stocks")
+                .Where(s => s.Strategy == "overnight")
+                .Count();
+            Console.WriteLine($"winners: {winnersCount}, losers: {losersCount}");
+            #endregion
+        }
+        public static void PlotWinnersLosers() { }
+        #endregion
+
         /// <summary>
         /// Update the list of securities in database
         /// </summary>
-        public static void SynchronizeSecurities()
+        public static void UpdateSecurities()
         {
             #region data source
             // instantiate sources
@@ -133,6 +158,7 @@ namespace Crunch.UseCases
                 Console.Write('e');
             }
             db.SaveChanges();
+            db.Dispose();
             #endregion
 
 

@@ -15,18 +15,43 @@ namespace Crunch
 {
     class Program
     {
+        [Verb("import", HelpText = "Import prices and other data")]
+        class ImportOptions
+        {
+            [Option("overnight", HelpText = "Import prices for weekly overnight strategy", SetName = "overnight")]
+            public bool IsOvernight { get; set; }
+
+            [Option('w', "week", HelpText = "Week number", SetName = "overnight")]
+            public int WeekNum { get; set; }
+        }
+
+        [Verb("report", HelpText = "Calculate reports")]
+        class ReportOptions
+        {
+            [Option('w', "week", HelpText = "Calendar week number", Required = true)]
+            public int WeekNum { get; set; }
+        }
+
+        [Verb("update", HelpText = "Update the list of securities in database")]
+        class UpdateOptions { }
+
+
         private static void Main(string[] args)
         {
-            if (args[0] == "import:prices")
-            {
-                UseCase.ImportPricesForOvernight(35);
 
-            }
-            else if (args[0] == "plot")
-            {
-                UseCase.SynchronizeSecurities();
-            }
-
+            Parser.Default.ParseArguments<UpdateOptions, ImportOptions, ReportOptions>(args)
+               .WithParsed<UpdateOptions>(options =>
+               {
+                   UseCase.UpdateSecurities();
+               })
+              .WithParsed<ImportOptions>(options =>
+               {
+                   UseCase.ImportPricesForOvernight(options.WeekNum);
+               })
+              .WithParsed<ReportOptions>(options =>
+              {
+                  UseCase.CalculateWinnersLosers(options.WeekNum);
+              });
         }
 
     }

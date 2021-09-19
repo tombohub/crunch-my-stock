@@ -14,7 +14,8 @@ namespace Crunch.Strategies.Overnight
         }
         public void WinnersLosers()
         {
-
+            
         }
     }
+   
 }
