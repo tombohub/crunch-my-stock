@@ -2,7 +2,7 @@
   "profiles": {
     "Crunch": {
       "commandName": "Project",
-      "commandLineArgs": "report -w 35"
+      "commandLineArgs": "plot -w 35"
     }
   }
 }

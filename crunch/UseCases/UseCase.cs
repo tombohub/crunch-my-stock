@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Crunch.DataSources.Fmp.Endpoints;
 using Microsoft.EntityFrameworkCore;
+using ScottPlot;
 
 
 namespace Crunch.UseCases
@@ -78,10 +79,10 @@ namespace Crunch.UseCases
             }
         }
 
-        public static void CalculateWinnersLosers(int weekNum)
+        private static List<WinnersLosersReport> CalculateWinnersLosers(int weekNum)
         {
             #region database
-            var db = new stock_analyticsContext();
+            var db = new stock_analyticsContext(); 
             var stats = db.WeeklyOvernightStats
                 .Where(s => s.WeekNum == weekNum).ToList();
             #endregion
@@ -95,10 +96,33 @@ namespace Crunch.UseCases
                 .Where(s => s.SecurityType == "stocks")
                 .Where(s => s.Strategy == "overnight")
                 .Count();
-            Console.WriteLine($"winners: {winnersCount}, losers: {losersCount}");
             #endregion
+
+            #region return
+            var reportData = new List<WinnersLosersReport>
+            {
+                new WinnersLosersReport { Type = "Winners", Count = winnersCount },
+                new WinnersLosersReport { Type = "Losers", Count = losersCount }
+            };
+            return reportData;
+            #endregion
+
         }
-        public static void PlotWinnersLosers() { }
+        public static void PlotWinnersLosers(int weekNum) 
+        {
+            var plt = new ScottPlot.Plot();
+            var reportData = UseCase.CalculateWinnersLosers(weekNum);
+
+            // HACK: this should be this method parameter
+            double[] values = reportData.Select(d => (double)d.Count).ToArray();
+            double[] positions = { 0, 1 };
+            string[] labels = { reportData[0].Type, reportData[1].Type };
+            var bar = plt.AddBar(values, positions);
+            bar.ShowValuesAboveBars = true;
+            plt.XTicks(positions, labels);
+            plt.SetAxisLimits(yMin: 0);
+            plt.SaveFig("D:\\PROJEKTI\\bar.png");
+        }
         #endregion
 
         /// <summary>

@@ -32,6 +32,13 @@ namespace Crunch
             public int WeekNum { get; set; }
         }
 
+        [Verb("plot", HelpText = "Plot reports")]
+        class PlotOptions
+        {
+            [Option('w', "week", HelpText = "Calendar week number", Required = true)]
+            public int WeekNum { get; set; }
+        }
+
         [Verb("update", HelpText = "Update the list of securities in database")]
         class UpdateOptions { }
 
@@ -39,7 +46,7 @@ namespace Crunch
         private static void Main(string[] args)
         {
 
-            Parser.Default.ParseArguments<UpdateOptions, ImportOptions, ReportOptions>(args)
+            Parser.Default.ParseArguments<UpdateOptions, ImportOptions, PlotOptions>(args)
                .WithParsed<UpdateOptions>(options =>
                {
                    UseCase.UpdateSecurities();
@@ -48,9 +55,9 @@ namespace Crunch
                {
                    UseCase.ImportPricesForOvernight(options.WeekNum);
                })
-              .WithParsed<ReportOptions>(options =>
+              .WithParsed<PlotOptions>(options =>
               {
-                  UseCase.CalculateWinnersLosers(options.WeekNum);
+                  UseCase.PlotWinnersLosers(options.WeekNum);
               });
         }
 
