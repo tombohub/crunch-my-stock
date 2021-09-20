@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Crunch.DataSources.Fmp.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using ScottPlot;
-
+using System.Drawing;
 
 namespace Crunch.UseCases
 {
@@ -113,15 +113,16 @@ namespace Crunch.UseCases
             var plt = new ScottPlot.Plot();
             var reportData = UseCase.CalculateWinnersLosers(weekNum);
 
-            // HACK: this should be this method parameter
+            // HACK: this should be this method parameter. maybe?
             double[] values = reportData.Select(d => (double)d.Count).ToArray();
-            double[] positions = { 0, 1 };
-            string[] labels = { reportData[0].Type, reportData[1].Type };
-            var bar = plt.AddBar(values, positions);
-            bar.ShowValuesAboveBars = true;
-            plt.XTicks(positions, labels);
-            plt.SetAxisLimits(yMin: 0);
-            plt.SaveFig("D:\\PROJEKTI\\bar.png");
+            string[] labels = reportData.Select(d => d.Type).ToArray();
+            var pie = plt.AddPie(values);
+            pie.SliceLabels = labels;
+            pie.ShowLabels = true;
+            pie.ShowPercentages = true;
+            pie.SliceFillColors = new Color[] { Color.DarkGreen, Color.DarkRed};
+            pie.Explode = true;
+            plt.SaveFig("D:\\PROJEKTI\\pie.png");
         }
         #endregion
 
