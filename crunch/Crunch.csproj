@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <Folder Include="Domain\Securities\" />
-    <Folder Include="Infrastructure\" />
   </ItemGroup>
 
 </Project>

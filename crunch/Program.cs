@@ -28,6 +28,9 @@ namespace Crunch
         [Verb("report", HelpText = "Calculate reports")]
         class ReportOptions
         {
+            [Option('n', "name", HelpText = "Name of the report")]
+            public string Name { get; set; }
+
             [Option('w', "week", HelpText = "Calendar week number", Required = true)]
             public int WeekNum { get; set; }
         }
@@ -35,6 +38,9 @@ namespace Crunch
         [Verb("plot", HelpText = "Plot reports")]
         class PlotOptions
         {
+            [Option('n', "name", HelpText = "Name of the plot", Required = true)]
+            public string Name { get; set; }
+
             [Option('w', "week", HelpText = "Calendar week number", Required = true)]
             public int WeekNum { get; set; }
         }
@@ -46,7 +52,7 @@ namespace Crunch
         private static void Main(string[] args)
         {
 
-            Parser.Default.ParseArguments<UpdateOptions, ImportOptions, PlotOptions>(args)
+            Parser.Default.ParseArguments<UpdateOptions, ImportOptions, PlotOptions, ReportOptions>(args)
                .WithParsed<UpdateOptions>(options =>
                {
                    UseCase.UpdateSecurities();
@@ -55,9 +61,14 @@ namespace Crunch
                {
                    UseCase.ImportPricesForOvernight(options.WeekNum);
                })
+              .WithParsed<ReportOptions>(options =>
+              {
+                  UseCase.CalculateTop10(options.WeekNum);
+              })
               .WithParsed<PlotOptions>(options =>
               {
-                  UseCase.PlotWinnersLosers(options.WeekNum);
+                  if (options.Name == "winners") UseCase.PlotWinnersLosers(options.WeekNum);
+                  if (options.Name == "top10") UseCase.PlotTop10(options.WeekNum);
               });
         }
 
