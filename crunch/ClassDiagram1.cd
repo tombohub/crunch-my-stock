@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Crunch.DataSources.Fmp.Endpoints.EtfListEndpoint">
+    <Position X="4" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAACAEAAAAAgAA=</HashCode>
+      <FileName>DataSources\Fmp\Endpoints\EtfListEndpoint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crunch.DataSources.Fmp.Endpoints.StocksListEndpoint">
+    <Position X="2" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAACAAAAAAACAAAAAAAgAA=</HashCode>
+      <FileName>DataSources\Fmp\Endpoints\StocksListEndpoint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crunch.DataSources.Fmp.Responses.SymbolsListResponse">
+    <Position X="8.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataSources\Fmp\Responses\SymbolsListResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crunch.DataSources.Fmp.UrlBuilder">
+    <Position X="8.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAgAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataSources\Fmp\UrlBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crunch.DataSources.DataSourceAPI">
+    <Position X="5.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>DataSources\DataSourceAPI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crunch.DataSources.Finviz">
+    <Position X="3.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAgAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>DataSources\Finviz.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -69,6 +69,7 @@ namespace Crunch
               {
                   if (options.Name == "winners") UseCase.PlotWinnersLosers(options.WeekNum);
                   if (options.Name == "top10") UseCase.PlotTop10(options.WeekNum);
+                  if (options.Name == "bottom10") UseCase.PlotBottom10(options.WeekNum);
               });
         }
 

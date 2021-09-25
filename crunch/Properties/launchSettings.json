@@ -2,7 +2,7 @@
   "profiles": {
     "Crunch": {
       "commandName": "Project",
-      "commandLineArgs": "plot -n top10 -w 37"
+      "commandLineArgs": "plot -n bottom10 -w 37"
     }
   }
 }

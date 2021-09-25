@@ -23,6 +23,7 @@ namespace Crunch.DataSources.Fmp.Endpoints
         /// </summary>
         private readonly WebClient _webClient = new();
 
+
         /// <summary>
         /// Complete URL for API request
         /// </summary>

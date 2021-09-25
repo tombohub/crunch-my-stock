@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Crunch.DataSources.Fmp.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using ScottPlot;
+using ScottPlot.Plottable;
 using System.Drawing;
 using Microsoft.Data.Analysis;
 
@@ -80,6 +81,16 @@ namespace Crunch.UseCases
             }
         }
 
+        // HACK: database method inside application service layer
+        public static List<WeeklyOvernightStat> GetWeeklyOvernightStats(int weekNum)
+        {
+            var db = new stock_analyticsContext();
+            List<WeeklyOvernightStat> stats = db.WeeklyOvernightStats
+                .Where(s => s.WeekNum == weekNum).ToList();
+            db.Dispose();
+
+            return stats;
+        }
         /// <summary>
         /// Calculate the count of winners and losers
         /// </summary>
@@ -88,9 +99,7 @@ namespace Crunch.UseCases
         private static List<WinnersLosersReport> CalculateWinnersLosers(int weekNum)
         {
             #region database
-            var db = new stock_analyticsContext();
-            var stats = db.WeeklyOvernightStats
-                .Where(s => s.WeekNum == weekNum).ToList();
+            List<WeeklyOvernightStat> stats = GetWeeklyOvernightStats(weekNum);
             #endregion
 
             #region calculation
@@ -122,20 +131,15 @@ namespace Crunch.UseCases
         // HACK: repeated weekNum parameter
         public static List<Top10Report> CalculateTop10(int weekNum)
         {
-            // HACK: repeated code fetching from database
             #region database
-            var db = new stock_analyticsContext();
-
-            var stats = db.WeeklyOvernightStats
-                .Where(s => s.WeekNum == weekNum).ToList();
-
-            db.Dispose();
+            List<WeeklyOvernightStat> stats = GetWeeklyOvernightStats(weekNum);
             #endregion
 
             #region calculation
             // sort top 10 from database
             List<WeeklyOvernightStat> top10 = stats
                 .Where(s => s.SecurityType == "stocks") // HACK: magic string
+                .Where(s => s.Strategy == "overnight")
                 .OrderByDescending(s => s.ReturnOnInitialCapital)
                 .Take(10)
                 .ToList();
@@ -157,14 +161,52 @@ namespace Crunch.UseCases
                     BenchmarkRoi = benchmarkRoi
                 });
 
-                Console.WriteLine(item.Symbol);
+                Console.WriteLine($"{item.Symbol} : {benchmarkRoi}");
             }
             #endregion
 
             #region return
             return reportData;
             #endregion
+        }
 
+        /// <summary>
+        /// Calculate bottom 10 securities by Overnight ROI
+        /// </summary>
+        /// <param name="weekNum">Calendar week number</param>
+        /// <returns>Report data for each symbol</returns>
+        // HACK: repeated weekNum parameter
+        public static List<Bottom10Report> CalculateBottom10(int weekNum)
+        {
+            List<WeeklyOvernightStat> stats = GetWeeklyOvernightStats(weekNum);
+
+            // sort top 10 from database
+            List<WeeklyOvernightStat> bottom10 = stats
+                .Where(s => s.SecurityType == "stocks") // HACK: magic string
+                .Where(s => s.Strategy == "overnight")
+                .OrderBy(s => s.ReturnOnInitialCapital)
+                .Take(10)
+                .ToList();
+
+            var reportData = new List<Bottom10Report>();
+            foreach (var item in bottom10)
+            {
+                double benchmarkRoi = stats
+                    .Where(s => s.Symbol == item.Symbol)
+                    .Where(s => s.Strategy == "benchmark")
+                    .Select(s => s.ReturnOnInitialCapital)
+                    .Single();
+
+                reportData.Add(new Bottom10Report
+                {
+                    Symbol = item.Symbol,
+                    StrategyRoi = item.ReturnOnInitialCapital,
+                    BenchmarkRoi = benchmarkRoi
+                });
+
+                Console.WriteLine($"{item.Symbol} : {benchmarkRoi}");
+            }
+            return reportData;
         }
 
         /// <summary>
@@ -196,31 +238,29 @@ namespace Crunch.UseCases
         // HACK: week num as parameter, shouldnt be
         public static void PlotTop10(int weekNum)
         {
-            var plt = new ScottPlot.Plot(600, 400);
             // HACK: dependency on calculation method
-            List<Top10Report> top10 = UseCase.CalculateTop10(weekNum);
+            List<Top10Report> top10 = CalculateTop10(weekNum);
+            
+            Plot plt = new Plot(600, 400);
 
-            double[] values = top10
-                .OrderBy(t => t.StrategyRoi)
+            List<Top10Report> orderedTop10 = top10.OrderBy(t => t.StrategyRoi).ToList();
+
+            // bars overnight roi
+            double[] values = orderedTop10
                 .Select(t => t.StrategyRoi)
                 .ToArray();
 
-            string[] labels = top10
-                .OrderBy(t => t.StrategyRoi)
+            string[] labels = orderedTop10
                 .Select(t => t.Symbol)
                 .ToArray();
 
-            plt.Title("Top 10");
 
-            var bar = plt.AddBar(values);
-            bar.Label = "Overnight ROI";
+            BarPlot bar = plt.AddBar(values, color: Color.DarkGreen);
+            bar.Label = "Overnight";
             bar.Orientation = Orientation.Horizontal;
-            plt.YTicks(labels);
-            plt.XLabel("ROI");
-            plt.XAxis.TickLabelFormat("P1", false);
-            plt.SetAxisLimits(xMin: 0);
-
-            double[] x = top10
+            
+            // lines benchmark roi
+            double[] x = orderedTop10
                 .Select(t => (double)t.BenchmarkRoi)
                 .ToArray();
 
@@ -228,13 +268,67 @@ namespace Crunch.UseCases
                 .Select(y => (double)y)
                 .ToArray();
 
-            var sp = plt.AddScatterPoints(x, y, Color.Black, 11, MarkerShape.verticalBar, "Buy Hold ROI");
+            var benchmarkLines = plt.AddScatterPoints(x, y, Color.Black, 11, MarkerShape.verticalBar, "Buy & Hold");
             
+            plt.Title("Top 10");
+            plt.YTicks(labels);
+            plt.XLabel("ROI");
+            plt.XAxis.TickLabelFormat("P1", false);
             plt.Legend();
-            
+
             // HACK: dealing with files, magic string
             plt.SaveFig("D:\\PROJEKTI\\top10.png");
         }
+
+        public static void PlotBottom10(int weekNum)
+        {
+            List<Bottom10Report> bottom10 = CalculateBottom10(weekNum);
+
+            var plt = new Plot(600, 400);
+
+            List<Bottom10Report> orderedBottom10 = bottom10.OrderBy(b => b.StrategyRoi).ToList();
+
+            double[] values = orderedBottom10
+                .Select(b => b.StrategyRoi)
+                .ToArray();
+
+            string[] labels = orderedBottom10
+                .Select(b => b.Symbol)
+                .ToArray();
+            
+
+            BarPlot bar = plt.AddBar(values, Color.IndianRed);
+            bar.FillColorNegative = bar.FillColor;
+            bar.Label = "Overnight";
+            bar.Orientation = Orientation.Horizontal;
+
+            //lines benchmark ROI
+            double[] benchmarkRois = orderedBottom10
+                .Select(b => (double)b.BenchmarkRoi)
+                .ToArray();
+
+            double[] symbolPositions = Enumerable.Range(0, bottom10.Count)
+                .Select(s => (double)s)
+                .ToArray();
+
+            ScatterPlot benchmarkLines = plt.AddScatterPoints(
+                benchmarkRois,
+                symbolPositions,
+                Color.Black,
+                11,
+                MarkerShape.verticalBar,
+                "Buy & Hold");
+
+            plt.Title("Bottom 10");
+            plt.YTicks(labels);
+            plt.XLabel("ROI");
+            plt.XAxis.TickLabelFormat("P1", false);
+            plt.Legend(location: Alignment.UpperLeft);
+
+            // HACK: dealing with files, magic string
+            plt.SaveFig("D:\\PROJEKTI\\bot10.png");
+        }
+
         #endregion weekly overnight
 
 
