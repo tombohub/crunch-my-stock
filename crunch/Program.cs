@@ -71,7 +71,9 @@ namespace Crunch
                   if (options.Name == "top10") UseCase.PlotTop10(options.WeekNum);
                   if (options.Name == "bottom10") UseCase.PlotBottom10(options.WeekNum);
                   if (options.Name == "spyroi") UseCase.DrawSpyBenchmarkRoi(options.WeekNum);
-                  if (options.Name == "roi") UseCase.DrawAverageOvernightRoi(options.WeekNum);
+                  if (options.Name == "averageroi") UseCase.DrawAverageOvernightRoi(options.WeekNum);
+                  if (options.Name == "spyovernightroi") UseCase.DrawSpyOvernightRoi(options.WeekNum);
+                  if (options.Name == "roi") UseCase.DrawAverageBenchmarkRoi(options.WeekNum);
               });
         }
 

@@ -1,5 +1,6 @@
 ﻿using Crunch.Domain;
 using Crunch.Database.Models;
+using Crunch.Database;
 using Crunch.DataSources;
 using Crunch.Strategies.Overnight;
 using System;
@@ -80,21 +81,7 @@ namespace Crunch.UseCases
             }
         }
 
-        /// <summary>
-        /// Get overnight strategy stats for the selected week
-        /// </summary>
-        /// <param name="weekNum">Calendar week number</param>
-        /// <returns>Weekly overnight stats</returns>
-        // HACK: database method inside application service layer
-        public static List<WeeklyOvernightStat> GetWeeklyOvernightStats(int weekNum)
-        {
-            var db = new stock_analyticsContext();
-            List<WeeklyOvernightStat> stats = db.WeeklyOvernightStats
-                .Where(s => s.WeekNum == weekNum).ToList();
-            db.Dispose();
 
-            return stats;
-        }
         /// <summary>
         /// Calculate the count of winners and losers
         /// </summary>
@@ -103,7 +90,7 @@ namespace Crunch.UseCases
         private static List<WinnersLosersReport> CalculateWinnersLosers(int weekNum)
         {
             #region database
-            List<WeeklyOvernightStat> stats = GetWeeklyOvernightStats(weekNum);
+            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             #endregion
 
             #region calculation
@@ -136,7 +123,7 @@ namespace Crunch.UseCases
         public static List<Top10Report> CalculateTop10(int weekNum)
         {
             #region database
-            List<WeeklyOvernightStat> stats = GetWeeklyOvernightStats(weekNum);
+            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             #endregion
 
             #region calculation
@@ -176,7 +163,7 @@ namespace Crunch.UseCases
 
         private static double CalculateAverageOvernightRoi(int weekNum)
         {
-            List<WeeklyOvernightStat> stats = GetWeeklyOvernightStats(weekNum);
+            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             double averageRoi = stats
                 .Where(s => s.Strategy == "overnight") // HACK: miagic string
                 .Where(s => s.SecurityType == "stocks") //hack: magic string
@@ -184,6 +171,41 @@ namespace Crunch.UseCases
                 .Average();
 
             return averageRoi;
+        }
+
+        private static double CalculateAverageBenchmarkRoi(int weekNum)
+        {
+            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
+            double averageBenchmarkRoi = stats
+                .Where(s => s.Strategy == "benchmark") //hack: magic string
+                .Where(s => s.SecurityType == "stocks") //hack: magic string
+                .Select(s => s.ReturnOnInitialCapital)
+                .Average();
+            return averageBenchmarkRoi;
+        }
+
+        private static double GetSpyBenchmarkRoi(int weekNum)
+        {
+            // HACK: stats are coupled
+            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
+            double spyRoi = stats
+                .Where(s => s.Symbol == "SPY") //HACK: magic string
+                .Where(s => s.Strategy == "benchmark") //HACK: magic string
+                .Select(s => s.ReturnOnInitialCapital)
+                .Single();
+
+            return spyRoi;
+        }
+        private static double GetSpyOvernightRoi(int weekNum)
+        {
+            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
+            double spyOvernightRoi = stats
+                .Where(s => s.Symbol == "SPY")
+                .Where(s => s.Strategy == "overnight")
+                .Select(s => s.ReturnOnInitialCapital)
+                .Single();
+
+            return spyOvernightRoi;
         }
 
         /// <summary>
@@ -194,7 +216,7 @@ namespace Crunch.UseCases
         // HACK: repeated weekNum parameter
         public static List<Bottom10Report> CalculateBottom10(int weekNum)
         {
-            List<WeeklyOvernightStat> stats = GetWeeklyOvernightStats(weekNum);
+            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
 
             // sort top 10 from database
             List<WeeklyOvernightStat> bottom10 = stats
@@ -225,18 +247,7 @@ namespace Crunch.UseCases
             return reportData;
         }
 
-        public static double GetSpyBenchmarkRoi(int weekNum)
-        {
-            // HACK: stats are coupled
-            List<WeeklyOvernightStat> stats = GetWeeklyOvernightStats(weekNum);
-            double spyRoi = stats
-                .Where(s => s.Symbol == "SPY") //HACK: magic string
-                .Where(s => s.Strategy == "benchmark") //HACK: magic string
-                .Select(s => s.ReturnOnInitialCapital)
-                .Single();
 
-            return spyRoi;
-        }
         /// <summary>
         /// Plot Winners vs Losers pie chart Overnight strategy
         /// </summary>
@@ -268,7 +279,7 @@ namespace Crunch.UseCases
         {
             // HACK: dependency on calculation method
             List<Top10Report> top10 = CalculateTop10(weekNum);
-            
+
             Plot plt = new Plot(600, 400);
 
             List<Top10Report> orderedTop10 = top10.OrderByDescending(t => t.StrategyRoi).ToList();
@@ -286,7 +297,7 @@ namespace Crunch.UseCases
             BarPlot bar = plt.AddBar(values, color: Color.DarkGreen);
             bar.Label = "Overnight";
             bar.Orientation = Orientation.Horizontal;
-            
+
             // lines benchmark roi
             double[] x = orderedTop10
                 .Select(t => (double)t.BenchmarkRoi)
@@ -297,7 +308,7 @@ namespace Crunch.UseCases
                 .ToArray();
 
             var benchmarkLines = plt.AddScatterPoints(x, y, Color.Black, 11, MarkerShape.verticalBar, "Buy & Hold");
-            
+
             plt.Title("Top 10");
             plt.YTicks(labels);
             plt.XLabel("ROI");
@@ -323,7 +334,7 @@ namespace Crunch.UseCases
             string[] labels = orderedBottom10
                 .Select(b => b.Symbol)
                 .ToArray();
-            
+
 
             BarPlot bar = plt.AddBar(values, Color.IndianRed);
             bar.FillColorNegative = bar.FillColor;
@@ -365,15 +376,19 @@ namespace Crunch.UseCases
 
             // make white background
             gra.FillRectangle(Brushes.White, 0, 0, png.Width, png.Height);
-            Font font = new Font("Verdana", 24);
+            Font font = new Font("Verdana", 24, FontStyle.Italic);
 
             // center text
             var format = new StringFormat();
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Center;
-            var rect = new Rectangle(0, 0, 200, 200);
+
+            var rect = new Rectangle(0, 0, 200, 100);
+            var rect2 = new Rectangle(0, 100, 200, 100);
 
             gra.DrawString(text, new Font("Verdana", 18), Brushes.Black, rect, format);
+            gra.DrawString("hello", new Font("Arial", 14, FontStyle.Italic), Brushes.Black, rect2, format);
+
             png.Save($"D:\\PROJEKTI\\{filename}.png");
         }
 
@@ -389,12 +404,25 @@ namespace Crunch.UseCases
 
             DrawRoiBox(text, "koko");
         }
+        public static void DrawSpyOvernightRoi(int weekNum)
+        {
+            double spyOvernightRoi = GetSpyOvernightRoi(weekNum);
+            string text = $"SPY Overnight\n{spyOvernightRoi:P2}";
+            DrawRoiBox(text, "spyovernightroi");
+        }
 
         public static void DrawAverageOvernightRoi(int weekNum)
         {
             double averageRoi = CalculateAverageOvernightRoi(weekNum);
             string text = $"Average ROI\n{averageRoi:P2}";
             DrawRoiBox(text, "momo");
+        }
+
+        public static void DrawAverageBenchmarkRoi(int weekNum)
+        {
+            double averageRoi = CalculateAverageBenchmarkRoi(weekNum);
+            string text = $"Buy Hold ROI\n{averageRoi:P2}";
+            DrawRoiBox(text, "buyholdroi");
         }
         #endregion weekly overnight
 
