@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using ScottPlot;
 using ScottPlot.Plottable;
 using System.Drawing;
-using Microsoft.Data.Analysis;
 
 namespace Crunch.UseCases
 {
@@ -81,6 +80,11 @@ namespace Crunch.UseCases
             }
         }
 
+        /// <summary>
+        /// Get overnight strategy stats for the selected week
+        /// </summary>
+        /// <param name="weekNum">Calendar week number</param>
+        /// <returns>Weekly overnight stats</returns>
         // HACK: database method inside application service layer
         public static List<WeeklyOvernightStat> GetWeeklyOvernightStats(int weekNum)
         {
@@ -170,6 +174,18 @@ namespace Crunch.UseCases
             #endregion
         }
 
+        private static double CalculateAverageOvernightRoi(int weekNum)
+        {
+            List<WeeklyOvernightStat> stats = GetWeeklyOvernightStats(weekNum);
+            double averageRoi = stats
+                .Where(s => s.Strategy == "overnight") // HACK: miagic string
+                .Where(s => s.SecurityType == "stocks") //hack: magic string
+                .Select(s => s.ReturnOnInitialCapital)
+                .Average();
+
+            return averageRoi;
+        }
+
         /// <summary>
         /// Calculate bottom 10 securities by Overnight ROI
         /// </summary>
@@ -209,6 +225,18 @@ namespace Crunch.UseCases
             return reportData;
         }
 
+        public static double GetSpyBenchmarkRoi(int weekNum)
+        {
+            // HACK: stats are coupled
+            List<WeeklyOvernightStat> stats = GetWeeklyOvernightStats(weekNum);
+            double spyRoi = stats
+                .Where(s => s.Symbol == "SPY") //HACK: magic string
+                .Where(s => s.Strategy == "benchmark") //HACK: magic string
+                .Select(s => s.ReturnOnInitialCapital)
+                .Single();
+
+            return spyRoi;
+        }
         /// <summary>
         /// Plot Winners vs Losers pie chart Overnight strategy
         /// </summary>
@@ -243,7 +271,7 @@ namespace Crunch.UseCases
             
             Plot plt = new Plot(600, 400);
 
-            List<Top10Report> orderedTop10 = top10.OrderBy(t => t.StrategyRoi).ToList();
+            List<Top10Report> orderedTop10 = top10.OrderByDescending(t => t.StrategyRoi).ToList();
 
             // bars overnight roi
             double[] values = orderedTop10
@@ -329,6 +357,45 @@ namespace Crunch.UseCases
             plt.SaveFig("D:\\PROJEKTI\\bot10.png");
         }
 
+        private static void DrawRoiBox(string text, string filename)
+        {
+            // initialize objects
+            Bitmap png = new Bitmap(200, 200);
+            Graphics gra = Graphics.FromImage(png);
+
+            // make white background
+            gra.FillRectangle(Brushes.White, 0, 0, png.Width, png.Height);
+            Font font = new Font("Verdana", 24);
+
+            // center text
+            var format = new StringFormat();
+            format.Alignment = StringAlignment.Center;
+            format.LineAlignment = StringAlignment.Center;
+            var rect = new Rectangle(0, 0, 200, 200);
+
+            gra.DrawString(text, new Font("Verdana", 18), Brushes.Black, rect, format);
+            png.Save($"D:\\PROJEKTI\\{filename}.png");
+        }
+
+        /// <summary>
+        /// Draws the Spy benchmark ROI
+        /// </summary>
+        /// <param name="weekNum">Calendar week number</param>
+        public static void DrawSpyBenchmarkRoi(int weekNum)
+        {
+            // setup text
+            double spyRoi = GetSpyBenchmarkRoi(weekNum);
+            string text = $"SPY\n{spyRoi:P2}";
+
+            DrawRoiBox(text, "koko");
+        }
+
+        public static void DrawAverageOvernightRoi(int weekNum)
+        {
+            double averageRoi = CalculateAverageOvernightRoi(weekNum);
+            string text = $"Average ROI\n{averageRoi:P2}";
+            DrawRoiBox(text, "momo");
+        }
         #endregion weekly overnight
 
 

@@ -15,6 +15,7 @@ namespace Crunch.DataSources
         private static string _baseUrl = "https://us-central1-stock-analytics-310810.cloudfunctions.net/";
         private static WebClient _client = new WebClient();
 
+
         /// <summary>
         /// Get groups (sectors and industries) data. Daily performance per sector and industry.
         /// </summary>
