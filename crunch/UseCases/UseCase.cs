@@ -42,18 +42,12 @@ namespace Crunch.UseCases
                                                    options.End);
                         foreach (var price in prices)
                         {
-                            string interval;
-                            switch (price.interval)
+                            string interval = price.interval switch
                             {
-                                case PriceInterval.OneDay:
-                                    interval = "1d";
-                                    break;
-                                case PriceInterval.ThirtyMinutes:
-                                    interval = "30m";
-                                    break;
-                                default:
-                                    throw new ArgumentException("Interval doesn't exist");
-                            }
+                                PriceInterval.OneDay => "1d",
+                                PriceInterval.ThirtyMinutes => "30m",
+                                _ => throw new ArgumentException("Interval doesn't exist"),
+                            };
                             var dbPrice = new Price
                             {
                                 Close = price.close,

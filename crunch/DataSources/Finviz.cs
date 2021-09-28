@@ -12,8 +12,8 @@ namespace Crunch.DataSources
     /// </summary>
     static class Finviz
     {
-        private static string _baseUrl = "https://us-central1-stock-analytics-310810.cloudfunctions.net/";
-        private static WebClient _client = new WebClient();
+        private static readonly string _baseUrl = "https://us-central1-stock-analytics-310810.cloudfunctions.net/";
+        private static readonly WebClient _client = new();
 
 
         /// <summary>

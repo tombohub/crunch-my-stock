@@ -10,8 +10,7 @@ namespace Crunch.Database
 {
     class DatabaseAPI
     {
-        public void SaveGroups(string data) { }
-
+        
         /// <summary>
         /// Get overnight strategy stats for the selected week
         /// </summary>

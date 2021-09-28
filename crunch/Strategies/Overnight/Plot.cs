@@ -35,7 +35,7 @@ namespace Crunch.Strategies.Overnight
         /// </summary>
         public static void PlotTop10(List<Top10Report> top10Data)
         {
-            ScottPlot.Plot plt = new ScottPlot.Plot(600, 400);
+            ScottPlot.Plot plt = new(600, 400);
 
             List<Top10Report> orderedTop10 = top10Data.OrderByDescending(t => t.StrategyRoi).ToList();
 
