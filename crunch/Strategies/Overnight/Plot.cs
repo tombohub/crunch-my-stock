@@ -34,7 +34,7 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Plot Weekly Overnight top 10 ROI
         /// </summary>
-        public static void PlotTop10(List<Top10Report> top10Data)
+        public static Bitmap PlotTop10(List<Top10Report> top10Data)
         {
             ScottPlot.Plot plt = new(600, 400);
 
@@ -71,11 +71,14 @@ namespace Crunch.Strategies.Overnight
             plt.XAxis.TickLabelFormat("P1", false);
             plt.Legend();
 
-            // HACK: dealing with files, magic string
-            plt.SaveFig("D:\\PROJEKTI\\top10.png");
+            return plt.Render();
         }
 
-        public static void PlotBottom10(List<Bottom10Report> bottom10Data)
+        /// <summary>
+        /// Plot Bottom 10 securities based on ROI
+        /// </summary>
+        /// <param name="bottom10Data"></param>
+        public static Bitmap PlotBottom10(List<Bottom10Report> bottom10Data)
         {
             var plt = new ScottPlot.Plot(600, 400);
 
@@ -118,18 +121,22 @@ namespace Crunch.Strategies.Overnight
             plt.XAxis.TickLabelFormat("P1", false);
             plt.Legend(location: Alignment.UpperLeft);
 
-            // HACK: dealing with files, magic string
-            plt.SaveFig("D:\\PROJEKTI\\bot10.png");
+            return plt.Render();
         }
 
-        private static void DrawRoiBox(string text, string filename)
+        /// <summary>
+        /// Draw the rectangle with text in center
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="filename"></param>
+        private static Bitmap DrawRoiBox(string text, string filename)
         {
             // initialize objects
-            Bitmap png = new Bitmap(200, 200);
-            Graphics gra = Graphics.FromImage(png);
+            Bitmap box = new Bitmap(200, 200);
+            Graphics graphics = Graphics.FromImage(box);
 
             // make white background
-            gra.FillRectangle(Brushes.White, 0, 0, png.Width, png.Height);
+            graphics.FillRectangle(Brushes.White, 0, 0, box.Width, box.Height);
 
             // center text
             var format = new StringFormat
@@ -140,35 +147,56 @@ namespace Crunch.Strategies.Overnight
 
             var rect = new Rectangle(0, 0, 200, 200);
 
-            gra.DrawString(text, new Font("Verdana", 18), Brushes.Black, rect, format);
+            graphics.DrawString(text, new Font("Verdana", 18), Brushes.Black, rect, format);
 
-            png.Save($"D:\\PROJEKTI\\{filename}.png");
+            return box;
         }
 
         /// <summary>
         /// Draws the Spy benchmark ROI
         /// </summary>
-        public static void DrawSpyBenchmarkRoi(double spyRoi)
+        public static Bitmap DrawSpyBenchmarkRoi(double spyRoi)
         {
             string text = $"SPY\n{spyRoi:P2}";
-            DrawRoiBox(text, "spybenchroi");
+            Bitmap spyBenchRoi = DrawRoiBox(text, "spybenchroi");
+
+            return spyBenchRoi;
         }
-        public static void DrawSpyOvernightRoi(double spyRoi)
+
+        /// <summary>
+        /// Draw Spy Overnight strategy ROI
+        /// </summary>
+        /// <param name="spyRoi"></param>
+        public static Bitmap DrawSpyOvernightRoi(double spyRoi)
         {
             string text = $"SPY Overnight\n{spyRoi:P2}";
-            DrawRoiBox(text, "spyovernightroi");
+            Bitmap spyOvernightRoi = DrawRoiBox(text, "spyovernightroi");
+
+            return spyOvernightRoi;
         }
 
-        public static void DrawAverageOvernightRoi(double averageRoi)
+        /// <summary>
+        /// Draw Average ROI across all securities
+        /// </summary>
+        /// <param name="averageRoi"></param>
+        public static Bitmap DrawAverageOvernightRoi(double averageRoi)
         {
             string text = $"Average ROI\n{averageRoi:P2}";
-            DrawRoiBox(text, "avgroi");
+            Bitmap avgOvernightRoi = DrawRoiBox(text, "avgroi");
+
+            return avgOvernightRoi;
         }
 
-        public static void DrawAverageBenchmarkRoi(double averageRoi)
+        /// <summary>
+        /// Draw average ROI of buy and hold strategy across all securities
+        /// </summary>
+        /// <param name="averageRoi"></param>
+        public static Bitmap DrawAverageBenchmarkRoi(double averageRoi)
         {
             string text = $"Buy Hold ROI\n{averageRoi:P2}";
-            DrawRoiBox(text, "buyholdroi");
+            Bitmap avgBenchRoi = DrawRoiBox(text, "buyholdroi");
+
+            return avgBenchRoi;
         }
     }
 }
