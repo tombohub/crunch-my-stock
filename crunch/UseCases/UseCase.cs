@@ -83,10 +83,10 @@ namespace Crunch.UseCases
 
 
         #region composition usecase
-        public static void PlotWinnersLosersUseCase(int weekNum)
+        public static void PlotWinnersLosersUseCase(int weekNum, SecurityType securityType) 
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            List<WinnersLosersReport> winLosData = Reports.CalculateWinnersLosersRatio(stats);
+            WinnersLosersRatioReport winLosData = Reports.CalculateWinnersLosersRatio(stats, securityType);
             Plot.PlotWinnersLosers(winLosData);
         }
 

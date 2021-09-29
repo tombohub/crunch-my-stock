@@ -4,35 +4,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Crunch.Database.Models;
+using Crunch.Domain;
 
 namespace Crunch.Strategies.Overnight
 {
     class Reports
     {
-        public Reports()
+        public WinnersLosersRatioReport WinnersLosersRatio { get; }
+        public Reports(List<WeeklyOvernightStat> stats, SecurityType securityType) // TODO: use enum instead of string
         {
-
+            WinnersLosersRatio = CalculateWinnersLosersRatio(stats, securityType);
         }
         /// <summary>
         /// Calculate the count of winners and losers
         /// </summary>
         /// <param name="weekNum">Calendar week number</param>
         /// <returns>Winners and losers count data</returns>
-        public static List<WinnersLosersReport> CalculateWinnersLosersRatio(List<WeeklyOvernightStat> stats)
+        //TODO: use enum instead of string
+        public static WinnersLosersRatioReport CalculateWinnersLosersRatio(List<WeeklyOvernightStat> stats, SecurityType securityType)
         {
+            string type = securityType switch
+            {
+                SecurityType.Stock => "stocks",
+                SecurityType.Etf => "etf",
+                _ => throw new NotImplementedException(),
+            };
+
             var winnersCount = stats.Where(s => s.ReturnOnInitialCapital >= 0)
-                .Where(s => s.SecurityType == "stocks")
+                .Where(s => s.SecurityType == type)
                 .Where(s => s.Strategy == "overnight")
                 .Count();
             var losersCount = stats.Where(s => s.ReturnOnInitialCapital < 0)
-                .Where(s => s.SecurityType == "stocks")
+                .Where(s => s.SecurityType == type)
                 .Where(s => s.Strategy == "overnight")
                 .Count();
 
-            var reportData = new List<WinnersLosersReport>
+            var reportData = new WinnersLosersRatioReport 
             {
-                new WinnersLosersReport { Type = "Winners", Count = winnersCount },
-                new WinnersLosersReport { Type = "Losers", Count = losersCount }
+               SecurityType = securityType,
+               WinnersCount = winnersCount,
+               LosersCount = losersCount
             };
             return reportData;
         }

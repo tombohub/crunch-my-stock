@@ -10,6 +10,7 @@ using CommandLine;
 using ScottPlot;
 using Crunch.Strategies.Overnight;
 using Crunch.DataSources.Fmp;
+using Crunch.Domain;
 
 namespace Crunch
 {
@@ -43,11 +44,14 @@ namespace Crunch
 
             [Option('w', "week", HelpText = "Calendar week number", Required = true)]
             public int WeekNum { get; set; }
+
+            [Option('t', "type", HelpText = "Security type", Required =true)]
+            public SecurityType SecurityType { get; set; }
         }
 
         [Verb("update", HelpText = "Update the list of securities in database")]
         class UpdateOptions { }
-
+        
 
         private static void Main(string[] args)
         {
@@ -63,7 +67,7 @@ namespace Crunch
                })
               .WithParsed<PlotOptions>(options =>
               {
-                  if (options.Name == "winners") UseCase.PlotWinnersLosersUseCase(options.WeekNum);
+                  if (options.Name == "winners") UseCase.PlotWinnersLosersUseCase(options.WeekNum, options.SecurityType);
                   if (options.Name == "top10") UseCase.PlotTop10UseCase(options.WeekNum);
                   if (options.Name == "bottom10") UseCase.PlotBottom10UseCase(options.WeekNum);
                   if (options.Name == "spyroi") UseCase.DrawSpyBenchmarkRoiUseCase(options.WeekNum);

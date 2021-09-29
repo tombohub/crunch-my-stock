@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace Crunch.Strategies.Overnight
 {
-    class WeekStart
+    class SingleSymbolStats
     {
-        public DateTime Start { get; }
-
-        public WeekStart(int weekNum)
-        {
-
-        }
+        public string Symbol { get; init; }
+        public string Type { get; init; }
+        public double Roi { get; init; }
     }
 }

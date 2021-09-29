@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Crunch.Strategies.Overnight
 {
-    class OvernightStat
+    class OvernightStrategy
     {
+        public List<SingleSymbolStats> Stats { get; init; }
     }
 }

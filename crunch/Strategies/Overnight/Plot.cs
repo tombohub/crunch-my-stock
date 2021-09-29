@@ -15,19 +15,20 @@ namespace Crunch.Strategies.Overnight
         /// Plot Winners vs Losers pie chart Overnight strategy
         /// </summary>
         /// <param name="weekNum"></param>
-        public static void PlotWinnersLosers(List<WinnersLosersReport> winLosData)
+        public static Bitmap PlotWinnersLosers(WinnersLosersRatioReport winLosData)
         {
             var plt = new ScottPlot.Plot();
 
-            double[] values = winLosData.Select(d => (double)d.Count).ToArray();
-            string[] labels = winLosData.Select(d => d.Type).ToArray();
+            double[] values = { winLosData.WinnersCount, winLosData.LosersCount };
+            string[] labels = { "Winners", "Losers" };
             var pie = plt.AddPie(values);
             pie.SliceLabels = labels;
             pie.ShowLabels = true;
             pie.ShowPercentages = true;
             pie.SliceFillColors = new Color[] { Color.DarkGreen, Color.DarkRed };
             pie.Explode = true;
-            plt.SaveFig("D:\\PROJEKTI\\pie.png");
+
+            return plt.Render();
         }
 
         /// <summary>
