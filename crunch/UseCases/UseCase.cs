@@ -87,49 +87,49 @@ namespace Crunch.UseCases
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             WinnersLosersRatioReport winLosData = Reports.CalculateWinnersLosersRatio(stats, securityType);
-            Plot.PlotWinnersLosers(winLosData);
+            OvernightPlot.PlotWinnersLosers(winLosData);
         }
 
         public static void PlotTop10UseCase(int weekNum)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             List<Top10Report> top10Data = Reports.CalculateTop10(stats);
-            Plot.PlotTop10(top10Data);
+            OvernightPlot.PlotTop10(top10Data);
         }
 
         public static void PlotBottom10UseCase(int weekNum)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             List<Bottom10Report> bottom10Data = Reports.CalculateBottom10(stats);
-            Plot.PlotBottom10(bottom10Data);
+            OvernightPlot.PlotBottom10(bottom10Data);
         }
 
         public static void DrawSpyBenchmarkRoiUseCase(int weekNum)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             double spyRoi = Reports.GetSpyBenchmarkRoi(stats);
-            Plot.DrawSpyBenchmarkRoi(spyRoi);
+            OvernightPlot.DrawSpyBenchmarkRoi(spyRoi);
         }
 
         public static void DrawSpyOvernightRoiUseCase(int weekNum)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             double spyRoi = Reports.GetSpyOvernightRoi(stats);
-            Plot.DrawSpyOvernightRoi(spyRoi);
+            OvernightPlot.DrawSpyOvernightRoi(spyRoi);
         }
 
         public static void DrawAverageOvernightRoiUseCase(int weekNum)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             double avgRoi = Reports.CalculateAverageOvernightRoi(stats);
-            Plot.DrawAverageOvernightRoi(avgRoi);
+            OvernightPlot.DrawAverageOvernightRoi(avgRoi);
         }
 
         public static void DrawAverageBenchmarkRoiUseCase(int weekNum)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             double avgRoi = Reports.CalculateAverageBenchmarkRoi(stats);
-            Plot.DrawAverageBenchmarkRoi(avgRoi);
+            OvernightPlot.DrawAverageBenchmarkRoi(avgRoi);
         }
 
         #endregion composition usecase

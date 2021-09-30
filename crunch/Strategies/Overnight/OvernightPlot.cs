@@ -9,9 +9,9 @@ using ScottPlot.Plottable;
 
 namespace Crunch.Strategies.Overnight
 {
-    class Plot
+    class OvernightPlot
     {
-        public Plot()
+        public OvernightPlot()
         {
 
         }
