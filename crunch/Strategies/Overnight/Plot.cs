@@ -11,6 +11,11 @@ namespace Crunch.Strategies.Overnight
 {
     class Plot
     {
+        public Plot()
+        {
+
+        }
+
         /// <summary>
         /// Plot Winners vs Losers pie chart Overnight strategy
         /// </summary>
