@@ -10,9 +10,9 @@ namespace Crunch.Strategies.Overnight
 {
     class OvernightStats
     {
-        public List<SingleSymbolStats> Stats { get; }
+        public List<WeeklyOvernightStat> Stats { get; }
 
-        public OvernightStats(List<SingleSymbolStats> stats)
+        public OvernightStats(List<WeeklyOvernightStat> stats)
         {
             Stats = stats;
         }
@@ -20,10 +20,9 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Calculate the count of winners and losers
         /// </summary>
-        /// <param name="weekNum">Calendar week number</param>
         /// <returns>Winners and losers count data</returns>
         //TODO: use enum instead of string
-        public static WinnersLosersRatioReport CalculateWinnersLosersRatio(List<WeeklyOvernightStat> stats, SecurityType securityType)
+        public WinnersLosersRatioReport CalculateWinnersLosersRatio(SecurityType securityType)
         {
             string type = securityType switch
             {
@@ -32,11 +31,11 @@ namespace Crunch.Strategies.Overnight
                 _ => throw new NotImplementedException(),
             };
 
-            var winnersCount = stats.Where(s => s.ReturnOnInitialCapital >= 0)
+            var winnersCount = Stats.Where(s => s.ReturnOnInitialCapital >= 0)
                 .Where(s => s.SecurityType == type)
                 .Where(s => s.Strategy == "overnight")
                 .Count();
-            var losersCount = stats.Where(s => s.ReturnOnInitialCapital < 0)
+            var losersCount = Stats.Where(s => s.ReturnOnInitialCapital < 0)
                 .Where(s => s.SecurityType == type)
                 .Where(s => s.Strategy == "overnight")
                 .Count();
@@ -53,12 +52,11 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Calculate Top 10 securities by ROI for overnight strategy
         /// </summary>
-        /// <param name="weekNum">Calendar week number</param>
         /// <returns>Top 10 report data</returns>
-        public static List<Top10Report> CalculateTop10(List<WeeklyOvernightStat> stats)
+        public List<Top10Report> CalculateTop10()
         {
             // sort top 10 from database
-            List<WeeklyOvernightStat> top10 = stats
+            List<WeeklyOvernightStat> top10 = Stats
                 .Where(s => s.SecurityType == "stocks") // HACK: magic string
                 .Where(s => s.Strategy == "overnight")
                 .OrderByDescending(s => s.ReturnOnInitialCapital)
@@ -69,7 +67,7 @@ namespace Crunch.Strategies.Overnight
             var reportData = new List<Top10Report>();
             foreach (var item in top10)
             {
-                double benchmarkRoi = stats
+                double benchmarkRoi = Stats
                     .Where(s => s.Symbol == item.Symbol)
                     .Where(s => s.Strategy == "benchmark")
                     .Select(s => s.ReturnOnInitialCapital)
@@ -92,12 +90,11 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Calculate bottom 10 securities by Overnight ROI
         /// </summary>
-        /// <param name="weekNum">Calendar week number</param>
         /// <returns>Report data for each symbol</returns>
-        public static List<Bottom10Report> CalculateBottom10(List<WeeklyOvernightStat> stats)
+        public List<Bottom10Report> CalculateBottom10()
         {
             // sort top 10 from database
-            List<WeeklyOvernightStat> bottom10 = stats
+            List<WeeklyOvernightStat> bottom10 = Stats
                 .Where(s => s.SecurityType == "stocks") // HACK: magic string
                 .Where(s => s.Strategy == "overnight")
                 .OrderBy(s => s.ReturnOnInitialCapital)
@@ -107,7 +104,7 @@ namespace Crunch.Strategies.Overnight
             var reportData = new List<Bottom10Report>();
             foreach (var item in bottom10)
             {
-                double benchmarkRoi = stats
+                double benchmarkRoi = Stats
                     .Where(s => s.Symbol == item.Symbol)
                     .Where(s => s.Strategy == "benchmark")
                     .Select(s => s.ReturnOnInitialCapital)
@@ -128,11 +125,10 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Calculate Average ROI for selected security type of Overnight strategy
         /// </summary>
-        /// <param name="stats">Overnight stats for the week</param>
         /// <returns>Average ROI</returns>
-        public static double CalculateAverageOvernightRoi(List<WeeklyOvernightStat> stats)
+        public double CalculateAverageOvernightRoi()
         {
-            double averageRoi = stats
+            double averageRoi = Stats
                 .Where(s => s.Strategy == "overnight") // HACK: miagic string
                 .Where(s => s.SecurityType == "stocks") //hack: magic string
                 .Select(s => s.ReturnOnInitialCapital)
@@ -144,11 +140,10 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Calculate average ROI for benchmark (buy and hold) for selected security type
         /// </summary>
-        /// <param name="stats">Weekly overnight stats for the week</param>
         /// <returns></returns>
-        public static double CalculateAverageBenchmarkRoi(List<WeeklyOvernightStat> stats)
+        public double CalculateAverageBenchmarkRoi()
         {
-            double averageBenchmarkRoi = stats
+            double averageBenchmarkRoi = Stats
                 .Where(s => s.Strategy == "benchmark") //hack: magic string
                 .Where(s => s.SecurityType == "stocks") //hack: magic string
                 .Select(s => s.ReturnOnInitialCapital)
@@ -159,11 +154,10 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Get SPY benchmark buy and hold) ROI for the week
         /// </summary>
-        /// <param name="stats"></param>
         /// <returns></returns>
-        public static double GetSpyBenchmarkRoi(List<WeeklyOvernightStat> stats)
+        public double GetSpyBenchmarkRoi()
         {
-            double spyRoi = stats
+            double spyRoi = Stats
                 .Where(s => s.Symbol == "SPY") //HACK: magic string
                 .Where(s => s.Strategy == "benchmark") //HACK: magic string
                 .Select(s => s.ReturnOnInitialCapital)
@@ -175,11 +169,10 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Select Spy overnight ROI from the stats
         /// </summary>
-        /// <param name="stats"></param>
         /// <returns></returns>
-        public static double GetSpyOvernightRoi(List<WeeklyOvernightStat> stats)
+        public double GetSpyOvernightRoi()
         {
-            double spyOvernightRoi = stats
+            double spyOvernightRoi = Stats
                 .Where(s => s.Symbol == "SPY")
                 .Where(s => s.Strategy == "overnight")
                 .Select(s => s.ReturnOnInitialCapital)

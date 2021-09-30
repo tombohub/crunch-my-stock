@@ -85,50 +85,64 @@ namespace Crunch.UseCases
         #region composition usecase
         public static void PlotWinnersLosersUseCase(int weekNum, SecurityType securityType) 
         {
+            // TODO: refactor so getting directly OvernightStats entity
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            WinnersLosersRatioReport winLosData = OvernightStats.CalculateWinnersLosersRatio(stats, securityType);
+            var overnightStats = new OvernightStats(stats);
+            WinnersLosersRatioReport winLosData = overnightStats.CalculateWinnersLosersRatio(securityType);
             OvernightPlot.PlotWinnersLosers(winLosData);
         }
 
         public static void PlotTop10UseCase(int weekNum)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            List<Top10Report> top10Data = OvernightStats.CalculateTop10(stats);
+            var overnightStats = new OvernightStats(stats);
+
+            List<Top10Report> top10Data = overnightStats.CalculateTop10();
             OvernightPlot.PlotTop10(top10Data);
         }
 
         public static void PlotBottom10UseCase(int weekNum)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            List<Bottom10Report> bottom10Data = OvernightStats.CalculateBottom10(stats);
+            var overnightStats = new OvernightStats(stats);
+
+            List<Bottom10Report> bottom10Data = overnightStats.CalculateBottom10();
             OvernightPlot.PlotBottom10(bottom10Data);
         }
 
         public static void DrawSpyBenchmarkRoiUseCase(int weekNum)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            double spyRoi = OvernightStats.GetSpyBenchmarkRoi(stats);
+            var overnightStats = new OvernightStats(stats);
+
+            double spyRoi = overnightStats.GetSpyBenchmarkRoi();
             OvernightPlot.DrawSpyBenchmarkRoi(spyRoi);
         }
 
         public static void DrawSpyOvernightRoiUseCase(int weekNum)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            double spyRoi = OvernightStats.GetSpyOvernightRoi(stats);
+            var overnightStats = new OvernightStats(stats);
+
+            double spyRoi = overnightStats.GetSpyOvernightRoi();
             OvernightPlot.DrawSpyOvernightRoi(spyRoi);
         }
 
         public static void DrawAverageOvernightRoiUseCase(int weekNum)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            double avgRoi = OvernightStats.CalculateAverageOvernightRoi(stats);
+            var overnightStats = new OvernightStats(stats);
+
+            double avgRoi = overnightStats.CalculateAverageOvernightRoi();
             OvernightPlot.DrawAverageOvernightRoi(avgRoi);
         }
 
         public static void DrawAverageBenchmarkRoiUseCase(int weekNum)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            double avgRoi = OvernightStats.CalculateAverageBenchmarkRoi(stats);
+            var overnightStats = new OvernightStats(stats);
+
+            double avgRoi = overnightStats.CalculateAverageBenchmarkRoi();
             OvernightPlot.DrawAverageBenchmarkRoi(avgRoi);
         }
 
