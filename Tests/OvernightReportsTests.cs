@@ -40,22 +40,16 @@ namespace CrunchTests
             Assert.AreEqual(spyBenchmarkRoi, -0.026090999999999975);
         }
 
-        [TestMethod]
-        public void CalculateAverageOvernightRoi_OvernightStocksStatsData_ReturnsCorrectNumber()
+        [DataTestMethod]
+        [DataRow(SecurityType.Stock, -0.017692364756611095)]
+        [DataRow(SecurityType.Etf, -0.016191809945275748)]
+        public void CalculateAverageOvernightRoi_OvernightStocksStatsData_ReturnsCorrectNumber(SecurityType securityType, double result)
         {
             //var stats = DatabaseAPI.GetWeeklyOvernightStats(37);
             var overnightStats = new OvernightStats(Stats);
-            var avgRoi = overnightStats.CalculateAverageOvernightRoi(SecurityType.Stock);
-            Assert.AreEqual(avgRoi, -0.017692364756611095);
+            var avgRoi = overnightStats.CalculateAverageOvernightRoi(securityType);
+            Assert.AreEqual(avgRoi, result);
         }
 
-        [TestMethod]
-        public void CalculateAverageOvernightRoi_OvernightEtfsStatsData_ReturnsCorrectNumber()
-        {
-            //var stats = DatabaseAPI.GetWeeklyOvernightStats(37);
-            var overnightStats = new OvernightStats(Stats);
-            var avgRoi = overnightStats.CalculateAverageOvernightRoi(SecurityType.Etf);
-            Assert.AreEqual(avgRoi, -0.016191809945275748);
-        }
     }
 }
