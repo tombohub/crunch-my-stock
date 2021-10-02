@@ -15,28 +15,31 @@ namespace CrunchTests
     [TestClass]
     public class OvernightReportsTests
     {
-        public static List<WeeklyOvernightStat> Stats { get; set; }
+        public static OvernightStats Stats { get; set; }
 
         [ClassInitialize]
         public static void GetStats(TestContext context)
         {
-            Stats = DatabaseAPI.GetWeeklyOvernightStats(37);
+            var stats = DatabaseAPI.GetWeeklyOvernightStats(37);
+            Stats = new OvernightStats(stats);
+        }
+
+        [TestMethod]
+        public void CalculateWinnersLosersRatio_OvernightStatsData_ReturnsEqual()
+        {
+            
         }
         [TestMethod]
         public void GetSpyOvernightRoi_OvernightStatsData_ReturnsCorrectNumber()
         {
-            //var stats = DatabaseAPI.GetWeeklyOvernightStats(37);
-            var overnightStats = new OvernightStats(Stats);
-            var spyOvernightRoi = overnightStats.GetSpyOvernightRoi();
+            var spyOvernightRoi = Stats.GetSpyOvernightRoi();
             Assert.AreEqual(spyOvernightRoi, -0.016582899999999946);
         }
 
         [TestMethod]
         public void GetSpyBenchmarkRoi_OvernightStatsData_ReturnsCorrectNumber()
         {
-            //var stats = DatabaseAPI.GetWeeklyOvernightStats(37);
-            var overnightStats = new OvernightStats(Stats);
-            var spyBenchmarkRoi = overnightStats.GetSpyBenchmarkRoi();
+            var spyBenchmarkRoi = Stats.GetSpyBenchmarkRoi();
             Assert.AreEqual(spyBenchmarkRoi, -0.026090999999999975);
         }
 
@@ -45,9 +48,7 @@ namespace CrunchTests
         [DataRow(SecurityType.Etf, -0.016191809945275748)]
         public void CalculateAverageOvernightRoi_OvernightStocksStatsData_ReturnsCorrectNumber(SecurityType securityType, double result)
         {
-            //var stats = DatabaseAPI.GetWeeklyOvernightStats(37);
-            var overnightStats = new OvernightStats(Stats);
-            var avgRoi = overnightStats.CalculateAverageOvernightRoi(securityType);
+            var avgRoi = Stats.CalculateAverageOvernightRoi(securityType);
             Assert.AreEqual(avgRoi, result);
         }
 
