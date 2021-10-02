@@ -10,19 +10,14 @@ namespace Crunch.Strategies.Overnight
 {
     class Reports
     {
-        public WinnersLosersRatioReport WinnersLosersRatio { get; }
-        public List<Top10Report> Top10 { get; }
-        public List<Bottom10Report> Bottom10 { get; }
-        public double AverageOvernightRoi { get; }
-        public double AverageBenchmarkRoi { get; }
-        public double SpyOvernightRoi { get; }
-        public double SpyBenchmarkRoi { get; }
-
-        public Reports() 
-        {
-        }
-
-        
+        public WinnersLosersRatioReport WinnersLosersRatio { get; init; }
+        public List<Top10Report> Top10 { get; init; }
+        public List<Bottom10Report> Bottom10 { get; init; }
+        public double AverageOvernightRoi { get; init; }
+        public double AverageBenchmarkRoi { get; init; }
+        public double SpyOvernightRoi { get; init; }
+        public double SpyBenchmarkRoi { get; init; }
+      
     }
-
+       
 }

@@ -89,7 +89,8 @@ namespace Crunch.UseCases
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             var overnightStats = new OvernightStats(stats);
             WinnersLosersRatioReport winLosData = overnightStats.CalculateWinnersLosersRatio(securityType);
-            OvernightPlot.PlotWinnersLosers(winLosData);
+            OvernightPlot overnightPlot = new();
+            overnightPlot.PlotWinnersLosers(winLosData);
         }
 
         public static void PlotTop10UseCase(int weekNum)
@@ -98,7 +99,8 @@ namespace Crunch.UseCases
             var overnightStats = new OvernightStats(stats);
 
             List<Top10Report> top10Data = overnightStats.CalculateTop10();
-            OvernightPlot.PlotTop10(top10Data);
+            OvernightPlot overnightPlot = new();
+            overnightPlot.PlotTop10(top10Data);
         }
 
         public static void PlotBottom10UseCase(int weekNum)
@@ -107,7 +109,8 @@ namespace Crunch.UseCases
             var overnightStats = new OvernightStats(stats);
 
             List<Bottom10Report> bottom10Data = overnightStats.CalculateBottom10();
-            OvernightPlot.PlotBottom10(bottom10Data);
+            OvernightPlot overnightPlot = new();
+            overnightPlot.PlotBottom10(bottom10Data);
         }
 
         public static void DrawSpyBenchmarkRoiUseCase(int weekNum)
@@ -116,7 +119,8 @@ namespace Crunch.UseCases
             var overnightStats = new OvernightStats(stats);
 
             double spyRoi = overnightStats.GetSpyBenchmarkRoi();
-            OvernightPlot.DrawSpyBenchmarkRoi(spyRoi);
+            OvernightPlot overnightPlot = new();
+            overnightPlot.DrawSpyBenchmarkRoi(spyRoi);
         }
 
         public static void DrawSpyOvernightRoiUseCase(int weekNum)
@@ -125,7 +129,8 @@ namespace Crunch.UseCases
             var overnightStats = new OvernightStats(stats);
 
             double spyRoi = overnightStats.GetSpyOvernightRoi();
-            OvernightPlot.DrawSpyOvernightRoi(spyRoi);
+            OvernightPlot overnightPlot = new();
+            overnightPlot.DrawSpyOvernightRoi(spyRoi);
         }
 
         public static void DrawAverageOvernightRoiUseCase(int weekNum)
@@ -134,7 +139,8 @@ namespace Crunch.UseCases
             var overnightStats = new OvernightStats(stats);
 
             double avgRoi = overnightStats.CalculateAverageOvernightRoi();
-            OvernightPlot.DrawAverageOvernightRoi(avgRoi);
+            OvernightPlot overnightPlot = new();
+            overnightPlot.DrawAverageOvernightRoi(avgRoi);
         }
 
         public static void DrawAverageBenchmarkRoiUseCase(int weekNum)
@@ -143,7 +149,18 @@ namespace Crunch.UseCases
             var overnightStats = new OvernightStats(stats);
 
             double avgRoi = overnightStats.CalculateAverageBenchmarkRoi();
-            OvernightPlot.DrawAverageBenchmarkRoi(avgRoi);
+            OvernightPlot overnightPlot = new();
+            overnightPlot.DrawAverageBenchmarkRoi(avgRoi);
+        }
+
+        public static void PlotOvernightUseCase(int weekNum)
+        {
+            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
+            var overnightStats = new OvernightStats(stats);
+
+            Reports reports = overnightStats.CreateReports();
+            OvernightPlot overnightPlot = new();
+            overnightPlot.PlotEverything(reports);
         }
 
         #endregion composition usecase

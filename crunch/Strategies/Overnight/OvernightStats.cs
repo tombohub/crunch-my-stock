@@ -180,5 +180,21 @@ namespace Crunch.Strategies.Overnight
 
             return spyOvernightRoi;
         }
+
+        public Reports CreateReports()
+        {
+            Reports reports = new Reports
+            {
+                AverageBenchmarkRoi = CalculateAverageBenchmarkRoi(),
+                AverageOvernightRoi = CalculateAverageOvernightRoi(),
+                Top10 = CalculateTop10(), //todo: needs security type
+                Bottom10 = CalculateBottom10(), //todo: needs security type
+                SpyBenchmarkRoi = GetSpyBenchmarkRoi(),
+                SpyOvernightRoi = GetSpyOvernightRoi(),
+                WinnersLosersRatio = CalculateWinnersLosersRatio(SecurityType.Stock) //todo: deal wih sec type
+            };
+
+            return reports;
+        }
     }
 }

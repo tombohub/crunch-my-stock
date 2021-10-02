@@ -7,6 +7,7 @@ using System.Drawing;
 using ScottPlot;
 using ScottPlot.Plottable;
 
+//TODO: svaki plot ima dimenzije, dimenzije moraju biti unutar dimenzija generalnog plota
 namespace Crunch.Strategies.Overnight
 {
     class OvernightPlot
@@ -16,13 +17,33 @@ namespace Crunch.Strategies.Overnight
 
         }
 
+        public void PlotEverything(Reports reports)
+        {
+            Bitmap winnersLosersPlot = PlotWinnersLosers(reports.WinnersLosersRatio, 300, 300);
+            Bitmap top10Plot = PlotTop10(reports.Top10, 300, 300);
+            Bitmap bottom10Plot = PlotBottom10(reports.Bottom10, 300, 300);
+            Bitmap spyBenchRoiBox = DrawSpyBenchmarkRoi(reports.SpyBenchmarkRoi, 300, 300);
+            Bitmap spyOvernightRoiBox = DrawSpyOvernightRoi(reports.SpyOvernightRoi, 300, 300);
+            Bitmap avgBenchRoiBox = DrawAverageBenchmarkRoi(reports.AverageBenchmarkRoi, 300, 300);
+            Bitmap avgOvernightRoiBox = DrawAverageOvernightRoi(reports.AverageOvernightRoi, 300, 300);
+
+            Bitmap plot = new Bitmap(800, 1600);
+            var graphics = Graphics.FromImage(plot);
+            graphics.DrawImage(top10Plot, 200, 0);
+            graphics.DrawImage(bottom10Plot, 400, 0);
+
+            plot.Save("D:\\PROJEKTI\\koko.png");
+        }
+
         /// <summary>
         /// Plot Winners vs Losers pie chart Overnight strategy
         /// </summary>
-        /// <param name="weekNum"></param>
-        public static Bitmap PlotWinnersLosers(WinnersLosersRatioReport winLosData)
+        /// <param name="width">Plot width in pixels</param>
+        /// <param name="height">Plot height in pixels</param>
+        /// <param name="winLosData">Plot data</param>
+        public Bitmap PlotWinnersLosers(WinnersLosersRatioReport winLosData, int width, int height)
         {
-            var plt = new ScottPlot.Plot();
+            var plt = new ScottPlot.Plot(width, height);
 
             double[] values = { winLosData.WinnersCount, winLosData.LosersCount };
             string[] labels = { "Winners", "Losers" };
@@ -39,9 +60,10 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Plot Weekly Overnight top 10 ROI
         /// </summary>
-        public static Bitmap PlotTop10(List<Top10Report> top10Data)
+        /// <param name="height"></param>
+        public Bitmap PlotTop10(List<Top10Report> top10Data, int width, int height)
         {
-            ScottPlot.Plot plt = new(600, 400);
+            ScottPlot.Plot plt = new(width, height);
 
             List<Top10Report> orderedTop10 = top10Data.OrderByDescending(t => t.StrategyRoi).ToList();
 
@@ -83,9 +105,9 @@ namespace Crunch.Strategies.Overnight
         /// Plot Bottom 10 securities based on ROI
         /// </summary>
         /// <param name="bottom10Data"></param>
-        public static Bitmap PlotBottom10(List<Bottom10Report> bottom10Data)
+        public Bitmap PlotBottom10(List<Bottom10Report> bottom10Data, int width, int height)
         {
-            var plt = new ScottPlot.Plot(600, 400);
+            var plt = new ScottPlot.Plot(width, height);
 
             List<Bottom10Report> orderedBottom10 = bottom10Data.OrderBy(b => b.StrategyRoi).ToList();
 
@@ -132,12 +154,10 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Draw the rectangle with text in center
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="filename"></param>
-        private static Bitmap DrawRoiBox(string text, string filename)
+        private Bitmap DrawRoiBox(string text, int width, int height)
         {
             // initialize objects
-            Bitmap box = new Bitmap(200, 200);
+            Bitmap box = new Bitmap(width, height);
             Graphics graphics = Graphics.FromImage(box);
 
             // make white background
@@ -160,10 +180,10 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Draws the Spy benchmark ROI
         /// </summary>
-        public static Bitmap DrawSpyBenchmarkRoi(double spyRoi)
+        public Bitmap DrawSpyBenchmarkRoi(double spyRoi, int width, int height)
         {
             string text = $"SPY\n{spyRoi:P2}";
-            Bitmap spyBenchRoi = DrawRoiBox(text, "spybenchroi");
+            Bitmap spyBenchRoi = DrawRoiBox(text, width, height);
 
             return spyBenchRoi;
         }
@@ -172,10 +192,10 @@ namespace Crunch.Strategies.Overnight
         /// Draw Spy Overnight strategy ROI
         /// </summary>
         /// <param name="spyRoi"></param>
-        public static Bitmap DrawSpyOvernightRoi(double spyRoi)
+        public Bitmap DrawSpyOvernightRoi(double spyRoi, int width, int height)
         {
             string text = $"SPY Overnight\n{spyRoi:P2}";
-            Bitmap spyOvernightRoi = DrawRoiBox(text, "spyovernightroi");
+            Bitmap spyOvernightRoi = DrawRoiBox(text, width, height);
 
             return spyOvernightRoi;
         }
@@ -184,10 +204,10 @@ namespace Crunch.Strategies.Overnight
         /// Draw Average ROI across all securities
         /// </summary>
         /// <param name="averageRoi"></param>
-        public static Bitmap DrawAverageOvernightRoi(double averageRoi)
+        public Bitmap DrawAverageOvernightRoi(double averageRoi, int width, int height)
         {
             string text = $"Average ROI\n{averageRoi:P2}";
-            Bitmap avgOvernightRoi = DrawRoiBox(text, "avgroi");
+            Bitmap avgOvernightRoi = DrawRoiBox(text, width, height);
 
             return avgOvernightRoi;
         }
@@ -196,12 +216,13 @@ namespace Crunch.Strategies.Overnight
         /// Draw average ROI of buy and hold strategy across all securities
         /// </summary>
         /// <param name="averageRoi"></param>
-        public static Bitmap DrawAverageBenchmarkRoi(double averageRoi)
+        public Bitmap DrawAverageBenchmarkRoi(double averageRoi, int width, int height)
         {
             string text = $"Buy Hold ROI\n{averageRoi:P2}";
-            Bitmap avgBenchRoi = DrawRoiBox(text, "buyholdroi");
+            Bitmap avgBenchRoi = DrawRoiBox(text, width, height);
 
             return avgBenchRoi;
         }
     }
+
 }
