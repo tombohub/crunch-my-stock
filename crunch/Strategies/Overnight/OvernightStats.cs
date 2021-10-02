@@ -126,11 +126,19 @@ namespace Crunch.Strategies.Overnight
         /// Calculate Average ROI for selected security type of Overnight strategy
         /// </summary>
         /// <returns>Average ROI</returns>
-        public double CalculateAverageOvernightRoi()
+        public double CalculateAverageOvernightRoi(SecurityType securityType)
         {
+            // hack: repeated code
+            string type = securityType switch
+            {
+                SecurityType.Stock => "stocks",
+                SecurityType.Etf => "etfs",
+                _ => throw new ArgumentException()
+            };
+
             double averageRoi = Stats
                 .Where(s => s.Strategy == "overnight") // HACK: miagic string
-                .Where(s => s.SecurityType == "stocks") //hack: magic string
+                .Where(s => s.SecurityType == type) 
                 .Select(s => s.ReturnOnInitialCapital)
                 .Average();
 
@@ -181,12 +189,12 @@ namespace Crunch.Strategies.Overnight
             return spyOvernightRoi;
         }
 
-        public Reports CreateReports()
+        public Reports CreateReports(SecurityType securityType)
         {
             Reports reports = new Reports
             {
                 AverageBenchmarkRoi = CalculateAverageBenchmarkRoi(),
-                AverageOvernightRoi = CalculateAverageOvernightRoi(),
+                AverageOvernightRoi = CalculateAverageOvernightRoi(securityType),
                 Top10 = CalculateTop10(), //todo: needs security type
                 Bottom10 = CalculateBottom10(), //todo: needs security type
                 SpyBenchmarkRoi = GetSpyBenchmarkRoi(),

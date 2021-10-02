@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Crunch.Strategies.Overnight;
 using Crunch.Database;
+using Crunch.Domain;
 
 
 namespace CrunchTests
@@ -32,12 +33,21 @@ namespace CrunchTests
         }
 
         [TestMethod]
-        public void CalculateAverageOvernightRoi_OvernightStatsData_ReturnsCorrectNumber()
+        public void CalculateAverageOvernightRoi_OvernightStocksStatsData_ReturnsCorrectNumber()
         {
             var stats = DatabaseAPI.GetWeeklyOvernightStats(37);
             var overnightStats = new OvernightStats(stats);
-            var avgRoi = overnightStats.CalculateAverageOvernightRoi();
+            var avgRoi = overnightStats.CalculateAverageOvernightRoi(SecurityType.Stock);
             Assert.AreEqual(avgRoi, -0.017692364756611095);
+        }
+
+        [TestMethod]
+        public void CalculateAverageOvernightRoi_OvernightEtfsStatsData_ReturnsCorrectNumber()
+        {
+            var stats = DatabaseAPI.GetWeeklyOvernightStats(37);
+            var overnightStats = new OvernightStats(stats);
+            var avgRoi = overnightStats.CalculateAverageOvernightRoi(SecurityType.Etf);
+            Assert.AreEqual(avgRoi, -0.016191809945275748);
         }
     }
 }

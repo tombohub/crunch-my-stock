@@ -133,12 +133,12 @@ namespace Crunch.UseCases
             overnightPlot.DrawSpyOvernightRoi(spyRoi, 300, 300);
         }
 
-        public static void DrawAverageOvernightRoiUseCase(int weekNum)
+        public static void DrawAverageOvernightRoiUseCase(int weekNum, SecurityType securityType)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             var overnightStats = new OvernightStats(stats);
 
-            double avgRoi = overnightStats.CalculateAverageOvernightRoi();
+            double avgRoi = overnightStats.CalculateAverageOvernightRoi(securityType);
             OvernightPlot overnightPlot = new();
             overnightPlot.DrawAverageOvernightRoi(avgRoi, 300, 300);
         }
@@ -153,12 +153,12 @@ namespace Crunch.UseCases
             overnightPlot.DrawAverageBenchmarkRoi(avgRoi, 300, 300);
         }
 
-        public static void PlotOvernightUseCase(int weekNum)
+        public static void PlotOvernightUseCase(int weekNum, SecurityType securityType)
         {
             List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
             var overnightStats = new OvernightStats(stats);
 
-            Reports reports = overnightStats.CreateReports();
+            Reports reports = overnightStats.CreateReports(securityType);
             OvernightPlot overnightPlot = new();
             overnightPlot.PlotEverything(reports);
         }
