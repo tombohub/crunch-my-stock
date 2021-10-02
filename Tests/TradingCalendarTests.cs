@@ -1,12 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Crunch.Strategies;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Crunch.Strategies.Overnight;
+using Crunch.Database;
+using Crunch.Database.Models;
+using Crunch.Strategies;
 
-namespace Crunch.Strategies.Tests
+namespace CrunchTests
 {
     [TestClass]
     public class TradingCalendarTests
@@ -43,4 +43,6 @@ namespace Crunch.Strategies.Tests
             Assert.IsTrue(isTradingDay);
         }
     }
+
+
 }

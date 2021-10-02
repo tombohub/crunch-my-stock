@@ -90,7 +90,7 @@ namespace Crunch.UseCases
             var overnightStats = new OvernightStats(stats);
             WinnersLosersRatioReport winLosData = overnightStats.CalculateWinnersLosersRatio(securityType);
             OvernightPlot overnightPlot = new();
-            overnightPlot.PlotWinnersLosers(winLosData);
+            overnightPlot.PlotWinnersLosers(winLosData, 300, 300);
         }
 
         public static void PlotTop10UseCase(int weekNum)
@@ -100,7 +100,7 @@ namespace Crunch.UseCases
 
             List<Top10Report> top10Data = overnightStats.CalculateTop10();
             OvernightPlot overnightPlot = new();
-            overnightPlot.PlotTop10(top10Data);
+            overnightPlot.PlotTop10(top10Data, 300, 300);
         }
 
         public static void PlotBottom10UseCase(int weekNum)
@@ -110,7 +110,7 @@ namespace Crunch.UseCases
 
             List<Bottom10Report> bottom10Data = overnightStats.CalculateBottom10();
             OvernightPlot overnightPlot = new();
-            overnightPlot.PlotBottom10(bottom10Data);
+            overnightPlot.PlotBottom10(bottom10Data, 300, 300);
         }
 
         public static void DrawSpyBenchmarkRoiUseCase(int weekNum)
@@ -120,7 +120,7 @@ namespace Crunch.UseCases
 
             double spyRoi = overnightStats.GetSpyBenchmarkRoi();
             OvernightPlot overnightPlot = new();
-            overnightPlot.DrawSpyBenchmarkRoi(spyRoi);
+            overnightPlot.DrawSpyBenchmarkRoi(spyRoi, 300, 300);
         }
 
         public static void DrawSpyOvernightRoiUseCase(int weekNum)
@@ -130,7 +130,7 @@ namespace Crunch.UseCases
 
             double spyRoi = overnightStats.GetSpyOvernightRoi();
             OvernightPlot overnightPlot = new();
-            overnightPlot.DrawSpyOvernightRoi(spyRoi);
+            overnightPlot.DrawSpyOvernightRoi(spyRoi, 300, 300);
         }
 
         public static void DrawAverageOvernightRoiUseCase(int weekNum)
@@ -140,7 +140,7 @@ namespace Crunch.UseCases
 
             double avgRoi = overnightStats.CalculateAverageOvernightRoi();
             OvernightPlot overnightPlot = new();
-            overnightPlot.DrawAverageOvernightRoi(avgRoi);
+            overnightPlot.DrawAverageOvernightRoi(avgRoi, 300, 300);
         }
 
         public static void DrawAverageBenchmarkRoiUseCase(int weekNum)
@@ -150,7 +150,7 @@ namespace Crunch.UseCases
 
             double avgRoi = overnightStats.CalculateAverageBenchmarkRoi();
             OvernightPlot overnightPlot = new();
-            overnightPlot.DrawAverageBenchmarkRoi(avgRoi);
+            overnightPlot.DrawAverageBenchmarkRoi(avgRoi, 300, 300);
         }
 
         public static void PlotOvernightUseCase(int weekNum)

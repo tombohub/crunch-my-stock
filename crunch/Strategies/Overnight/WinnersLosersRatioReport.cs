@@ -10,7 +10,7 @@ namespace Crunch.Strategies.Overnight
     /// <summary>
     /// Report data model for Winners and Losers count
     /// </summary>
-    class WinnersLosersRatioReport
+    public class WinnersLosersRatioReport
     {
         public SecurityType SecurityType { get; init; }
         public int WinnersCount { get; init; }

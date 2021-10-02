@@ -8,7 +8,7 @@ using Crunch.Database.Models;
 
 namespace Crunch.Strategies.Overnight
 {
-    class OvernightStats
+    public class OvernightStats
     {
         public List<WeeklyOvernightStat> Stats { get; }
 

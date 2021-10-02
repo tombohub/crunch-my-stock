@@ -8,7 +8,7 @@ using Crunch.Database.Models;
 
 namespace Crunch.Database
 {
-    class DatabaseAPI
+    public class DatabaseAPI
     {
         
         /// <summary>

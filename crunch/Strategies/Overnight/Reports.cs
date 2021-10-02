@@ -8,7 +8,7 @@ using Crunch.Domain;
 
 namespace Crunch.Strategies.Overnight
 {
-    class Reports
+    public class Reports
     {
         public WinnersLosersRatioReport WinnersLosersRatio { get; init; }
         public List<Top10Report> Top10 { get; init; }

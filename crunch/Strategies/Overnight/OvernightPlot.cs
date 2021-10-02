@@ -20,17 +20,17 @@ namespace Crunch.Strategies.Overnight
         public void PlotEverything(Reports reports)
         {
             Bitmap winnersLosersPlot = PlotWinnersLosers(reports.WinnersLosersRatio, 300, 300);
-            Bitmap top10Plot = PlotTop10(reports.Top10, 300, 300);
-            Bitmap bottom10Plot = PlotBottom10(reports.Bottom10, 300, 300);
+            Bitmap top10Plot = PlotTop10(reports.Top10, 600, 600);
+            Bitmap bottom10Plot = PlotBottom10(reports.Bottom10, 600, 600);
             Bitmap spyBenchRoiBox = DrawSpyBenchmarkRoi(reports.SpyBenchmarkRoi, 300, 300);
             Bitmap spyOvernightRoiBox = DrawSpyOvernightRoi(reports.SpyOvernightRoi, 300, 300);
             Bitmap avgBenchRoiBox = DrawAverageBenchmarkRoi(reports.AverageBenchmarkRoi, 300, 300);
             Bitmap avgOvernightRoiBox = DrawAverageOvernightRoi(reports.AverageOvernightRoi, 300, 300);
 
-            Bitmap plot = new Bitmap(800, 1600);
+            Bitmap plot = new Bitmap(1200, 600);
             var graphics = Graphics.FromImage(plot);
-            graphics.DrawImage(top10Plot, 200, 0);
-            graphics.DrawImage(bottom10Plot, 400, 0);
+            graphics.DrawImage(top10Plot, 0, 0);
+            graphics.DrawImage(bottom10Plot, 600, 0);
 
             plot.Save("D:\\PROJEKTI\\koko.png");
         }
@@ -65,7 +65,7 @@ namespace Crunch.Strategies.Overnight
         {
             ScottPlot.Plot plt = new(width, height);
 
-            List<Top10Report> orderedTop10 = top10Data.OrderByDescending(t => t.StrategyRoi).ToList();
+            List<Top10Report> orderedTop10 = top10Data.OrderBy(t => t.StrategyRoi).ToList();
 
             // bars overnight roi
             double[] values = orderedTop10
