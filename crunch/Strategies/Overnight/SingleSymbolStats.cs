@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Crunch.Strategies.Overnight
 {
-    class SingleSymbolStats
+    public record SingleSymbolStats
     {
         public string Symbol { get; init; }
-        public string Type { get; init; }
+        public string SecurityType { get; init; }
         public double Roi { get; init; }
+        public string Strategy { get; init; }
     }
 }

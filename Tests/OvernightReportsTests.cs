@@ -20,15 +20,26 @@ namespace CrunchTests
         [ClassInitialize]
         public static void GetStats(TestContext context)
         {
-            var stats = DatabaseAPI.GetWeeklyOvernightStats(37);
-            Stats = new OvernightStats(stats);
+            var repo = new OvernightStatsRepository();
+            Stats = repo.GetOvernightStats(37);
         }
 
-        [TestMethod]
-        public void CalculateWinnersLosersRatio_OvernightStatsData_ReturnsEqual()
+        [DataTestMethod]
+        [DataRow(1049, 4826, SecurityType.Stock)]
+        [DataRow(320, 2019, SecurityType.Etf)]
+        public void CalculateWinnersLosersRatio_OvernightStatsData_ReturnsEqual(int winnersCount, int losersCount, SecurityType securityType)
         {
-            
+            var expectedRatio = new WinnersLosersRatioReport
+            {
+                WinnersCount = winnersCount,
+                LosersCount = losersCount,
+                SecurityType = securityType
+            };
+            var winnerLosersRatio = Stats.CalculateWinnersLosersRatio(securityType);
+            Assert.AreEqual(expectedRatio, winnerLosersRatio);
+
         }
+
         [TestMethod]
         public void GetSpyOvernightRoi_OvernightStatsData_ReturnsCorrectNumber()
         {
@@ -46,10 +57,17 @@ namespace CrunchTests
         [DataTestMethod]
         [DataRow(SecurityType.Stock, -0.017692364756611095)]
         [DataRow(SecurityType.Etf, -0.016191809945275748)]
-        public void CalculateAverageOvernightRoi_OvernightStocksStatsData_ReturnsCorrectNumber(SecurityType securityType, double result)
+        public void CalculateAverageOvernightRoi_OvernightStatsData_ReturnsCorrectNumber(SecurityType securityType, double result)
         {
             var avgRoi = Stats.CalculateAverageOvernightRoi(securityType);
             Assert.AreEqual(avgRoi, result);
+        }
+
+
+        [TestMethod]
+        public void CalculateTop10_OvernightStatsData_ReturnsEqual()
+        {
+            List<Top10Report> 
         }
 
     }

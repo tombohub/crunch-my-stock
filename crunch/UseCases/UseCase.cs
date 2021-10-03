@@ -85,9 +85,8 @@ namespace Crunch.UseCases
         #region composition usecase
         public static void PlotWinnersLosersUseCase(int weekNum, SecurityType securityType) 
         {
-            // TODO: refactor so getting directly OvernightStats entity
-            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            var overnightStats = new OvernightStats(stats);
+            var repo = new OvernightStatsRepository();
+            var overnightStats = repo.GetOvernightStats(weekNum);
             WinnersLosersRatioReport winLosData = overnightStats.CalculateWinnersLosersRatio(securityType);
             OvernightPlot overnightPlot = new();
             overnightPlot.PlotWinnersLosers(winLosData, 300, 300);
@@ -95,8 +94,8 @@ namespace Crunch.UseCases
 
         public static void PlotTop10UseCase(int weekNum)
         {
-            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            var overnightStats = new OvernightStats(stats);
+            var repo = new OvernightStatsRepository();
+            var overnightStats = repo.GetOvernightStats(weekNum);
 
             List<Top10Report> top10Data = overnightStats.CalculateTop10();
             OvernightPlot overnightPlot = new();
@@ -105,8 +104,8 @@ namespace Crunch.UseCases
 
         public static void PlotBottom10UseCase(int weekNum)
         {
-            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            var overnightStats = new OvernightStats(stats);
+            var repo = new OvernightStatsRepository();
+            var overnightStats = repo.GetOvernightStats(weekNum);
 
             List<Bottom10Report> bottom10Data = overnightStats.CalculateBottom10();
             OvernightPlot overnightPlot = new();
@@ -115,8 +114,8 @@ namespace Crunch.UseCases
 
         public static void DrawSpyBenchmarkRoiUseCase(int weekNum)
         {
-            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            var overnightStats = new OvernightStats(stats);
+            var repo = new OvernightStatsRepository();
+            var overnightStats = repo.GetOvernightStats(weekNum);
 
             double spyRoi = overnightStats.GetSpyBenchmarkRoi();
             OvernightPlot overnightPlot = new();
@@ -125,8 +124,8 @@ namespace Crunch.UseCases
 
         public static void DrawSpyOvernightRoiUseCase(int weekNum)
         {
-            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            var overnightStats = new OvernightStats(stats);
+            var repo = new OvernightStatsRepository();
+            var overnightStats = repo.GetOvernightStats(weekNum);
 
             double spyRoi = overnightStats.GetSpyOvernightRoi();
             OvernightPlot overnightPlot = new();
@@ -135,8 +134,8 @@ namespace Crunch.UseCases
 
         public static void DrawAverageOvernightRoiUseCase(int weekNum, SecurityType securityType)
         {
-            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            var overnightStats = new OvernightStats(stats);
+            var repo = new OvernightStatsRepository();
+            var overnightStats = repo.GetOvernightStats(weekNum);
 
             double avgRoi = overnightStats.CalculateAverageOvernightRoi(securityType);
             OvernightPlot overnightPlot = new();
@@ -145,8 +144,8 @@ namespace Crunch.UseCases
 
         public static void DrawAverageBenchmarkRoiUseCase(int weekNum)
         {
-            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            var overnightStats = new OvernightStats(stats);
+            var repo = new OvernightStatsRepository();
+            var overnightStats = repo.GetOvernightStats(weekNum);
 
             double avgRoi = overnightStats.CalculateAverageBenchmarkRoi();
             OvernightPlot overnightPlot = new();
@@ -155,8 +154,8 @@ namespace Crunch.UseCases
 
         public static void PlotOvernightUseCase(int weekNum, SecurityType securityType)
         {
-            List<WeeklyOvernightStat> stats = DatabaseAPI.GetWeeklyOvernightStats(weekNum);
-            var overnightStats = new OvernightStats(stats);
+            var repo = new OvernightStatsRepository();
+            var overnightStats = repo.GetOvernightStats(weekNum);
 
             Reports reports = overnightStats.CreateReports(securityType);
             OvernightPlot overnightPlot = new();
