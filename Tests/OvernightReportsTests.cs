@@ -8,7 +8,11 @@ using Crunch.Strategies.Overnight;
 using Crunch.Database;
 using Crunch.Database.Models;
 using Crunch.Domain;
-
+using CsvHelper;
+using CsvHelper.Configuration.Attributes;
+using System.IO;
+using System.Reflection;
+using CsvHelper.Configuration;
 
 namespace CrunchTests
 {
@@ -67,7 +71,12 @@ namespace CrunchTests
         [TestMethod]
         public void CalculateTop10_OvernightStatsData_ReturnsEqual()
         {
-            List<Top10Report> 
+            var reader = new StreamReader("Top10StocksReportData.csv");
+            var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
+            var records = csv.GetRecords<Top10Report>().ToList();
+            var top10 = Stats.CalculateTop10();
+            
+
         }
 
     }
