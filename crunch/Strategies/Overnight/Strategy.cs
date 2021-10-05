@@ -9,7 +9,7 @@ namespace Crunch.Strategies.Overnight
     /// <summary>
     /// Name of the strategy used in stats
     /// </summary>
-    enum Strategy
+    public enum Strategy
     {
         /// <summary>
         /// Overnight strategy, main strategy
