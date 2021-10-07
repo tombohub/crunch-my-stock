@@ -103,5 +103,16 @@ namespace CrunchTests
 
             bottom10.Should().Equal(expectedBottom10);
         }
+
+        [TestMethod]
+        public void CalculateBottom10Etfs_OvernightStatsData_RetunEqual()
+        {
+            var reader = new StreamReader("Bottom10EtfsReportData.csv");
+            var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
+            var expectedBottom10 = csv.GetRecords<Bottom10Report>().ToList();
+            var bottom10 = Stats.CalculateBottom10(SecurityType.Etf);
+
+            bottom10.Should().Equal(expectedBottom10);
+        }
     }
 }
