@@ -69,7 +69,7 @@ namespace Crunch
               {
                   if (options.Name == "winners") UseCase.PlotWinnersLosersUseCase(options.WeekNum, options.SecurityType);
                   if (options.Name == "top10") UseCase.PlotTop10UseCase(options.WeekNum, options.SecurityType);
-                  if (options.Name == "bottom10") UseCase.PlotBottom10UseCase(options.WeekNum);
+                  if (options.Name == "bottom10") UseCase.PlotBottom10UseCase(options.WeekNum, options.SecurityType);
                   if (options.Name == "spyroi") UseCase.DrawSpyBenchmarkRoiUseCase(options.WeekNum);
                   if (options.Name == "spyovernightroi") UseCase.DrawSpyOvernightRoiUseCase(options.WeekNum);
                   if (options.Name == "averageroi") UseCase.DrawAverageOvernightRoiUseCase(options.WeekNum, options.SecurityType);

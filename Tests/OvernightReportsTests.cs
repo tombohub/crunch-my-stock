@@ -99,7 +99,7 @@ namespace CrunchTests
             var reader = new StreamReader("Bottom10StocksReportData.csv");
             var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
             var expectedBottom10 = csv.GetRecords<Bottom10Report>().ToList();
-            var bottom10 = Stats.CalculateBottom10();
+            var bottom10 = Stats.CalculateBottom10(SecurityType.Stock);
 
             bottom10.Should().Equal(expectedBottom10);
         }

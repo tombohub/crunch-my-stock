@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Crunch.Strategies.Overnight
 {
-    public class Bottom10Report
+    public record Bottom10Report
     {
         public string Symbol { get; init; }
         public double StrategyRoi { get; init; }

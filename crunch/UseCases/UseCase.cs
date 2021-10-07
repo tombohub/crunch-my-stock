@@ -101,12 +101,12 @@ namespace Crunch.UseCases
             overnightPlot.PlotTop10(top10Data, 300, 300);
         }
 
-        public static void PlotBottom10UseCase(int weekNum)
+        public static void PlotBottom10UseCase(int weekNum, SecurityType securityType)
         {
             var repo = new OvernightStatsRepository();
             var overnightStats = repo.GetOvernightStats(weekNum);
 
-            List<Bottom10Report> bottom10Data = overnightStats.CalculateBottom10();
+            List<Bottom10Report> bottom10Data = overnightStats.CalculateBottom10(securityType);
             OvernightPlot overnightPlot = new();
             overnightPlot.PlotBottom10(bottom10Data, 300, 300);
         }

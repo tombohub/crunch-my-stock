@@ -45,6 +45,7 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Calculate Top 10 securities by ROI for overnight strategy
         /// </summary>
+        /// <param name="securityType"></param>
         /// <returns>Top 10 report data</returns>
         public List<Top10Report> CalculateTop10(SecurityType securityType)
         {
@@ -83,12 +84,13 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Calculate bottom 10 securities by Overnight ROI
         /// </summary>
+        /// <param name="securityType"></param>
         /// <returns>Report data for each symbol</returns>
-        public List<Bottom10Report> CalculateBottom10()
+        public List<Bottom10Report> CalculateBottom10(SecurityType securityType)
         {
             // sort top 10 from database
             List<SingleSymbolStats> bottom10 = Stats
-                .Where(s => s.SecurityType == SecurityType.Stock) // HACK: magic string
+                .Where(s => s.SecurityType == securityType)
                 .Where(s => s.Strategy == Strategy.Overnight)
                 .OrderBy(s => s.Roi)
                 .Take(10)
@@ -180,8 +182,8 @@ namespace Crunch.Strategies.Overnight
             {
                 AverageBenchmarkRoi = CalculateAverageBenchmarkRoi(),
                 AverageOvernightRoi = CalculateAverageOvernightRoi(securityType),
-                Top10 = CalculateTop10(securityType), //todo: needs security type
-                Bottom10 = CalculateBottom10(), //todo: needs security type
+                Top10 = CalculateTop10(securityType),
+                Bottom10 = CalculateBottom10(securityType),
                 SpyBenchmarkRoi = GetSpyBenchmarkRoi(),
                 SpyOvernightRoi = GetSpyOvernightRoi(),
                 WinnersLosersRatio = CalculateWinnersLosersRatio(SecurityType.Stock) //todo: deal wih sec type
