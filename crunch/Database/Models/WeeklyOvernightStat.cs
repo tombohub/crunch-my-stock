@@ -11,7 +11,7 @@ namespace Crunch.Database.Models
         public long Id { get; set; }
         public string Symbol { get; set; }
         public string SecurityType { get; set; }
-        public Strategy Strategy { get; set; }
+        public string Strategy { get; set; }
         public double StartPrice { get; set; }
         public long WeekNum { get; set; }
         public DateTime Start { get; set; }

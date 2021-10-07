@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crunch.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Security type
         /// </summary>
-        public string SecurityType { get; init; }
+        public SecurityType SecurityType { get; init; }
 
         /// <summary>
         /// Roi of the strategy

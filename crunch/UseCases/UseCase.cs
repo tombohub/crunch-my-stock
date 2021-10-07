@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Crunch.DataSources.Fmp.Endpoints;
 using Microsoft.EntityFrameworkCore;
-
 using System.Drawing;
 
 namespace Crunch.UseCases
@@ -92,12 +91,12 @@ namespace Crunch.UseCases
             overnightPlot.PlotWinnersLosers(winLosData, 300, 300);
         }
 
-        public static void PlotTop10UseCase(int weekNum)
+        public static void PlotTop10UseCase(int weekNum, SecurityType securityType)
         {
             var repo = new OvernightStatsRepository();
             var overnightStats = repo.GetOvernightStats(weekNum);
 
-            List<Top10Report> top10Data = overnightStats.CalculateTop10();
+            List<Top10Report> top10Data = overnightStats.CalculateTop10(securityType);
             OvernightPlot overnightPlot = new();
             overnightPlot.PlotTop10(top10Data, 300, 300);
         }

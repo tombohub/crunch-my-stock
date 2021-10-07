@@ -24,19 +24,12 @@ namespace Crunch.Strategies.Overnight
         //TODO: use enum instead of string
         public WinnersLosersRatioReport CalculateWinnersLosersRatio(SecurityType securityType)
         {
-            string type = securityType switch
-            {
-                SecurityType.Stock => "stocks",
-                SecurityType.Etf => "etfs",
-                _ => throw new NotImplementedException(),
-            };
-
             var winnersCount = Stats.Where(s => s.Roi >= 0)
-                .Where(s => s.SecurityType == type)
+                .Where(s => s.SecurityType == securityType)
                 .Where(s => s.Strategy == Strategy.Overnight)
                 .Count();
             var losersCount = Stats.Where(s => s.Roi < 0)
-                .Where(s => s.SecurityType == type)
+                .Where(s => s.SecurityType == securityType)
                 .Where(s => s.Strategy == Strategy.Overnight)
                 .Count();
 
@@ -53,11 +46,11 @@ namespace Crunch.Strategies.Overnight
         /// Calculate Top 10 securities by ROI for overnight strategy
         /// </summary>
         /// <returns>Top 10 report data</returns>
-        public List<Top10Report> CalculateTop10()
+        public List<Top10Report> CalculateTop10(SecurityType securityType)
         {
             // sort top 10 from database
             List<SingleSymbolStats> top10 = Stats
-                .Where(s => s.SecurityType == "stocks") // HACK: magic string
+                .Where(s => s.SecurityType == securityType)
                 .Where(s => s.Strategy == Strategy.Overnight)
                 .OrderByDescending(s => s.Roi)
                 .Take(10)
@@ -95,7 +88,7 @@ namespace Crunch.Strategies.Overnight
         {
             // sort top 10 from database
             List<SingleSymbolStats> bottom10 = Stats
-                .Where(s => s.SecurityType == "stocks") // HACK: magic string
+                .Where(s => s.SecurityType == SecurityType.Stock) // HACK: magic string
                 .Where(s => s.Strategy == Strategy.Overnight)
                 .OrderBy(s => s.Roi)
                 .Take(10)
@@ -128,17 +121,9 @@ namespace Crunch.Strategies.Overnight
         /// <returns>Average ROI</returns>
         public double CalculateAverageOvernightRoi(SecurityType securityType)
         {
-            // hack: repeated code
-            string type = securityType switch
-            {
-                SecurityType.Stock => "stocks",
-                SecurityType.Etf => "etfs",
-                _ => throw new ArgumentException()
-            };
-
             double averageRoi = Stats
                 .Where(s => s.Strategy == Strategy.Overnight) // HACK: miagic string
-                .Where(s => s.SecurityType == type) 
+                .Where(s => s.SecurityType == securityType) 
                 .Select(s => s.Roi)
                 .Average();
 
@@ -152,8 +137,8 @@ namespace Crunch.Strategies.Overnight
         public double CalculateAverageBenchmarkRoi()
         {
             double averageBenchmarkRoi = Stats
-                .Where(s => s.Strategy == Strategy.Benchmark) //hack: magic string
-                .Where(s => s.SecurityType == "stocks") //hack: magic string
+                .Where(s => s.Strategy == Strategy.Benchmark)
+                .Where(s => s.SecurityType == SecurityType.Stock)
                 .Select(s => s.Roi)
                 .Average();
             return averageBenchmarkRoi;
@@ -167,7 +152,7 @@ namespace Crunch.Strategies.Overnight
         {
             double spyRoi = Stats
                 .Where(s => s.Symbol == "SPY") //HACK: magic string
-                .Where(s => s.Strategy == Strategy.Benchmark) //HACK: magic string
+                .Where(s => s.Strategy == Strategy.Benchmark) 
                 .Select(s => s.Roi)
                 .Single();
 
@@ -195,7 +180,7 @@ namespace Crunch.Strategies.Overnight
             {
                 AverageBenchmarkRoi = CalculateAverageBenchmarkRoi(),
                 AverageOvernightRoi = CalculateAverageOvernightRoi(securityType),
-                Top10 = CalculateTop10(), //todo: needs security type
+                Top10 = CalculateTop10(securityType), //todo: needs security type
                 Bottom10 = CalculateBottom10(), //todo: needs security type
                 SpyBenchmarkRoi = GetSpyBenchmarkRoi(),
                 SpyOvernightRoi = GetSpyOvernightRoi(),

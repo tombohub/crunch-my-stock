@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Crunch.Domain;
 using Crunch.Strategies.Overnight;
 using Crunch.Database.Models;
 
@@ -24,14 +25,27 @@ namespace Crunch.Database
             db.Dispose();
 
             var stats = new List<SingleSymbolStats>();
-            foreach (var stat in statsDb)
+            foreach (var statDb in statsDb)
             {
+                SecurityType securityType = statDb.SecurityType switch
+                {   // hack: values are from database
+                    "stocks" => SecurityType.Stock,
+                    "etfs" => SecurityType.Etf,
+                    _ => throw new NotImplementedException()
+                };
+                Strategy strategy = statDb.Strategy switch
+                {   // hack: values are from database
+                    "overnight" => Strategy.Overnight,
+                    "benchmark" => Strategy.Benchmark,
+                    _ => throw new NotImplementedException()
+                };
+
                 stats.Add(new SingleSymbolStats
                 {
-                    Roi = stat.ReturnOnInitialCapital,
-                    Symbol = stat.Symbol,
-                    SecurityType = stat.SecurityType,
-                    Strategy = stat.Strategy
+                    Roi = statDb.ReturnOnInitialCapital,
+                    Symbol = statDb.Symbol,
+                    SecurityType = securityType,
+                    Strategy = strategy
                 });
             }
             var overnightStats = new OvernightStats(stats);
