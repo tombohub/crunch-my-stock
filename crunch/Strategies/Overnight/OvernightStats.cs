@@ -21,7 +21,6 @@ namespace Crunch.Strategies.Overnight
         /// Calculate the count of winners and losers
         /// </summary>
         /// <returns>Winners and losers count data</returns>
-        //TODO: use enum instead of string
         public WinnersLosersRatioReport CalculateWinnersLosersRatio(SecurityType securityType)
         {
             var winnersCount = Stats.Where(s => s.Roi >= 0)
@@ -124,7 +123,7 @@ namespace Crunch.Strategies.Overnight
         public double CalculateAverageOvernightRoi(SecurityType securityType)
         {
             double averageRoi = Stats
-                .Where(s => s.Strategy == Strategy.Overnight) // HACK: miagic string
+                .Where(s => s.Strategy == Strategy.Overnight)
                 .Where(s => s.SecurityType == securityType) 
                 .Select(s => s.Roi)
                 .Average();
@@ -186,7 +185,7 @@ namespace Crunch.Strategies.Overnight
                 Bottom10 = CalculateBottom10(securityType),
                 SpyBenchmarkRoi = GetSpyBenchmarkRoi(),
                 SpyOvernightRoi = GetSpyOvernightRoi(),
-                WinnersLosersRatio = CalculateWinnersLosersRatio(SecurityType.Stock) //todo: deal wih sec type
+                WinnersLosersRatio = CalculateWinnersLosersRatio(securityType)
             };
 
             return reports;

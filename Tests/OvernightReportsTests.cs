@@ -31,6 +31,7 @@ namespace CrunchTests
             var records = csv.GetRecords<SingleSymbolStats>().ToList();
             Stats = new OvernightStats(records);
         }
+
         [DataTestMethod]
         [DataRow(1049, 4826, SecurityType.Stock)]
         [DataRow(320, 2019, SecurityType.Etf)]

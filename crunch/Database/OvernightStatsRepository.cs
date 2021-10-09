@@ -39,7 +39,7 @@ namespace Crunch.Database
                     "benchmark" => Strategy.Benchmark,
                     _ => throw new NotImplementedException()
                 };
-
+                
                 stats.Add(new SingleSymbolStats
                 {
                     Roi = statDb.ReturnOnInitialCapital,
