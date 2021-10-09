@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Crunch.Strategies.Overnight
+namespace Crunch.Strategies.Overnight.Reports
 {
     public record Bottom10Report
     {

@@ -8,8 +8,11 @@ using ScottPlot;
 using ScottPlot.Plottable;
 
 //TODO: svaki plot ima dimenzije, dimenzije moraju biti unutar dimenzija generalnog plota
-namespace Crunch.Strategies.Overnight
+namespace Crunch.Strategies.Overnight.Plots
 {
+    /// <summary>
+    /// Class fror creating overnight report
+    /// </summary>
     class OvernightPlot
     {
         public OvernightPlot()
@@ -17,6 +20,10 @@ namespace Crunch.Strategies.Overnight
 
         }
 
+        /// <summary>
+        /// Composes all individual plots into one
+        /// </summary>
+        /// <param name="reports"></param>
         public void PlotEverything(Reports reports)
         {
             Bitmap winnersLosersPlot = PlotWinnersLosers(reports.WinnersLosersRatio, 300, 300);
