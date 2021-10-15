@@ -13,52 +13,68 @@ namespace Crunch.Strategies.Overnight.Plots
     /// </summary>
     class MultiplotLayout
     {
-        /// <summary>
-        /// Height of the multiplot in pixels
+         /// <summary>
+        /// Collection of individual grid cells
         /// </summary>
-        private int _height;
+        private Rectangle[,] _cells;
 
         /// <summary>
-        /// Width of multiplot in pixels
+        /// Initialize multiplot layout grid object.
         /// </summary>
-        private int _width;
-        
-        /// <summary>
-        /// Number of rows in grid
-        /// </summary>
-        private int _rowsNumber;
-
-        /// <summary>
-        /// Number of columns in grid
-        /// </summary>
-        private int _columnsNumber;
-
-        /// <summary>
-        /// Initialize multiplot layout grid object
-        /// </summary>
-        /// <param name="width">Width of multiplot in pixels</param>
-        /// <param name="height">Height of multiplot in pixels</param>
-        /// <param name="rowsNumber">Number of rows in grid</param>
-        /// <param name="columnsNumber">Number of columns in grid</param>
-        public MultiplotLayout(int width, int height, int rowsNumber, int columnsNumber)
+        /// <param name="imageWidth">Width of multiplot in pixels</param>
+        /// <param name="rowsCount">Number of rows in grid</param>
+        /// <param name="columnsCount">Number of columns in grid</param>
+        public MultiplotLayout(int imageWidth, int rowsCount, int columnsCount)
         {
-            _width = width;
-            _height = height;
-            _rowsNumber = rowsNumber;
-            _columnsNumber = columnsNumber;
+            _cells = CreateCells(imageWidth, rowsCount, columnsCount);
         }
 
         /// <summary>
-        /// Adds plot to the multiplot detrmined by starting grid point and ending grid point
+        /// Get rectangle for area which contains one or more grid cells
         /// </summary>
-        /// <param name="plot">Plot to </param>
-        /// <param name="columnStart"></param>
-        /// <param name="rowStart"></param>
-        /// <param name="columnEnd"></param>
-        /// <param name="rowEnd"></param>
-        public void AddPlot(Bitmap plot, int columnStart, int rowStart, int columnEnd, int rowEnd)
+        /// <param name="startRow"></param>
+        /// <param name="startColumn"></param>
+        /// <param name="endRow"></param>
+        /// <param name="endColumn"></param>
+        /// <returns></returns>
+        public Rectangle GetArea(int startRow, int startColumn, int endRow, int endColumn)
         {
+            // note: pixels start from top left corner
+            Rectangle startCell = _cells[startRow, startColumn];
+            Rectangle endCell = _cells[endRow, endColumn];
+            int startX = startCell.X;
+            int startY = startCell.Y;
+            int endX = endCell.Right;
+            int endY = endCell.Bottom;
+            
+            int areaWidth = endX - startX;
+            int areaHeight = endY - startY;
 
+            return new Rectangle(startX, startY, areaWidth, areaHeight);
+        }
+
+        /// <summary>
+        /// Create an array of individual grid cells
+        /// </summary>
+        /// <param name="imageWidth"></param>
+        /// <param name="rowsCount"></param>
+        /// <param name="columnsCount"></param>
+        /// <returns></returns>
+        private Rectangle[,] CreateCells(int imageWidth, int rowsCount, int columnsCount)
+        {
+            int cellSideLength = imageWidth / columnsCount;
+            Rectangle[,] cells = new Rectangle[rowsCount, columnsCount];
+            for (int rowNumber = 0; rowNumber < rowsCount; rowNumber++)
+            {
+                for (int columnNumber = 0; columnNumber < columnsCount; columnNumber++)
+                {
+                    int startX = columnNumber * cellSideLength;
+                    int startY = rowNumber * cellSideLength;
+                    cells[rowNumber, columnNumber] = new Rectangle(startX, startY, cellSideLength, cellSideLength);
+                }
+            }
+
+            return cells;
         }
     }
     
