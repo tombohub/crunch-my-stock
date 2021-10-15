@@ -30,13 +30,13 @@ namespace Crunch.Strategies.Overnight.Plots
         }
 
         /// <summary>
-        /// Get rectangle for area which contains one or more grid cells
+        /// Get area which contains one or more grid cells
         /// </summary>
-        /// <param name="startRow"></param>
-        /// <param name="startColumn"></param>
-        /// <param name="endRow"></param>
-        /// <param name="endColumn"></param>
-        /// <returns></returns>
+        /// <param name="startRow">0 based row number for starting grid cell (top left)</param>
+        /// <param name="startColumn">0 based column number for starting grid cell (top left)</param>
+        /// <param name="endRow">0 based row number for ending grid cell (bottom right)</param>
+        /// <param name="endColumn">0 based column number fro ending grid cell (bottom right)</param>
+        /// <returns>Rectangle object</returns>
         public Rectangle GetArea(int startRow, int startColumn, int endRow, int endColumn)
         {
             // note: pixels start from top left corner
@@ -54,7 +54,7 @@ namespace Crunch.Strategies.Overnight.Plots
         }
 
         /// <summary>
-        /// Create an array of individual grid cells
+        /// Create an 2d array of individual grid cells
         /// </summary>
         /// <param name="imageWidth"></param>
         /// <param name="rowsCount"></param>
