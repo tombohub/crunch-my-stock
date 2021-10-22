@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Crunch.Database.Models;
 using Crunch.Domain;
+using Crunch.Strategies.Overnight.Reports;
 
 namespace Crunch.Strategies.Overnight
 {
-    public class Reports
+    public class ReportsCollection
     {
         public WinnersLosersRatioReport WinnersLosersRatio { get; init; }
         public List<Top10Report> Top10 { get; init; }

@@ -14,9 +14,15 @@ namespace Crunch.Strategies.Overnight.Plots
     /// <summary>
     /// Class fror creating overnight report
     /// </summary>
-    class OvernightMultiplot
+    class OvernightPlotter
     {
-        public OvernightMultiplot()
+        /// <summary>
+        /// Multiplot image width in pixels
+        /// </summary>
+        private int _multiplotWidth = 1200;
+
+        
+        public OvernightPlotter()
         {
 
         }
@@ -25,20 +31,37 @@ namespace Crunch.Strategies.Overnight.Plots
         /// Composes all individual plots into one
         /// </summary>
         /// <param name="reports"></param>
-        public void PlotEverything(ReportsCollection reports)
+        public void CreateMultiplot(ReportsCollection reports)
         {
-            Bitmap winnersLosersPlot = PlotWinnersLosers(reports.WinnersLosersRatio, 300, 300);
-            Bitmap top10Plot = PlotTop10(reports.Top10, 600, 600);
-            Bitmap bottom10Plot = PlotBottom10(reports.Bottom10, 600, 600);
-            Bitmap spyBenchRoiBox = DrawSpyBenchmarkRoi(reports.SpyBenchmarkRoi, 300, 300);
-            Bitmap spyOvernightRoiBox = DrawSpyOvernightRoi(reports.SpyOvernightRoi, 300, 300);
-            Bitmap avgBenchRoiBox = DrawAverageBenchmarkRoi(reports.AverageBenchmarkRoi, 300, 300);
-            Bitmap avgOvernightRoiBox = DrawAverageOvernightRoi(reports.AverageOvernightRoi, 300, 300);
+            var overnightLayout = new GridLayout(1200, 5, 4);
+            int columnsNumber = 8;
 
-            Bitmap plot = new Bitmap(1200, 600);
+            int rowsNumber = 12;
+            int gridSquareSize = _multiplotWidth / columnsNumber;
+            int multiplotHeight = rowsNumber * gridSquareSize;
+            Bitmap plot = new Bitmap(_multiplotWidth, multiplotHeight);
             var graphics = Graphics.FromImage(plot);
-            graphics.DrawImage(top10Plot, 0, 0);
-            graphics.DrawImage(bottom10Plot, 600, 0);
+
+            (int Width, int Height) avgOvernightRoiBoxSize = (2, 1);
+
+
+            Bitmap avgOvernightRoiBox = DrawAverageOvernightRoi(reports.AverageOvernightRoi, avgOvernightRoiBoxSize.Width * gridSquareSize, avgOvernightRoiBoxSize.Height * gridSquareSize);
+            Bitmap avgBenchRoiBox = DrawAverageBenchmarkRoi(reports.AverageBenchmarkRoi, 2 * gridSquareSize, 1 * gridSquareSize);
+            Bitmap spyOvernightRoiBox = DrawSpyOvernightRoi(reports.SpyOvernightRoi, 2 * gridSquareSize, 1 * gridSquareSize);
+            Bitmap spyBenchRoiBox = DrawSpyBenchmarkRoi(reports.SpyBenchmarkRoi, 2 * gridSquareSize, 1 * gridSquareSize);
+            Bitmap winnersLosersPlot = PlotWinnersLosers(reports.WinnersLosersRatio, 4 * gridSquareSize, 4 * gridSquareSize);
+            Bitmap top10Plot = PlotTop10(reports.Top10, 4 * gridSquareSize, 4 * gridSquareSize);
+            Bitmap bottom10Plot = PlotBottom10(reports.Bottom10, 4 * gridSquareSize, 4 * gridSquareSize);
+
+            
+            graphics.DrawImage(avgOvernightRoiBox, overnightLayout.GetArea(0,0,0,0));
+            graphics.DrawImage(avgBenchRoiBox, overnightLayout.GetArea(0,1,0,1));
+            graphics.DrawImage(spyOvernightRoiBox, overnightLayout.GetArea(0,2,0,2));
+            graphics.DrawImage(spyBenchRoiBox, overnightLayout.GetArea(0,3,0,3));
+            graphics.DrawImage(winnersLosersPlot, overnightLayout.GetArea(1,0, 2,1));
+            graphics.DrawImage(top10Plot, overnightLayout.GetArea(3,0,4,1));
+            graphics.DrawImage(bottom10Plot, overnightLayout.GetArea(3,2,4,3));
+
 
             plot.Save("D:\\PROJEKTI\\koko.png");
         }
@@ -72,7 +95,7 @@ namespace Crunch.Strategies.Overnight.Plots
         public Bitmap PlotTop10(List<Top10Report> top10Data, int width, int height)
         {
             ScottPlot.Plot plt = new(width, height);
-
+            
             List<Top10Report> orderedTop10 = top10Data.OrderBy(t => t.StrategyRoi).ToList();
 
             // bars overnight roi
@@ -209,9 +232,11 @@ namespace Crunch.Strategies.Overnight.Plots
         }
 
         /// <summary>
-        /// Draw Average ROI across all securities
+        /// Draw Average ROI across all securities with size in pixels
         /// </summary>
         /// <param name="averageRoi"></param>
+        /// <param name="width">width in pixels</param>
+        /// <param name="height">height in pixels</param>
         public Bitmap DrawAverageOvernightRoi(double averageRoi, int width, int height)
         {
             string text = $"Average ROI\n{averageRoi:P2}";

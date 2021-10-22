@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using Crunch.DataSources.Fmp.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
+using Crunch.Strategies.Overnight.Reports;
+using Crunch.Strategies.Overnight.Plots;
 
 namespace Crunch.UseCases
 {
@@ -87,8 +89,8 @@ namespace Crunch.UseCases
             var repo = new OvernightStatsRepository();
             var overnightStats = repo.GetOvernightStats(weekNum);
             WinnersLosersRatioReport winLosData = overnightStats.CalculateWinnersLosersRatio(securityType);
-            OvernightPlot overnightPlot = new();
-            overnightPlot.PlotWinnersLosers(winLosData, 300, 300);
+            OvernightPlotter overnightMultiplot = new();
+            overnightMultiplot.PlotWinnersLosers(winLosData, 300, 300);
         }
 
         public static void PlotTop10UseCase(int weekNum, SecurityType securityType)
@@ -97,8 +99,8 @@ namespace Crunch.UseCases
             var overnightStats = repo.GetOvernightStats(weekNum);
 
             List<Top10Report> top10Data = overnightStats.CalculateTop10(securityType);
-            OvernightPlot overnightPlot = new();
-            overnightPlot.PlotTop10(top10Data, 300, 300);
+            OvernightPlotter overnightMultiplot = new();
+            overnightMultiplot.PlotTop10(top10Data, 300, 300);
         }
 
         public static void PlotBottom10UseCase(int weekNum, SecurityType securityType)
@@ -107,8 +109,8 @@ namespace Crunch.UseCases
             var overnightStats = repo.GetOvernightStats(weekNum);
 
             List<Bottom10Report> bottom10Data = overnightStats.CalculateBottom10(securityType);
-            OvernightPlot overnightPlot = new();
-            overnightPlot.PlotBottom10(bottom10Data, 300, 300);
+            OvernightPlotter overnightMultiplot = new();
+            overnightMultiplot.PlotBottom10(bottom10Data, 300, 300);
         }
 
         public static void DrawSpyBenchmarkRoiUseCase(int weekNum)
@@ -117,8 +119,8 @@ namespace Crunch.UseCases
             var overnightStats = repo.GetOvernightStats(weekNum);
 
             double spyRoi = overnightStats.GetSpyBenchmarkRoi();
-            OvernightPlot overnightPlot = new();
-            overnightPlot.DrawSpyBenchmarkRoi(spyRoi, 300, 300);
+            OvernightPlotter overnightMultiplot = new();
+            overnightMultiplot.DrawSpyBenchmarkRoi(spyRoi, 300, 300);
         }
 
         public static void DrawSpyOvernightRoiUseCase(int weekNum)
@@ -127,8 +129,8 @@ namespace Crunch.UseCases
             var overnightStats = repo.GetOvernightStats(weekNum);
 
             double spyRoi = overnightStats.GetSpyOvernightRoi();
-            OvernightPlot overnightPlot = new();
-            overnightPlot.DrawSpyOvernightRoi(spyRoi, 300, 300);
+            OvernightPlotter overnightMultiplot = new();
+            overnightMultiplot.DrawSpyOvernightRoi(spyRoi, 300, 300);
         }
 
         public static void DrawAverageOvernightRoiUseCase(int weekNum, SecurityType securityType)
@@ -137,8 +139,8 @@ namespace Crunch.UseCases
             var overnightStats = repo.GetOvernightStats(weekNum);
 
             double avgRoi = overnightStats.CalculateAverageOvernightRoi(securityType);
-            OvernightPlot overnightPlot = new();
-            overnightPlot.DrawAverageOvernightRoi(avgRoi, 300, 300);
+            OvernightPlotter overnightMultiplot = new();
+            overnightMultiplot.DrawAverageOvernightRoi(avgRoi, 300, 300);
         }
 
         public static void DrawAverageBenchmarkRoiUseCase(int weekNum)
@@ -147,8 +149,8 @@ namespace Crunch.UseCases
             var overnightStats = repo.GetOvernightStats(weekNum);
 
             double avgRoi = overnightStats.CalculateAverageBenchmarkRoi();
-            OvernightPlot overnightPlot = new();
-            overnightPlot.DrawAverageBenchmarkRoi(avgRoi, 300, 300);
+            OvernightPlotter overnightMultiplot = new();
+            overnightMultiplot.DrawAverageBenchmarkRoi(avgRoi, 300, 300);
         }
 
         public static void PlotOvernightUseCase(int weekNum, SecurityType securityType)
@@ -156,9 +158,9 @@ namespace Crunch.UseCases
             var repo = new OvernightStatsRepository();
             var overnightStats = repo.GetOvernightStats(weekNum);
 
-            Reports reports = overnightStats.CreateReports(securityType);
-            OvernightPlot overnightPlot = new();
-            overnightPlot.PlotEverything(reports);
+            ReportsCollection reports = overnightStats.CreateReports(securityType);
+            OvernightPlotter overnightMultiplot = new();
+            overnightMultiplot.CreateMultiplot(reports);
         }
 
         #endregion composition usecase

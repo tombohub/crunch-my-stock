@@ -14,7 +14,7 @@ using System.IO;
 using System.Reflection;
 using CsvHelper.Configuration;
 using FluentAssertions;
-
+using Crunch.Strategies.Overnight.Reports;
 
 namespace CrunchTests
 {

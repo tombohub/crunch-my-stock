@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Crunch.Domain;
 using Crunch.Database.Models;
+using Crunch.Strategies.Overnight.Reports;
 
 namespace Crunch.Strategies.Overnight
 {
@@ -175,9 +176,9 @@ namespace Crunch.Strategies.Overnight
             return spyOvernightRoi;
         }
 
-        public Reports CreateReports(SecurityType securityType)
+        public ReportsCollection CreateReports(SecurityType securityType)
         {
-            Reports reports = new Reports
+            ReportsCollection reports = new ReportsCollection
             {
                 AverageBenchmarkRoi = CalculateAverageBenchmarkRoi(),
                 AverageOvernightRoi = CalculateAverageOvernightRoi(securityType),
