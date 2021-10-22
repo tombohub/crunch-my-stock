@@ -15,6 +15,7 @@ using System.Reflection;
 using CsvHelper.Configuration;
 using FluentAssertions;
 using Crunch.Strategies.Overnight.Reports;
+using Crunch.Strategies.Overnight;
 
 namespace CrunchTests
 {
@@ -22,6 +23,7 @@ namespace CrunchTests
     public class OvernightReportsTests
     {
         public static OvernightStats Stats { get; set; }
+        public static ReportsCalculator ReportsCalculator {get; set;}
 
         [ClassInitialize]
         public static void GetStats(TestContext context)
@@ -30,6 +32,7 @@ namespace CrunchTests
             var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
             var records = csv.GetRecords<SingleSymbolStats>().ToList();
             Stats = new OvernightStats(records);
+            ReportsCalculator = new ReportsCalculator(Stats);
         }
 
         [DataTestMethod]
@@ -43,7 +46,7 @@ namespace CrunchTests
                 LosersCount = losersCount,
                 SecurityType = securityType
             };
-            var winnerLosersRatio = Stats.CalculateWinnersLosersRatio(securityType);
+            var winnerLosersRatio = ReportsCalculator.CalculateWinnersLosersRatio(securityType);
             Assert.AreEqual(expectedRatio, winnerLosersRatio);
 
         }
@@ -51,14 +54,14 @@ namespace CrunchTests
         [TestMethod]
         public void GetSpyOvernightRoi_OvernightStatsData_ReturnsCorrectNumber()
         {
-            var spyOvernightRoi = Stats.GetSpyOvernightRoi();
+            var spyOvernightRoi = ReportsCalculator.GetSpyOvernightRoi();
             Assert.AreEqual(spyOvernightRoi, -0.0165, delta: 0.0001);
         }
 
         [TestMethod]
         public void GetSpyBenchmarkRoi_OvernightStatsData_ReturnsCorrectNumber()
         {
-            var spyBenchmarkRoi = Stats.GetSpyBenchmarkRoi();
+            var spyBenchmarkRoi = ReportsCalculator.GetSpyBenchmarkRoi();
             Assert.AreEqual(spyBenchmarkRoi, -0.0260, delta: 0.0001);
         }
 
@@ -67,7 +70,7 @@ namespace CrunchTests
         [DataRow(SecurityType.Etf, -0.0161)]
         public void CalculateAverageOvernightRoi_OvernightStatsData_ReturnsCorrectNumber(SecurityType securityType, double expectedAvgRoi)
         {
-            var avgRoi = Stats.CalculateAverageOvernightRoi(securityType);
+            var avgRoi = ReportsCalculator.CalculateAverageOvernightRoi(securityType);
             Assert.AreEqual(avgRoi, expectedAvgRoi, delta: 0.0001);
         }
 
@@ -78,7 +81,7 @@ namespace CrunchTests
             var reader = new StreamReader("Top10StocksReportData.csv");
             var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
             var expectedTop10 = csv.GetRecords<Top10Report>().ToList();
-            var top10 = Stats.CalculateTop10(SecurityType.Stock);
+            var top10 = ReportsCalculator.CalculateTop10(SecurityType.Stock);
 
             top10.Should().Equal(expectedTop10);
         }
@@ -89,7 +92,7 @@ namespace CrunchTests
             var reader = new StreamReader("Top10EtfsReportData.csv");
             var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
             var expectedTop10 = csv.GetRecords<Top10Report>().ToList();
-            var top10 = Stats.CalculateTop10(SecurityType.Etf);
+            var top10 = ReportsCalculator.CalculateTop10(SecurityType.Etf);
 
             top10.Should().Equal(expectedTop10);
         }
@@ -100,7 +103,7 @@ namespace CrunchTests
             var reader = new StreamReader("Bottom10StocksReportData.csv");
             var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
             var expectedBottom10 = csv.GetRecords<Bottom10Report>().ToList();
-            var bottom10 = Stats.CalculateBottom10(SecurityType.Stock);
+            var bottom10 = ReportsCalculator.CalculateBottom10(SecurityType.Stock);
 
             bottom10.Should().Equal(expectedBottom10);
         }
@@ -111,7 +114,7 @@ namespace CrunchTests
             var reader = new StreamReader("Bottom10EtfsReportData.csv");
             var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
             var expectedBottom10 = csv.GetRecords<Bottom10Report>().ToList();
-            var bottom10 = Stats.CalculateBottom10(SecurityType.Etf);
+            var bottom10 = ReportsCalculator.CalculateBottom10(SecurityType.Etf);
 
             bottom10.Should().Equal(expectedBottom10);
         }

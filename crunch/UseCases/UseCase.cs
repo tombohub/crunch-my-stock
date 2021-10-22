@@ -88,7 +88,8 @@ namespace Crunch.UseCases
         {
             var repo = new OvernightStatsRepository();
             var overnightStats = repo.GetOvernightStats(weekNum);
-            WinnersLosersRatioReport winLosData = overnightStats.CalculateWinnersLosersRatio(securityType);
+            var reportsCalculator = new ReportsCalculator(overnightStats);
+            WinnersLosersRatioReport winLosData = reportsCalculator.CalculateWinnersLosersRatio(securityType);
             OvernightPlotter overnightMultiplot = new();
             overnightMultiplot.PlotWinnersLosers(winLosData, 300, 300);
         }
@@ -97,8 +98,8 @@ namespace Crunch.UseCases
         {
             var repo = new OvernightStatsRepository();
             var overnightStats = repo.GetOvernightStats(weekNum);
-
-            List<Top10Report> top10Data = overnightStats.CalculateTop10(securityType);
+            var reportsCalculator = new ReportsCalculator(overnightStats);
+            List<Top10Report> top10Data = reportsCalculator.CalculateTop10(securityType);
             OvernightPlotter overnightMultiplot = new();
             overnightMultiplot.PlotTop10(top10Data, 300, 300);
         }
@@ -107,8 +108,9 @@ namespace Crunch.UseCases
         {
             var repo = new OvernightStatsRepository();
             var overnightStats = repo.GetOvernightStats(weekNum);
+            var reportsCalculator = new ReportsCalculator(overnightStats);
 
-            List<Bottom10Report> bottom10Data = overnightStats.CalculateBottom10(securityType);
+            List<Bottom10Report> bottom10Data = reportsCalculator.CalculateBottom10(securityType);
             OvernightPlotter overnightMultiplot = new();
             overnightMultiplot.PlotBottom10(bottom10Data, 300, 300);
         }
@@ -117,8 +119,9 @@ namespace Crunch.UseCases
         {
             var repo = new OvernightStatsRepository();
             var overnightStats = repo.GetOvernightStats(weekNum);
+            var reportsCalculator = new ReportsCalculator(overnightStats);
 
-            double spyRoi = overnightStats.GetSpyBenchmarkRoi();
+            double spyRoi = reportsCalculator.GetSpyBenchmarkRoi();
             OvernightPlotter overnightMultiplot = new();
             overnightMultiplot.DrawSpyBenchmarkRoi(spyRoi, 300, 300);
         }
@@ -127,8 +130,9 @@ namespace Crunch.UseCases
         {
             var repo = new OvernightStatsRepository();
             var overnightStats = repo.GetOvernightStats(weekNum);
+            var reportsCalculator = new ReportsCalculator(overnightStats);
 
-            double spyRoi = overnightStats.GetSpyOvernightRoi();
+            double spyRoi = reportsCalculator.GetSpyOvernightRoi();
             OvernightPlotter overnightMultiplot = new();
             overnightMultiplot.DrawSpyOvernightRoi(spyRoi, 300, 300);
         }
@@ -137,8 +141,9 @@ namespace Crunch.UseCases
         {
             var repo = new OvernightStatsRepository();
             var overnightStats = repo.GetOvernightStats(weekNum);
+            var reportsCalculator = new ReportsCalculator(overnightStats);
 
-            double avgRoi = overnightStats.CalculateAverageOvernightRoi(securityType);
+            double avgRoi = reportsCalculator.CalculateAverageOvernightRoi(securityType);
             OvernightPlotter overnightMultiplot = new();
             overnightMultiplot.DrawAverageOvernightRoi(avgRoi, 300, 300);
         }
@@ -147,8 +152,9 @@ namespace Crunch.UseCases
         {
             var repo = new OvernightStatsRepository();
             var overnightStats = repo.GetOvernightStats(weekNum);
+            var reportsCalculator = new ReportsCalculator(overnightStats);
 
-            double avgRoi = overnightStats.CalculateAverageBenchmarkRoi();
+            double avgRoi = reportsCalculator.CalculateAverageBenchmarkRoi();
             OvernightPlotter overnightMultiplot = new();
             overnightMultiplot.DrawAverageBenchmarkRoi(avgRoi, 300, 300);
         }
@@ -157,8 +163,9 @@ namespace Crunch.UseCases
         {
             var repo = new OvernightStatsRepository();
             var overnightStats = repo.GetOvernightStats(weekNum);
+            var reportsCalculator = new ReportsCalculator(overnightStats);
 
-            ReportsCollection reports = overnightStats.CreateReports(securityType);
+            ReportsCollection reports = reportsCalculator.CreateReports(securityType);
             OvernightPlotter overnightMultiplot = new();
             overnightMultiplot.CreateMultiplot(reports);
         }
