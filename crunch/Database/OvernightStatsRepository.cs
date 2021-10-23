@@ -9,6 +9,9 @@ using Crunch.Database.Models;
 
 namespace Crunch.Database
 {
+    /// <summary>
+    /// Repository for Overnight Stats entity
+    /// </summary>
     public class OvernightStatsRepository
     {
         /// <summary>

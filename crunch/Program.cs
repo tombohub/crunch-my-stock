@@ -67,14 +67,16 @@ namespace Crunch
                })
               .WithParsed<PlotOptions>(options =>
               {
-                  if (options.Name == "winners") UseCase.PlotWinnersLosersUseCase(options.WeekNum, options.SecurityType);
-                  if (options.Name == "top10") UseCase.PlotTop10UseCase(options.WeekNum, options.SecurityType);
-                  if (options.Name == "bottom10") UseCase.PlotBottom10UseCase(options.WeekNum, options.SecurityType);
-                  if (options.Name == "spyroi") UseCase.DrawSpyBenchmarkRoiUseCase(options.WeekNum);
-                  if (options.Name == "spyovernightroi") UseCase.DrawSpyOvernightRoiUseCase(options.WeekNum);
-                  if (options.Name == "averageroi") UseCase.DrawAverageOvernightRoiUseCase(options.WeekNum, options.SecurityType);
-                  if (options.Name == "benchmarkroi") UseCase.DrawAverageBenchmarkRoiUseCase(options.WeekNum);
-                  if (options.Name == "all") UseCase.PlotOvernightUseCase(options.WeekNum, options.SecurityType);
+                  var plottingUseCases = new PlottingUseCases(options.WeekNum);
+
+                  if (options.Name == "winners") plottingUseCases.PlotWinnersLosersUseCase(options.SecurityType);
+                  if (options.Name == "top10") plottingUseCases.PlotTop10UseCase(options.SecurityType);
+                  if (options.Name == "bottom10") plottingUseCases.PlotBottom10UseCase(options.SecurityType);
+                  if (options.Name == "spyroi") plottingUseCases.DrawSpyBenchmarkRoiUseCase();
+                  if (options.Name == "spyovernightroi") plottingUseCases.DrawSpyOvernightRoiUseCase();
+                  if (options.Name == "averageroi") plottingUseCases.DrawAverageOvernightRoiUseCase(options.SecurityType);
+                  if (options.Name == "benchmarkroi") plottingUseCases.DrawAverageBenchmarkRoiUseCase();
+                  if (options.Name == "all") plottingUseCases.PlotOvernightUseCase(options.SecurityType);
 
               });
         }
