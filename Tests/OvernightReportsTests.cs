@@ -102,10 +102,10 @@ namespace CrunchTests
         {
             var reader = new StreamReader("Bottom10StocksReportData.csv");
             var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
-            var expectedBottom10 = csv.GetRecords<Bottom10Report>().ToList();
-            var bottom10 = ReportsCalculator.CalculateBottom10(SecurityType.Stock);
+            var expectedBottom10Data = csv.GetRecords<SingleSymbolStats>().ToList();
+            var bottom10Data = ReportsCalculator.CalculateBottom10(SecurityType.Stock);
 
-            bottom10.Should().Equal(expectedBottom10);
+            bottom10Data.Should().Equal(expectedBottom10Data);
         }
 
         [TestMethod]
@@ -113,7 +113,7 @@ namespace CrunchTests
         {
             var reader = new StreamReader("Bottom10EtfsReportData.csv");
             var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);
-            var expectedBottom10 = csv.GetRecords<Bottom10Report>().ToList();
+            var expectedBottom10 = csv.GetRecords<SingleSymbolStats>().ToList();
             var bottom10 = ReportsCalculator.CalculateBottom10(SecurityType.Etf);
 
             bottom10.Should().Equal(expectedBottom10);

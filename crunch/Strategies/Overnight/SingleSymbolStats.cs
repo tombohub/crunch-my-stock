@@ -25,11 +25,11 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Roi of the strategy
         /// </summary>
-        public double Roi { get; init; }
+        public double OvernightRoi { get; init; }
 
         /// <summary>
-        /// Name of the strategy
+        /// Roi if the benchmark (buy and hold)
         /// </summary>
-        public Strategy Strategy { get; init; }
+        public double BenchmarkRoi { get; init; }
     }
 }

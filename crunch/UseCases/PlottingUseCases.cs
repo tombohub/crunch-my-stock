@@ -45,9 +45,9 @@ namespace Crunch.UseCases
 
         public void PlotBottom10UseCase(SecurityType securityType)
         {
-            List<Bottom10Report> bottom10Data = _reportsCalculator.CalculateBottom10(securityType);
-            OvernightPlotter overnightMultiplot = new();
-            overnightMultiplot.PlotBottom10(bottom10Data, 300, 300);
+            List<SingleSymbolStats> bottom10ReportData = _reportsCalculator.CalculateBottom10(securityType);
+            Bottom10Report bottom10Report = new Bottom10Report(bottom10ReportData);
+            bottom10Report.Plot(300, 300);
         }
 
         public void DrawSpyBenchmarkRoiUseCase()

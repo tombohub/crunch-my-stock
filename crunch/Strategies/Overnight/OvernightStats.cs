@@ -9,6 +9,9 @@ using Crunch.Strategies.Overnight.Reports;
 
 namespace Crunch.Strategies.Overnight
 {
+    /// <summary>
+    /// Overnight Stats entity. Use Overnight Repository to create.
+    /// </summary>
     public class OvernightStats
     {
         public List<SingleSymbolStats> Stats { get; }
@@ -17,9 +20,5 @@ namespace Crunch.Strategies.Overnight
         {
             Stats = stats;
         }
-
-        
-
-
     }
 }

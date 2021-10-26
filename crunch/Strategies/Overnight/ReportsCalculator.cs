@@ -22,13 +22,11 @@ namespace Crunch.Strategies.Overnight
         /// <returns>Winners and losers count data</returns>
         public WinnersLosersRatioReport CalculateWinnersLosersRatio(SecurityType securityType)
         {
-            var winnersCount = _stats.Stats.Where(s => s.Roi >= 0)
+            var winnersCount = _stats.Stats.Where(s => s.OvernightRoi >= 0)
                 .Where(s => s.SecurityType == securityType)
-                .Where(s => s.Strategy == Strategy.Overnight)
                 .Count();
-            var losersCount = _stats.Stats.Where(s => s.Roi < 0)
+            var losersCount = _stats.Stats.Where(s => s.OvernightRoi < 0)
                 .Where(s => s.SecurityType == securityType)
-                .Where(s => s.Strategy == Strategy.Overnight)
                 .Count();
 
             var reportData = new WinnersLosersRatioReport
@@ -50,8 +48,7 @@ namespace Crunch.Strategies.Overnight
             // sort top 10 from database
             List<SingleSymbolStats> top10 = _stats.Stats
                 .Where(s => s.SecurityType == securityType)
-                .Where(s => s.Strategy == Strategy.Overnight)
-                .OrderByDescending(s => s.Roi)
+                .OrderByDescending(s => s.OvernightRoi)
                 .Take(10)
                 .ToList();
 
@@ -61,14 +58,13 @@ namespace Crunch.Strategies.Overnight
             {
                 double benchmarkRoi = _stats.Stats
                     .Where(s => s.Symbol == item.Symbol)
-                    .Where(s => s.Strategy == Strategy.Benchmark)
-                    .Select(s => s.Roi)
+                    .Select(s => s.BenchmarkRoi)
                     .Single();
 
                 reportData.Add(new Top10Report
                 {
                     Symbol = item.Symbol,
-                    StrategyRoi = item.Roi,
+                    StrategyRoi = item.OvernightRoi,
                     BenchmarkRoi = benchmarkRoi
                 });
 
@@ -84,34 +80,33 @@ namespace Crunch.Strategies.Overnight
         /// </summary>
         /// <param name="securityType"></param>
         /// <returns>Report data for each symbol</returns>
-        public List<Bottom10Report> CalculateBottom10(SecurityType securityType)
+        public List<SingleSymbolStats> CalculateBottom10(SecurityType securityType)
         {
             // sort top 10 from database
             List<SingleSymbolStats> bottom10 = _stats.Stats
                 .Where(s => s.SecurityType == securityType)
-                .Where(s => s.Strategy == Strategy.Overnight)
-                .OrderBy(s => s.Roi)
+                .OrderBy(s => s.OvernightRoi)
                 .Take(10)
                 .ToList();
 
-            var reportData = new List<Bottom10Report>();
+            var reportData = new List<SingleSymbolStats>();
             foreach (var item in bottom10)
             {
                 double benchmarkRoi = _stats.Stats
                     .Where(s => s.Symbol == item.Symbol)
-                    .Where(s => s.Strategy == Strategy.Benchmark)
-                    .Select(s => s.Roi)
+                    .Select(s => s.BenchmarkRoi)
                     .Single();
 
-                reportData.Add(new Bottom10Report
+                reportData.Add(new SingleSymbolStats
                 {
                     Symbol = item.Symbol,
-                    StrategyRoi = item.Roi,
+                    OvernightRoi = item.OvernightRoi,
                     BenchmarkRoi = benchmarkRoi
                 });
 
                 Console.WriteLine($"{item.Symbol} : {benchmarkRoi}");
             }
+
             return reportData;
         }
 
@@ -122,9 +117,8 @@ namespace Crunch.Strategies.Overnight
         public double CalculateAverageOvernightRoi(SecurityType securityType)
         {
             double averageRoi = _stats.Stats
-                .Where(s => s.Strategy == Strategy.Overnight)
                 .Where(s => s.SecurityType == securityType)
-                .Select(s => s.Roi)
+                .Select(s => s.OvernightRoi)
                 .Average();
 
             return averageRoi;
@@ -137,26 +131,10 @@ namespace Crunch.Strategies.Overnight
         public double CalculateAverageBenchmarkRoi()
         {
             double averageBenchmarkRoi = _stats.Stats
-                .Where(s => s.Strategy == Strategy.Benchmark)
                 .Where(s => s.SecurityType == SecurityType.Stock)
-                .Select(s => s.Roi)
+                .Select(s => s.BenchmarkRoi)
                 .Average();
             return averageBenchmarkRoi;
-        }
-
-        /// <summary>
-        /// Get SPY benchmark buy and hold) ROI for the week
-        /// </summary>
-        /// <returns></returns>
-        public double GetSpyBenchmarkRoi()
-        {
-            double spyRoi = _stats.Stats
-                .Where(s => s.Symbol == "SPY") //HACK: magic string
-                .Where(s => s.Strategy == Strategy.Benchmark)
-                .Select(s => s.Roi)
-                .Single();
-
-            return spyRoi;
         }
 
         /// <summary>
@@ -167,13 +145,25 @@ namespace Crunch.Strategies.Overnight
         {
             double spyOvernightRoi = _stats.Stats
                 .Where(s => s.Symbol == "SPY")
-                .Where(s => s.Strategy == Strategy.Overnight)
-                .Select(s => s.Roi)
+                .Select(s => s.OvernightRoi)
                 .Single();
 
             return spyOvernightRoi;
         }
+        
+        /// <summary>
+        /// Get SPY benchmark buy and hold) ROI for the week
+        /// </summary>
+        /// <returns></returns>
+        public double GetSpyBenchmarkRoi()
+        {
+            double spyRoi = _stats.Stats
+                .Where(s => s.Symbol == "SPY") //HACK: magic string
+                .Select(s => s.BenchmarkRoi)
+                .Single();
 
+            return spyRoi;
+        }
 
         public ReportsCollection CreateReports(SecurityType securityType)
         {

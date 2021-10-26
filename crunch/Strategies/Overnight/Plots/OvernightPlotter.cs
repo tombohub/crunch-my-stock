@@ -51,8 +51,8 @@ namespace Crunch.Strategies.Overnight.Plots
             Bitmap spyBenchRoiBox = DrawSpyBenchmarkRoi(reports.SpyBenchmarkRoi, 2 * gridSquareSize, 1 * gridSquareSize);
             Bitmap winnersLosersPlot = PlotWinnersLosers(reports.WinnersLosersRatio, 4 * gridSquareSize, 4 * gridSquareSize);
             Bitmap top10Plot = PlotTop10(reports.Top10, 4 * gridSquareSize, 4 * gridSquareSize);
-            Bitmap bottom10Plot = PlotBottom10(reports.Bottom10, 4 * gridSquareSize, 4 * gridSquareSize);
-
+            //Bitmap bottom10Plot = PlotBottom10(reports.Bottom10, 4 * gridSquareSize, 4 * gridSquareSize);
+            // todo: activate bottom10plot
             
             graphics.DrawImage(avgOvernightRoiBox, overnightLayout.GetArea(0,0,0,0));
             graphics.DrawImage(avgBenchRoiBox, overnightLayout.GetArea(0,1,0,1));
@@ -60,7 +60,7 @@ namespace Crunch.Strategies.Overnight.Plots
             graphics.DrawImage(spyBenchRoiBox, overnightLayout.GetArea(0,3,0,3));
             graphics.DrawImage(winnersLosersPlot, overnightLayout.GetArea(1,0, 2,1));
             graphics.DrawImage(top10Plot, overnightLayout.GetArea(3,0,4,1));
-            graphics.DrawImage(bottom10Plot, overnightLayout.GetArea(3,2,4,3));
+            //graphics.DrawImage(bottom10Plot, overnightLayout.GetArea(3,2,4,3));
 
 
             plot.Save("D:\\PROJEKTI\\koko.png");
@@ -132,55 +132,7 @@ namespace Crunch.Strategies.Overnight.Plots
             return plt.Render();
         }
 
-        /// <summary>
-        /// Plot Bottom 10 securities based on ROI
-        /// </summary>
-        /// <param name="bottom10Data"></param>
-        public Bitmap PlotBottom10(List<Bottom10Report> bottom10Data, int width, int height)
-        {
-            var plt = new ScottPlot.Plot(width, height);
-
-            List<Bottom10Report> orderedBottom10 = bottom10Data.OrderBy(b => b.StrategyRoi).ToList();
-
-            double[] values = orderedBottom10
-                .Select(b => b.StrategyRoi)
-                .ToArray();
-
-            string[] labels = orderedBottom10
-                .Select(b => b.Symbol)
-                .ToArray();
-
-
-            BarPlot bar = plt.AddBar(values, Color.IndianRed);
-            bar.FillColorNegative = bar.FillColor;
-            bar.Label = "Overnight";
-            bar.Orientation = Orientation.Horizontal;
-
-            //lines benchmark ROI
-            double[] benchmarkRois = orderedBottom10
-                .Select(b => (double)b.BenchmarkRoi)
-                .ToArray();
-
-            double[] symbolPositions = Enumerable.Range(0, bottom10Data.Count)
-                .Select(s => (double)s)
-                .ToArray();
-
-            ScatterPlot benchmarkLines = plt.AddScatterPoints(
-                benchmarkRois,
-                symbolPositions,
-                Color.Black,
-                11,
-                MarkerShape.verticalBar,
-                "Buy & Hold");
-
-            plt.Title("Bottom 10");
-            plt.YTicks(labels);
-            plt.XLabel("ROI");
-            plt.XAxis.TickLabelFormat("P1", false);
-            plt.Legend(location: Alignment.UpperLeft);
-
-            return plt.Render();
-        }
+       
 
         /// <summary>
         /// Draw the rectangle with text in center
