@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using ScottPlot;
 using ScottPlot.Plottable;
+using Crunch.Domain.Strategies;
 
 namespace Crunch.Strategies.Overnight.Reports
 {

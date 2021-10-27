@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace Crunch.Strategies.Overnight.Reports
+namespace Crunch.Domain.Strategies
 {
     interface IReport
     {
