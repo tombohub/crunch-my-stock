@@ -20,25 +20,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Bottom10EtfsReportData.csv">
+    <None Update="OvernightStrategy\CsvData\Bottom10EtfsReportData.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OvernightStrategy\CsvData\Bottom10StocksReportData.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Bottom10StocksReportData.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="OvernightStatsWeek37.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="OvernightStrategy\CsvData\OvernightStatsWeek37.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="stats.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Top10EtfsReportData.csv">
+    <None Update="OvernightStrategy\CsvData\Top10EtfsReportData.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Top10ReportData.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Top10StocksReportData.csv">
+    <None Update="OvernightStrategy\CsvData\Top10StocksReportData.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
