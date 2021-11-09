@@ -55,12 +55,12 @@ namespace Crunch.Database
                 };
                                 
                 stats.Add(new SingleSymbolStats
-                {
-                    Symbol = statDb.Symbol,
-                    SecurityType = securityType,
-                    OvernightRoi = statDb.OvernightRoi,
-                    BenchmarkRoi = statDb.BenchmarkRoi
-                });
+                (
+                    Symbol: statDb.Symbol,
+                    SecurityType: securityType,
+                    OvernightRoi: statDb.OvernightRoi,
+                    BenchmarkRoi: statDb.BenchmarkRoi
+                ));
             }
             var overnightStatsEntity = new OvernightStats(stats);
 

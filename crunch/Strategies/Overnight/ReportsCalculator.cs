@@ -82,7 +82,7 @@ namespace Crunch.Strategies.Overnight
         /// <returns>Report data for each symbol</returns>
         public List<SingleSymbolStats> CalculateBottom10(SecurityType securityType)
         {
-            // sort top 10 from database
+            // sort bottom 10 from database
             List<SingleSymbolStats> bottom10 = _stats.Stats
                 .Where(s => s.SecurityType == securityType)
                 .OrderBy(s => s.OvernightRoi)
@@ -98,11 +98,12 @@ namespace Crunch.Strategies.Overnight
                     .Single();
 
                 reportData.Add(new SingleSymbolStats
-                {
-                    Symbol = item.Symbol,
-                    OvernightRoi = item.OvernightRoi,
-                    BenchmarkRoi = benchmarkRoi
-                });
+                (
+                    Symbol: item.Symbol,
+                    SecurityType: securityType,
+                    OvernightRoi: item.OvernightRoi,
+                    BenchmarkRoi: benchmarkRoi
+                ));
 
                 Console.WriteLine($"{item.Symbol} : {benchmarkRoi}");
             }
