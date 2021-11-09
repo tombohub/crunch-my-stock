@@ -38,14 +38,14 @@ namespace Crunch.UseCases
 
         public void PlotTop10UseCase(SecurityType securityType)
         {
-            List<Top10Report> top10Data = _reportsCalculator.CalculateTop10(securityType);
+            List<Strategies.Overnight.SingleSymbolStats> top10Data = _reportsCalculator.CalculateTop10(securityType);
             OvernightPlotter overnightMultiplot = new();
             overnightMultiplot.PlotTop10(top10Data, 300, 300);
         }
 
         public void PlotBottom10UseCase(SecurityType securityType)
         {
-            List<SingleSymbolStats> bottom10ReportData = _reportsCalculator.CalculateBottom10(securityType);
+            List<Strategies.Overnight.SingleSymbolStats> bottom10ReportData = _reportsCalculator.CalculateBottom10(securityType);
             Bottom10Report bottom10Report = new Bottom10Report(bottom10ReportData);
             bottom10Report.Plot(300, 300);
         }

@@ -43,7 +43,7 @@ namespace Crunch.Strategies.Overnight
         /// </summary>
         /// <param name="securityType"></param>
         /// <returns>Top 10 report data</returns>
-        public List<Top10Report> CalculateTop10(SecurityType securityType)
+        public List<SingleSymbolStats> CalculateTop10(SecurityType securityType)
         {
             // sort top 10 from database
             List<SingleSymbolStats> top10 = _stats.Stats
@@ -53,7 +53,7 @@ namespace Crunch.Strategies.Overnight
                 .ToList();
 
             // TODO: decide what object is this one
-            var reportData = new List<Top10Report>();
+            var reportData = new List<SingleSymbolStats>();
             foreach (var item in top10)
             {
                 double benchmarkRoi = _stats.Stats
@@ -61,12 +61,13 @@ namespace Crunch.Strategies.Overnight
                     .Select(s => s.BenchmarkRoi)
                     .Single();
 
-                reportData.Add(new Top10Report
-                {
-                    Symbol = item.Symbol,
-                    StrategyRoi = item.OvernightRoi,
-                    BenchmarkRoi = benchmarkRoi
-                });
+                reportData.Add(new SingleSymbolStats
+                (
+                    Symbol: item.Symbol,
+                    SecurityType: securityType,
+                    OvernightRoi: item.OvernightRoi,
+                    BenchmarkRoi: benchmarkRoi
+                ));
 
                 Console.WriteLine($"{item.Symbol} : {benchmarkRoi}");
             }

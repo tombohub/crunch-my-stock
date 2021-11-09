@@ -92,15 +92,15 @@ namespace Crunch.Strategies.Overnight.Plots
         /// Plot Weekly Overnight top 10 ROI
         /// </summary>
         /// <param name="height"></param>
-        public Bitmap PlotTop10(List<Top10Report> top10Data, int width, int height)
+        public Bitmap PlotTop10(List<SingleSymbolStats> top10Data, int width, int height)
         {
             ScottPlot.Plot plt = new(width, height);
-            
-            List<Top10Report> orderedTop10 = top10Data.OrderBy(t => t.StrategyRoi).ToList();
+
+            List<SingleSymbolStats> orderedTop10 = top10Data.OrderBy(t => t.OvernightRoi).ToList();
 
             // bars overnight roi
             double[] values = orderedTop10
-                .Select(t => t.StrategyRoi)
+                .Select(t => t.OvernightRoi)
                 .ToArray();
 
             string[] labels = orderedTop10
