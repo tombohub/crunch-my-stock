@@ -13,10 +13,8 @@ namespace Crunch.Strategies.Overnight
     class OvernightStrategy : IStrategy
     {
 
-        private readonly string _name = "Overnight Strategy";
-
         /// <inheritdoc/>
-        public string Name { get { return _name; } }
+        public string Name { get; } = "Overnight Strategy";
         public void PrintStrategyName()
         {
             Console.WriteLine(Name);

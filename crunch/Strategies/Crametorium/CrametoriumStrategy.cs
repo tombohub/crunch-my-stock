@@ -9,8 +9,7 @@ namespace Crunch.Strategies.Crametorium
 {
     class CrametoriumStrategy :IStrategy
     {
-        private string _name = "Crametorium Strategy";
-        public string Name { get { return _name; } }
+        public string Name { get; } = "Crametorium Strategy";
 
         public void PrintStrategyName()
         {
