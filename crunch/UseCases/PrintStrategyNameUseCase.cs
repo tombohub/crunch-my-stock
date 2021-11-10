@@ -9,7 +9,7 @@ using Crunch.Strategies.Crametorium;
 
 namespace Crunch.UseCases
 {
-    class PrintStrategyNameUseCase
+    class PrintStrategyNameUseCase : IUseCase
     {
         private IStrategy Strategy { get; init; } 
         public PrintStrategyNameUseCase(string strategyOption)

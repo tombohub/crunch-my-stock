@@ -2,7 +2,7 @@
   "profiles": {
     "Crunch": {
       "commandName": "Project",
-      "commandLineArgs": "--strategy crametorium"
+      "commandLineArgs": "--strategy overnight"
     }
   }
 }
