@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Crunch.Domain.Strategies
 {
     /// <summary>
-    /// Main Strategy object. Responsible for initializing strategy specific objects for data source,
+    /// Abstract Factory. Responsible for creating specific objects for data source,
     /// repository, publishing templates
     /// </summary>
     interface IStrategy
@@ -21,5 +21,6 @@ namespace Crunch.Domain.Strategies
         /// Print strategy name to the console
         /// </summary>
         void PrintStrategyName();
+
     }
 }

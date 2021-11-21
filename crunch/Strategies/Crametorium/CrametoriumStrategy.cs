@@ -7,13 +7,18 @@ using Crunch.Domain.Strategies;
 
 namespace Crunch.Strategies.Crametorium
 {
-    class CrametoriumStrategy :IStrategy
+    class CrametoriumStrategy : IStrategy
     {
         public string Name { get; } = "Crametorium Strategy";
 
         public void PrintStrategyName()
         {
             Console.WriteLine(Name);
+        }
+
+        public void CreateDataSource()
+        {
+            Console.WriteLine("Crametorium data source");
         }
     }
 }

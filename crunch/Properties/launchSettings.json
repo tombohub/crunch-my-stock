@@ -1,8 +1,11 @@
 {
   "profiles": {
     "Crunch": {
+      "commandName": "Project"
+    },
+    "DownloadPrices": {
       "commandName": "Project",
-      "commandLineArgs": "--strategy overnight"
+      "commandLineArgs": "download --start 2017-10-11 --end 2017-10-12 --interval 30m"
     }
   }
 }

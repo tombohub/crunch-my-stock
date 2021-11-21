@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 
-namespace Crunch.DataSources
+namespace Crunch.DataSources.Finviz
 {
     /// <summary>
     /// FinViz data source class.

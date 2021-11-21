@@ -31,7 +31,7 @@ namespace Crunch.Database
             conn.Close();
         }
 
-        public void SavePrices(List<Price> prices)
+        public void SavePrices(List<PriceSet> prices)
         {
             string sql = "insert into ";
             var cmd = new MySqlCommand(sql, conn);

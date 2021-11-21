@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Drawing;
 using Crunch.Strategies.Overnight.Reports;
 using Crunch.Strategies.Overnight.Plots;
+using Crunch.DataSources.Fmp;
 
 namespace Crunch.UseCases
 {
@@ -43,22 +44,14 @@ namespace Crunch.UseCases
                                                    options.End);
                         foreach (var price in prices)
                         {
-                            string interval = price.interval switch
+                                                       var dbPrice = new Price
                             {
-                                PriceInterval.OneDay => "1d",
-                                PriceInterval.ThirtyMinutes => "30m",
-                                _ => throw new ArgumentException("Interval doesn't exist"),
-                            };
-                            var dbPrice = new Price
-                            {
-                                Close = price.close,
-                                High = price.high,
-                                Interval = interval,
-                                Low = price.low,
-                                Open = price.open,
-                                Symbol = price.symbol,
-                                Timestamp = price.timestamp,
-                                Volume = (long)price.volume
+                                Close = price.Close,
+                                High = price.High,
+                                Low = price.Low,
+                                Open = price.Open,
+                                Timestamp = price.Timestamp,
+                                Volume = (long)price.Volume
                             };
                             db.Prices.Add(dbPrice);
                         }

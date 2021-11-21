@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 
-namespace Crunch.DataSources
+namespace Crunch.DataSources.Fmp
 {
     /// <summary>
     /// Financial Modeling Prep API data source
@@ -89,14 +89,12 @@ namespace Crunch.DataSources
                 foreach (var priceJsonData in pricesJsonData.EnumerateArray())
                 {
                     var price = new Price(
-                        symbol: symbol,
-                        timestamp: DateTime.Parse(priceJsonData.GetProperty("formated").GetString()),
-                        open: priceJsonData.GetProperty("o").GetDouble(),
-                        high: priceJsonData.GetProperty("h").GetDouble(),
-                        low: priceJsonData.GetProperty("l").GetDouble(),
-                        close: priceJsonData.GetProperty("c").GetDouble(),
-                        volume: priceJsonData.GetProperty("v").GetUInt64(),
-                        interval: interval
+                        Timestamp: DateTime.Parse(priceJsonData.GetProperty("formated").GetString()),
+                        Open: priceJsonData.GetProperty("o").GetDouble(),
+                        High: priceJsonData.GetProperty("h").GetDouble(),
+                        Low: priceJsonData.GetProperty("l").GetDouble(),
+                        Close: priceJsonData.GetProperty("c").GetDouble(),
+                        Volume: priceJsonData.GetProperty("v").GetUInt64()
                         );
                     prices.Add(price);
                 }
