@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Crunch.DataSources;
 using Crunch.Database;
@@ -15,7 +16,15 @@ namespace Crunch.UseCases
     
     internal class DownloadPricesUseCase : IUseCase
     {
-        PriceDataSource _priceDataSource = new PriceDataSource();
+        /// <summary>
+        /// Data source prices provider object
+        /// </summary>
+        PriceDataSource _source = new PriceDataSource();
+
+        /// <summary>
+        /// Prices repository object
+        /// </summary>
+        //PriceSetRepository _repo = new PriceSetRepository();
 
         /// <summary>
         /// Prices data starting date
@@ -51,20 +60,45 @@ namespace Crunch.UseCases
             // fetch data
             // save to database
             List<string> symbols = Helpers.GetSecuritySymbols();
-            //Helpers.TruncatePricesTable();
+            Helpers.TruncatePricesTable();
+
             foreach (string symbol in symbols)
             {
-                try
-                {
-                    PriceSet priceSet = _priceDataSource.DownloadData(symbol, _startDate, _endDate, _interval);
-                    Console.WriteLine(priceSet.Symbol);
-                }
-                catch (WebException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+                Console.WriteLine($"Creating task for {symbol}");
+                var thread = new Thread(() => ImportPrices(symbol));
+                Thread.Sleep(25);
+                thread.Start();
             }
         }
+
+        private void ImportPrices(string symbol)
+        {
+            PriceSet priceSet = null;
+
+            try
+            {
+                Console.WriteLine($"Requesting {symbol}");
+                priceSet = _source.DownloadData(symbol, _startDate, _endDate, _interval);
+                Console.WriteLine(priceSet.Prices[0].High);
+            }
+            catch (WebException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            if (priceSet != null)
+            {
+                Console.WriteLine($"SAving {symbol}");
+
+                //HACK: creating new instance of repo to make it thread safe
+                PriceSetRepository repo = new PriceSetRepository();
+                repo.Save(priceSet);
+            }
+            else Console.WriteLine($"{symbol} data is NULL");
+
+            Console.WriteLine($"{symbol} imported.");
+        }
+
 
         /// <summary>
         /// Checks if starting date is later than ending date.

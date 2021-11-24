@@ -94,7 +94,7 @@ namespace Crunch.DataSources.Fmp
                         High: priceJsonData.GetProperty("h").GetDouble(),
                         Low: priceJsonData.GetProperty("l").GetDouble(),
                         Close: priceJsonData.GetProperty("c").GetDouble(),
-                        Volume: priceJsonData.GetProperty("v").GetUInt64()
+                        Volume: priceJsonData.GetProperty("v").GetInt32()
                         );
                     prices.Add(price);
                 }

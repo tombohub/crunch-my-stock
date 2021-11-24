@@ -11,8 +11,20 @@ using Crunch.Domain.OhlcPrice;
 
 namespace Crunch.DataSources
 {
+    /// <summary>
+    /// Responsible for providing stock and etf prices from data source
+    /// </summary>
     internal class PriceDataSource
     {
+        /// <summary>
+        /// Downloads price set for given symbol and interval between start and end date. 
+        /// Start and end are inclusive.
+        /// </summary>
+        /// <param name="symbol">Ticker symbol</param>
+        /// <param name="start">Start date</param>
+        /// <param name="end">End date</param>
+        /// <param name="interval">Price interval</param>
+        /// <returns>Price set for the given symbol</returns>
         public PriceSet DownloadData(string symbol, DateOnly start, DateOnly end, PriceInterval interval)
         {
             HistoricalPricesRequester requester = new();

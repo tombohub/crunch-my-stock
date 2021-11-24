@@ -10,6 +10,9 @@ using Crunch.Domain.OhlcPrice;
 
 namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
 {
+    /// <summary>
+    /// Responsible for requesting prices data from Financial Modeling Prep data source
+    /// </summary>
     internal class HistoricalPricesRequester
     {
         /// <summary>
@@ -24,11 +27,14 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
         //TODO: repeated field, make it dry
         private readonly WebClient _webClient = new();
 
-        public HistoricalPricesRequester()
-        {
-            
-        }
-
+        /// <summary>
+        /// Make Api request from historical prices data
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="interval"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
         public PriceSet RequestData(string symbol, PriceInterval interval, DateOnly start, DateOnly end)
         {
             string queryString = CreateQueryString(symbol, interval, start, end);
@@ -36,10 +42,16 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
             string apiResponse = _webClient.DownloadString(apiUrl);
             HistoricalPricesJsonModel jsonPricesData = JsonSerializer.Deserialize<HistoricalPricesJsonModel>(apiResponse);
             PriceSet priceSet = MapJsonToPriceSet(symbol, interval, jsonPricesData);
-
             return priceSet;
         }
 
+        /// <summary>
+        /// Helper to map the json data model to the domain price set object
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="interval"></param>
+        /// <param name="jsonPricesData"></param>
+        /// <returns></returns>
         private PriceSet MapJsonToPriceSet(string symbol, PriceInterval interval, HistoricalPricesJsonModel jsonPricesData)
         {
             var prices = new List<Price>();
@@ -58,7 +70,7 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
             }
             var priceSet = new PriceSet(
                 Symbol: symbol,
-                interval: interval,
+                Interval: interval,
                 Prices: prices
                 );
 

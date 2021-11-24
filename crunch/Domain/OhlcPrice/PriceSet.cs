@@ -9,7 +9,7 @@ namespace Crunch.Domain.OhlcPrice
 {
     record PriceSet(
         string Symbol,
-        PriceInterval interval,
+        PriceInterval Interval,
         List<Price> Prices
         );
 
@@ -19,6 +19,6 @@ namespace Crunch.Domain.OhlcPrice
         double High,
         double Low,
         double Close,
-        ulong Volume
+        int Volume
     );
 }
