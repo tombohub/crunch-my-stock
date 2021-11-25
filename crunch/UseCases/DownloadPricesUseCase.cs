@@ -42,6 +42,12 @@ namespace Crunch.UseCases
         private readonly PriceInterval _interval;
 
         /// <summary>
+        /// Pause between data source API request in miliseconds. 
+        /// To avoid 'too many requests' error
+        /// </summary>
+        private readonly int _requestPause = 210;
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="start">Prices data starting date</param>
@@ -66,7 +72,7 @@ namespace Crunch.UseCases
             {
                 Console.WriteLine($"Creating task for {symbol}");
                 var thread = new Thread(() => ImportPrices(symbol));
-                Thread.Sleep(25);
+                Thread.Sleep(_requestPause);
                 thread.Start();
             }
         }
