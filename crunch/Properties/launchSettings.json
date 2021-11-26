@@ -5,7 +5,7 @@
     },
     "DownloadPrices": {
       "commandName": "Project",
-      "commandLineArgs": "download --start 2017-10-11 --end 2017-10-12 --interval 30m"
+      "commandLineArgs": "download --start 2021-11-11 --end 2021-11-24 --interval 1d"
     }
   }
 }

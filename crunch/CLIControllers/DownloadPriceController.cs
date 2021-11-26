@@ -50,7 +50,7 @@ namespace Crunch.CLIControllers
         /// </summary>
         public void RunUseCase()
         {
-            var useCase = new DownloadPricesUseCase(_start, _end, _interval);
+            var useCase = new ImportPricesUseCase(_start, _end, _interval);
             useCase.Execute();
         }
 

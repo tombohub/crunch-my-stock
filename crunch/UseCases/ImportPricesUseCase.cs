@@ -13,8 +13,10 @@ using System.Net;
 
 namespace Crunch.UseCases
 {
-    
-    internal class DownloadPricesUseCase : IUseCase
+    /// <summary>
+    /// Download prices for stocks and etfs from data source and save them to database
+    /// </summary>
+    internal class ImportPricesUseCase : IUseCase
     {
         /// <summary>
         /// Data source prices provider object
@@ -45,29 +47,29 @@ namespace Crunch.UseCases
         /// Pause between data source API request in miliseconds. 
         /// To avoid 'too many requests' error
         /// </summary>
-        private readonly int _requestPause = 210;
+        private readonly int _requestPause = 100;
 
         /// <summary>
-        /// 
+        /// Initialize Import prices use case object.
         /// </summary>
         /// <param name="start">Prices data starting date</param>
         /// <param name="end">Prices data ending date, inclusive</param>
         /// <param name="interval">Prices data interval between each price</param>
-        public DownloadPricesUseCase(DateOnly start, DateOnly end, PriceInterval interval)
+        public ImportPricesUseCase(DateOnly start, DateOnly end, PriceInterval interval)
         {
             _startDate = start;
             _endDate = end;
             _interval = interval;
             ValidateDates(start, end);
         }
+
+        /// <summary>
+        /// Execute Import prices use case
+        /// </summary>
         public void Execute()
         {
-            // call data source interface
-            // fetch data
-            // save to database
             List<string> symbols = Helpers.GetSecuritySymbols();
             Helpers.TruncatePricesTable();
-
             foreach (string symbol in symbols)
             {
                 Console.WriteLine($"Creating task for {symbol}");
@@ -77,6 +79,11 @@ namespace Crunch.UseCases
             }
         }
 
+        /// <summary>
+        /// Separate method encompassing the download and saving to database,
+        /// so it can be used for threading process
+        /// </summary>
+        /// <param name="symbol"></param>
         private void ImportPrices(string symbol)
         {
             PriceSet priceSet = null;
@@ -94,7 +101,7 @@ namespace Crunch.UseCases
 
             if (priceSet != null)
             {
-                Console.WriteLine($"SAving {symbol}");
+                Console.WriteLine($"Saving {symbol}");
 
                 //HACK: creating new instance of repo to make it thread safe
                 PriceSetRepository repo = new PriceSetRepository();
