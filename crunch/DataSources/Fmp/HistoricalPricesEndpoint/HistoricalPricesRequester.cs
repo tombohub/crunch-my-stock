@@ -35,9 +35,9 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public PriceSet RequestData(string symbol, PriceInterval interval, DateOnly start, DateOnly end)
+        public PriceSet RequestData(string symbol, TimeRange timeRange, PriceInterval interval)
         {
-            string queryString = CreateQueryString(symbol, interval, start, end);
+            string queryString = CreateQueryString(symbol, timeRange, interval);
             string apiUrl = UrlBuilder.BuildUrl(queryString);
             string apiResponse = _webClient.DownloadString(apiUrl);
             HistoricalPricesJsonModel jsonPricesData = JsonSerializer.Deserialize<HistoricalPricesJsonModel>(apiResponse);
@@ -86,7 +86,7 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
         /// <param name="end"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        private string CreateQueryString(string symbol, PriceInterval interval, DateOnly start, DateOnly end)
+        private string CreateQueryString(string symbol, TimeRange timeRange, PriceInterval interval)
         {
             string intervalQuery = interval switch
             {
@@ -95,12 +95,15 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
                 _ => throw new ArgumentException($"Interval {interval} doesn't Exist")
             };
 
+            string start = timeRange.Start.ToShortDateString();
+            string end = timeRange.End.ToShortDateString();
+
             // HACK: string templating
             string queryString = _queryTemplate
                 .Replace("{symbol}", symbol)
                 .Replace("{interval}", intervalQuery)
-                .Replace("{start}", start.ToString())
-                .Replace("{end}", end.ToString());
+                .Replace("{start}", start)
+                .Replace("{end}", end);
 
             return queryString;
         }

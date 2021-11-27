@@ -38,6 +38,8 @@ namespace Crunch.UseCases
         /// </summary>
         private readonly DateOnly _endDate;
 
+        private readonly TimeRange _timeRange;
+
         /// <summary>
         /// Price data interval
         /// </summary>
@@ -55,12 +57,10 @@ namespace Crunch.UseCases
         /// <param name="start">Prices data starting date</param>
         /// <param name="end">Prices data ending date, inclusive</param>
         /// <param name="interval">Prices data interval between each price</param>
-        public ImportPricesUseCase(DateOnly start, DateOnly end, PriceInterval interval)
+        public ImportPricesUseCase(TimeRange timeRange, PriceInterval interval)
         {
-            _startDate = start;
-            _endDate = end;
             _interval = interval;
-            ValidateDates(start, end);
+            _timeRange = timeRange;
         }
 
         /// <summary>
@@ -69,10 +69,9 @@ namespace Crunch.UseCases
         public void Execute()
         {
             List<string> symbols = Helpers.GetSecuritySymbols();
-            Helpers.TruncatePricesTable();
+            Helpers.TruncatePricesTable(_interval);
             foreach (string symbol in symbols)
             {
-                Console.WriteLine($"Creating task for {symbol}");
                 var thread = new Thread(() => ImportPrices(symbol));
                 Thread.Sleep(_requestPause);
                 thread.Start();
@@ -91,7 +90,7 @@ namespace Crunch.UseCases
             try
             {
                 Console.WriteLine($"Requesting {symbol}");
-                priceSet = _source.DownloadData(symbol, _startDate, _endDate, _interval);
+                priceSet = _source.DownloadData(symbol, _timeRange, _interval);
                 Console.WriteLine(priceSet.Prices[0].High);
             }
             catch (WebException ex)
@@ -105,7 +104,7 @@ namespace Crunch.UseCases
 
                 //HACK: creating new instance of repo to make it thread safe
                 PriceSetRepository repo = new PriceSetRepository();
-                repo.Save(priceSet);
+                repo.Save(priceSet, _interval);
             }
             else Console.WriteLine($"{symbol} data is NULL");
 
@@ -113,16 +112,6 @@ namespace Crunch.UseCases
         }
 
 
-        /// <summary>
-        /// Checks if starting date is later than ending date.
-        /// Throws exception if true.
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <exception cref="ArgumentException"></exception>
-        private void ValidateDates(DateOnly start, DateOnly end)
-        {
-            if (start > end) throw new ArgumentException("Starting date cannot be later than ending date");
-        }
+       
     }
 }

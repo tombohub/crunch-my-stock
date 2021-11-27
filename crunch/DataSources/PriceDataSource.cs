@@ -21,14 +21,14 @@ namespace Crunch.DataSources
         /// Start and end are inclusive.
         /// </summary>
         /// <param name="symbol">Ticker symbol</param>
-        /// <param name="start">Start date</param>
-        /// <param name="end">End date</param>
+        /// <param name="timeRange"></param>
         /// <param name="interval">Price interval</param>
+        /// 
         /// <returns>Price set for the given symbol</returns>
-        public PriceSet DownloadData(string symbol, DateOnly start, DateOnly end, PriceInterval interval)
+        public PriceSet DownloadData(string symbol, TimeRange timeRange, PriceInterval interval)
         {
             HistoricalPricesRequester requester = new();
-            PriceSet priceSet = requester.RequestData(symbol,interval, start, end);
+            PriceSet priceSet = requester.RequestData(symbol, timeRange, interval);
             return priceSet;
         }
     }

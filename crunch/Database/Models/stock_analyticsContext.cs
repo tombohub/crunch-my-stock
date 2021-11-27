@@ -22,7 +22,8 @@ namespace Crunch.Database.Models
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<GroupsDailyOverview> GroupsDailyOverviews { get; set; }
         public virtual DbSet<IntranightStat> IntranightStats { get; set; }
-        public virtual DbSet<Price> Prices { get; set; }
+        public virtual DbSet<PricesDaily> PricesDailies { get; set; }
+        public virtual DbSet<PricesIntraday> PricesIntradays { get; set; }
         public virtual DbSet<Security> Securities { get; set; }
         public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<WeeklyOvernightStat> WeeklyOvernightStats { get; set; }
@@ -32,7 +33,7 @@ namespace Crunch.Database.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySql("server=***REMOVED***;user=***REMOVED***;database***REMOVED***;port=3306;password=***REMOVED***", ServerVersion.Parse("8.0.26-mysql"));
+                optionsBuilder.UseMySql("server=***REMOVED***;user=***REMOVED***;database***REMOVED***;port=3306;password=***REMOVED***", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
             }
         }
 
@@ -218,9 +219,48 @@ namespace Crunch.Database.Models
                     .HasColumnName("symbol");
             });
 
-            modelBuilder.Entity<Price>(entity =>
+            modelBuilder.Entity<PricesDaily>(entity =>
             {
-                entity.ToTable("prices");
+                entity.ToTable("prices_daily");
+
+                entity.HasIndex(e => new { e.Timestamp, e.Symbol }, "datetime_symbol")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Close).HasColumnName("close");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_at")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.High).HasColumnName("high");
+
+                entity.Property(e => e.Interval)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasColumnName("interval");
+
+                entity.Property(e => e.Low).HasColumnName("low");
+
+                entity.Property(e => e.Open).HasColumnName("open");
+
+                entity.Property(e => e.Symbol)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("symbol");
+
+                entity.Property(e => e.Timestamp)
+                    .HasColumnType("date")
+                    .HasColumnName("timestamp");
+
+                entity.Property(e => e.Volume).HasColumnName("volume");
+            });
+
+            modelBuilder.Entity<PricesIntraday>(entity =>
+            {
+                entity.ToTable("prices_intraday");
 
                 entity.HasIndex(e => new { e.Timestamp, e.Symbol }, "datetime_symbol")
                     .IsUnique();

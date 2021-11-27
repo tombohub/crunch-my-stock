@@ -44,7 +44,7 @@ namespace Crunch.UseCases
                                                    options.End);
                         foreach (var price in prices)
                         {
-                                                       var dbPrice = new Price
+                                                       var dbPrice = new PricesIntraday
                             {
                                 Close = price.Close,
                                 High = price.High,
@@ -53,7 +53,7 @@ namespace Crunch.UseCases
                                 Timestamp = price.Timestamp,
                                 Volume = (long)price.Volume
                             };
-                            db.Prices.Add(dbPrice);
+                            db.PricesIntradays.Add(dbPrice);
                         }
                         db.SaveChanges();
 

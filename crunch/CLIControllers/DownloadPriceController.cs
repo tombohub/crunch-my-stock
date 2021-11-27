@@ -14,8 +14,7 @@ namespace Crunch.CLIControllers
     /// </summary>
     internal class DownloadPriceController : ICliController
     {
-        private readonly DateOnly _start;
-        private readonly DateOnly _end;
+        private readonly TimeRange _timeRange;
         private readonly PriceInterval _interval;
 
         /// <summary>
@@ -28,8 +27,7 @@ namespace Crunch.CLIControllers
         {
             try
             {
-                _start = DateOnly.Parse(start);
-                _end = DateOnly.Parse(end);
+                _timeRange = new TimeRange(DateTime.Parse(start), DateTime.Parse(end));
             }
             catch (Exception ex)
             {
@@ -50,7 +48,7 @@ namespace Crunch.CLIControllers
         /// </summary>
         public void RunUseCase()
         {
-            var useCase = new ImportPricesUseCase(_start, _end, _interval);
+            var useCase = new ImportPricesUseCase(_timeRange, _interval);
             useCase.Execute();
         }
 

@@ -3,7 +3,11 @@
     "Crunch": {
       "commandName": "Project"
     },
-    "DownloadPrices": {
+    "Download prices intraday": {
+      "commandName": "Project",
+      "commandLineArgs": "download --start 2021-11-11 --end 2021-11-24 --interval 30m"
+    },
+    "Download  prices day": {
       "commandName": "Project",
       "commandLineArgs": "download --start 2021-11-11 --end 2021-11-24 --interval 1d"
     }

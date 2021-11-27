@@ -7,6 +7,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Crunch.Domain.OhlcPrice
 {
+    /// <summary>
+    /// Represents set of Price related to single symbol
+    /// </summary>
+    /// <param name="Symbol"></param>
+    /// <param name="Interval"></param>
+    /// <param name="Prices"></param>
     record PriceSet(
         string Symbol,
         PriceInterval Interval,
