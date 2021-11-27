@@ -37,6 +37,11 @@ namespace Crunch.Database
             }
         }
 
+        /// <summary>
+        /// Saving daily prices to the database.
+        /// </summary>
+        /// <param name="priceSet"></param>
+        /// <param name="interval"></param>
         private void SaveDayPrices(PriceSet priceSet, string interval)
         {
             foreach (var price in priceSet.Prices)
@@ -58,6 +63,11 @@ namespace Crunch.Database
             _db.SaveChanges();
         }
 
+        /// <summary>
+        /// Saving intraday prices to the database
+        /// </summary>
+        /// <param name="priceSet"></param>
+        /// <param name="interval"></param>
         private void SaveIntradayPrices(PriceSet priceSet, string interval)
         {
             foreach (var price in priceSet.Prices)
