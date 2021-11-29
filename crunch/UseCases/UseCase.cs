@@ -19,58 +19,7 @@ namespace Crunch.UseCases
 {
     class UseCase
     {
-        #region weekly overnight
-        /// <summary>
-        /// Import prices needed for Weekly Overnight strategy into the database
-        /// </summary>
-        /// <param name="weekNum">calendar week number</param>
-        public static void ImportPricesForOvernight(int weekNum)
-        {
-            // initialize
-            var options = new PriceDownloadOptions(weekNum);
-            var fmp = new FmpDataSource();
-            List<Database.Models.Security> securities;
-
-            using (var db = new stock_analyticsContext())
-            {
-                securities = db.Securities.ToList();
-                foreach (var security in securities)
-                {
-                    Console.WriteLine($"Downloading {security.Symbol}");
-                    try
-                    {
-                        var prices = fmp.GetPrices(security.Symbol, options.Interval,
-                                                   options.Start,
-                                                   options.End);
-                        foreach (var price in prices)
-                        {
-                                                       var dbPrice = new PricesIntraday
-                            {
-                                Close = price.Close,
-                                High = price.High,
-                                Low = price.Low,
-                                Open = price.Open,
-                                Timestamp = price.Timestamp,
-                                Volume = (long)price.Volume
-                            };
-                            db.PricesIntradays.Add(dbPrice);
-                        }
-                        db.SaveChanges();
-
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.StackTrace);
-                    }
-
-                    Console.WriteLine($"Symbol {security.Symbol} saved");
-                }
-            }
-        }
-
-        #endregion weekly overnight
-
-
+        
         #region securities operations
         /// <summary>
         /// Update the list of securities in database
