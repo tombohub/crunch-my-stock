@@ -11,6 +11,10 @@
     "Download  prices day": {
       "commandName": "Project",
       "commandLineArgs": "download --start 2021-11-21 --end 2021-11-29 --interval 1d"
+    },
+    "Analyze": {
+      "commandName": "Project",
+      "commandLineArgs": "analyze"
     }
   }
 }

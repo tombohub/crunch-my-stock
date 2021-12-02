@@ -32,12 +32,24 @@ namespace Crunch
             public string Interval { get; set; }
         }
 
+        /// <summary>
+        /// Options to run analytics for the chosen strategy
+        /// </summary>
+        [Verb("analyze", HelpText = "run analytics for the chosen strategy")]
+        class AnalyzeOptions
+        {
+            [Option("strategy", HelpText = "Name of the strategy", Required = true)]
+            public string StrategyName { get; set; }
+
+            [Option("date", HelpText = "Date to analyze", Required = true)]
+            public DateOnly Date { get; set; }
+        }
         
 
         private static void Main(string[] args)
         {
 
-            Parser.Default.ParseArguments<TestOptions, DownloadOptions>(args)
+            Parser.Default.ParseArguments<TestOptions, DownloadOptions, AnalyzeOptions>(args)
                .WithParsed<TestOptions>(o =>
                {
                    var useCase = new RunOvernightAnalyticsUseCase();
@@ -47,6 +59,12 @@ namespace Crunch
                {
                    var controller = new DownloadPriceController(o.Start, o.End, o.Interval);
                    controller.RunUseCase();
+               })
+               .WithParsed<AnalyzeOptions>(o =>
+               {
+                   //TODO: implement
+                   Console.WriteLine("This runs the command 'analyze'");
+                   Console.WriteLine($"Date is {o.Date}");
                });
         }
     }
