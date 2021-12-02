@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-
-#nullable disable
 
 namespace Crunch.Database.Models
 {
@@ -39,8 +38,8 @@ namespace Crunch.Database.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasCharSet("utf8mb4")
-                .UseCollation("utf8mb4_0900_ai_ci");
+            modelBuilder.UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4");
 
             modelBuilder.Entity<Crametorium>(entity =>
             {
@@ -64,17 +63,13 @@ namespace Crunch.Database.Models
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                entity.Property(e => e.Date)
-                    .HasColumnType("date")
-                    .HasColumnName("date");
+                entity.Property(e => e.Date).HasColumnName("date");
 
                 entity.Property(e => e.High).HasColumnName("high");
 
                 entity.Property(e => e.Open).HasColumnName("open");
 
-                entity.Property(e => e.PickDate)
-                    .HasColumnType("date")
-                    .HasColumnName("pick_date");
+                entity.Property(e => e.PickDate).HasColumnName("pick_date");
 
                 entity.Property(e => e.StartPrice).HasColumnName("start_price");
 
@@ -100,9 +95,7 @@ namespace Crunch.Database.Models
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                entity.Property(e => e.Date)
-                    .HasColumnType("date")
-                    .HasColumnName("date");
+                entity.Property(e => e.Date).HasColumnName("date");
 
                 entity.Property(e => e.GapPct).HasColumnName("gap_pct");
 
@@ -153,9 +146,7 @@ namespace Crunch.Database.Models
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                entity.Property(e => e.Date)
-                    .HasColumnType("date")
-                    .HasColumnName("date");
+                entity.Property(e => e.Date).HasColumnName("date");
 
                 entity.Property(e => e.FwdPe).HasColumnName("FwdPE");
 
@@ -187,9 +178,7 @@ namespace Crunch.Database.Models
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                entity.Property(e => e.Date)
-                    .HasColumnType("date")
-                    .HasColumnName("date");
+                entity.Property(e => e.Date).HasColumnName("date");
 
                 entity.Property(e => e.DayVolume).HasColumnName("day_volume");
 
@@ -251,9 +240,7 @@ namespace Crunch.Database.Models
                     .HasMaxLength(50)
                     .HasColumnName("symbol");
 
-                entity.Property(e => e.Timestamp)
-                    .HasColumnType("date")
-                    .HasColumnName("timestamp");
+                entity.Property(e => e.Timestamp).HasColumnName("timestamp");
 
                 entity.Property(e => e.Volume).HasColumnName("volume");
             });
@@ -358,9 +345,7 @@ namespace Crunch.Database.Models
 
                 entity.Property(e => e.DailyStd).HasColumnName("daily_std");
 
-                entity.Property(e => e.End)
-                    .HasColumnType("date")
-                    .HasColumnName("end");
+                entity.Property(e => e.End).HasColumnName("end");
 
                 entity.Property(e => e.EndingBalance).HasColumnName("ending_balance");
 
@@ -413,9 +398,7 @@ namespace Crunch.Database.Models
 
                 entity.Property(e => e.SortinoRatio).HasColumnName("sortino_ratio");
 
-                entity.Property(e => e.Start)
-                    .HasColumnType("date")
-                    .HasColumnName("start");
+                entity.Property(e => e.Start).HasColumnName("start");
 
                 entity.Property(e => e.StartPrice).HasColumnName("start_price");
 

@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Crunch": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "test"
     },
     "Download prices intraday": {
       "commandName": "Project",
@@ -9,7 +10,7 @@
     },
     "Download  prices day": {
       "commandName": "Project",
-      "commandLineArgs": "download --start 2021-11-11 --end 2021-11-24 --interval 1d"
+      "commandLineArgs": "download --start 2021-11-21 --end 2021-11-29 --interval 1d"
     }
   }
 }

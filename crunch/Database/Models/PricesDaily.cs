@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Crunch.Database.Models
 {
     public partial class PricesDaily
     {
         public long Id { get; set; }
-        public DateTime Timestamp { get; set; }
+        public DateOnly Timestamp { get; set; }
         public string Symbol { get; set; }
         public double Open { get; set; }
         public double High { get; set; }

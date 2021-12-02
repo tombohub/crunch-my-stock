@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Crunch.DataSources;
 using Crunch.Database;
 using Crunch.Domain;
-using Crunch.Domain.OhlcPrice;
 using System.Net;
 
 namespace Crunch.UseCases
@@ -85,7 +84,7 @@ namespace Crunch.UseCases
         /// <param name="symbol"></param>
         private void ImportPrices(string symbol)
         {
-            PriceSet priceSet = null;
+            DailyPriceSet priceSet = null;
 
             try
             {
@@ -103,7 +102,7 @@ namespace Crunch.UseCases
                 Console.WriteLine($"Saving {symbol}");
 
                 //HACK: creating new instance of repo to make it thread safe
-                PriceSetRepository repo = new PriceSetRepository();
+                DailyPriceSetRepository repo = new DailyPriceSetRepository();
                 repo.Save(priceSet, _interval);
             }
             else Console.WriteLine($"{symbol} data is NULL");

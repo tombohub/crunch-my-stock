@@ -13,10 +13,10 @@ namespace Crunch
 {
     class Program
     {
-        class StrategyOptions
+        [Verb("test")]
+        class TestOptions
         {
-            [Option("strategy", Required =true, HelpText ="Name of the strategy")]
-            public string StrategyName { get; set; }
+            
         }
 
         [Verb("download", HelpText ="Download all securities prices data into the database")]
@@ -37,10 +37,10 @@ namespace Crunch
         private static void Main(string[] args)
         {
 
-            Parser.Default.ParseArguments<StrategyOptions, DownloadOptions>(args)
-               .WithParsed<StrategyOptions>(o =>
+            Parser.Default.ParseArguments<TestOptions, DownloadOptions>(args)
+               .WithParsed<TestOptions>(o =>
                {
-                   var useCase = new PrintStrategyNameUseCase(o.StrategyName);
+                   var useCase = new RunOvernightAnalyticsUseCase();
                    useCase.Execute();
                })
                .WithParsed<DownloadOptions>(o =>

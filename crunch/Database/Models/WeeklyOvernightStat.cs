@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Crunch.Database.Models
 {
     public partial class WeeklyOvernightStat
@@ -13,8 +11,8 @@ namespace Crunch.Database.Models
         public string Strategy { get; set; }
         public double StartPrice { get; set; }
         public long WeekNum { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        public DateOnly Start { get; set; }
+        public DateOnly End { get; set; }
         public long BeginningBalance { get; set; }
         public double EndingBalance { get; set; }
         public double TotalNetProfit { get; set; }

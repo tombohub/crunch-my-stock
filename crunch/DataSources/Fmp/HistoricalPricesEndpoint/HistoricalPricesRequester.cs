@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Text.Json;
 using Crunch.Domain;
-using Crunch.Domain.OhlcPrice;
 
 namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
 {
@@ -35,13 +34,13 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public PriceSet RequestData(string symbol, TimeRange timeRange, PriceInterval interval)
+        public DailyPriceSet RequestData(string symbol, TimeRange timeRange, PriceInterval interval)
         {
             string queryString = CreateQueryString(symbol, timeRange, interval);
             string apiUrl = UrlBuilder.BuildUrl(queryString);
             string apiResponse = _webClient.DownloadString(apiUrl);
             HistoricalPricesJsonModel jsonPricesData = JsonSerializer.Deserialize<HistoricalPricesJsonModel>(apiResponse);
-            PriceSet priceSet = MapJsonToPriceSet(symbol, interval, jsonPricesData);
+            DailyPriceSet priceSet = MapJsonToPriceSet(symbol, interval, jsonPricesData);
             return priceSet;
         }
 
@@ -52,13 +51,13 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
         /// <param name="interval"></param>
         /// <param name="jsonPricesData"></param>
         /// <returns></returns>
-        private PriceSet MapJsonToPriceSet(string symbol, PriceInterval interval, HistoricalPricesJsonModel jsonPricesData)
+        private DailyPriceSet MapJsonToPriceSet(string symbol, PriceInterval interval, HistoricalPricesJsonModel jsonPricesData)
         {
-            var prices = new List<Price>();
+            var prices = new List<PriceDaily>();
             foreach (var jsonPrice in jsonPricesData.Results)
             {
-                DateTime timestamp = DateTime.Parse(jsonPrice.Timestamp);
-                var price = new Price(
+                DateOnly timestamp = DateOnly.Parse(jsonPrice.Timestamp);
+                var price = new PriceDaily(
                     Timestamp: timestamp,
                     Open: jsonPrice.Open,
                     High: jsonPrice.High,
@@ -68,7 +67,7 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
                     );
                 prices.Add(price);
             }
-            var priceSet = new PriceSet(
+            var priceSet = new DailyPriceSet(
                 Symbol: symbol,
                 Interval: interval,
                 Prices: prices

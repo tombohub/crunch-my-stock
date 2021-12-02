@@ -42,11 +42,32 @@ namespace Crunch.Database
             }
         }
 
+        /// <summary>
+        /// Get list of all symbols from database
+        /// </summary>
+        /// <returns></returns>
         public static List<string> GetSecuritySymbols()
         {
             var db = new stock_analyticsContext();
             var symbols = db.Securities.Select(s => s.Symbol).ToList();
             return symbols;
+        }
+
+        /// <summary>
+        /// Get string associated with PriceInterval Enum to use in database
+        /// </summary>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static string PriceIntervalToString(PriceInterval interval)
+        {
+            string intervalAsString = interval switch
+            {
+                PriceInterval.OneDay => "1d",
+                PriceInterval.ThirtyMinutes => "30m",
+                _ => throw new ArgumentException("Interval is not supported", nameof(interval))
+            };
+            return intervalAsString;
         }
     }
 }

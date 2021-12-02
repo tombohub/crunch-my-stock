@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Crunch.DataSources.Fmp.HistoricalPricesEndpoint;
 using Crunch.UseCases;
-using Crunch.Domain.OhlcPrice;
+using Crunch.Domain;
 
 namespace Crunch.DataSources
 {
@@ -25,10 +25,10 @@ namespace Crunch.DataSources
         /// <param name="interval">Price interval</param>
         /// 
         /// <returns>Price set for the given symbol</returns>
-        public PriceSet DownloadData(string symbol, TimeRange timeRange, PriceInterval interval)
+        public DailyPriceSet DownloadData(string symbol, TimeRange timeRange, PriceInterval interval)
         {
             HistoricalPricesRequester requester = new();
-            PriceSet priceSet = requester.RequestData(symbol, timeRange, interval);
+            DailyPriceSet priceSet = requester.RequestData(symbol, timeRange, interval);
             return priceSet;
         }
     }

@@ -5,21 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace Crunch.Domain.OhlcPrice
+namespace Crunch.Domain
 {
     /// <summary>
-    /// Represents set of Price related to single symbol
+    /// Represents set of intraday prices related to single symbol
     /// </summary>
     /// <param name="Symbol"></param>
     /// <param name="Interval"></param>
     /// <param name="Prices"></param>
-    record PriceSet(
+    record IntradayPriceSet(
         string Symbol,
         PriceInterval Interval,
-        List<Price> Prices
+        List<PriceIntraday> Prices
         );
 
-    record Price(
+    record PriceIntraday(
         DateTime Timestamp,
         double Open,
         double High,

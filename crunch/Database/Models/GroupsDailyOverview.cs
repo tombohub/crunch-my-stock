@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace Crunch.Database.Models
 {
     public partial class GroupsDailyOverview
     {
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
         public string Group { get; set; }
         public string Name { get; set; }
         public long Stocks { get; set; }

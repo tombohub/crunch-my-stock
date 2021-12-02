@@ -1,5 +1,5 @@
 ﻿using Crunch.Domain;
-using Crunch.Domain.OhlcPrice;
+using Crunch.Domain;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -70,54 +70,6 @@ namespace Crunch.DataSources.Fmp
         {
             string result = _client.DownloadString(url);
             return result;
-        }
-
-        /// <summary>
-        /// Maps the JSON string prices data to Price entity object
-        /// </summary>
-        /// <param name="json">Prices data in JSON format</param>
-        /// <param name="interval">Time interval of price</param>
-        /// <returns>List of Price objects</returns>
-        private List<Price> JsonToPriceObject(string json, PriceInterval interval)
-        {
-            using (var document = JsonDocument.Parse(json))
-            {
-                var root = document.RootElement;
-                var symbol = root.GetProperty("symbol").GetString();
-                var pricesJsonData = root.GetProperty("results");
-                var prices = new List<Price>();
-                foreach (var priceJsonData in pricesJsonData.EnumerateArray())
-                {
-                    var price = new Price(
-                        Timestamp: DateTime.Parse(priceJsonData.GetProperty("formated").GetString()),
-                        Open: priceJsonData.GetProperty("o").GetDouble(),
-                        High: priceJsonData.GetProperty("h").GetDouble(),
-                        Low: priceJsonData.GetProperty("l").GetDouble(),
-                        Close: priceJsonData.GetProperty("c").GetDouble(),
-                        Volume: priceJsonData.GetProperty("v").GetInt32()
-                        );
-                    prices.Add(price);
-                }
-
-                return prices;
-            }
-
-        }
-
-        /// <summary>
-        /// Get historical prices data from start till now
-        /// </summary>
-        /// <param name="symbol">security symbol</param>
-        /// <param name="interval">price time interval</param>
-        /// <param name="start">start date to get prices from</param>
-        /// <param name="end">end date to get prices to</param>
-        /// <returns></returns>
-        public List<Price> GetPrices(string symbol, PriceInterval interval, DateTime start, DateTime end)
-        {
-            string url = BuildPricesUrl(symbol, interval, start, end);
-            string json = RequestPricesData(url);
-            var prices = JsonToPriceObject(json, interval);
-            return prices;
         }
 
     }
