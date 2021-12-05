@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-
-#nullable disable
 
 namespace Crunch.Database.Models
 {
@@ -22,7 +21,8 @@ namespace Crunch.Database.Models
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<GroupsDailyOverview> GroupsDailyOverviews { get; set; }
         public virtual DbSet<IntranightStat> IntranightStats { get; set; }
-        public virtual DbSet<Price> Prices { get; set; }
+        public virtual DbSet<PricesDaily> PricesDailies { get; set; }
+        public virtual DbSet<PricesIntraday> PricesIntradays { get; set; }
         public virtual DbSet<Security> Securities { get; set; }
         public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<WeeklyOvernightStat> WeeklyOvernightStats { get; set; }
@@ -32,14 +32,14 @@ namespace Crunch.Database.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySql("server=***REMOVED***;user=***REMOVED***;database***REMOVED***;port=3306;password=***REMOVED***", ServerVersion.Parse("8.0.26-mysql"));
+                optionsBuilder.UseMySql("server=***REMOVED***;user=***REMOVED***;database***REMOVED***;port=3306;password=***REMOVED***", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasCharSet("utf8mb4")
-                .UseCollation("utf8mb4_0900_ai_ci");
+            modelBuilder.UseCollation("utf8mb4_0900_ai_ci")
+                .HasCharSet("utf8mb4");
 
             modelBuilder.Entity<Crametorium>(entity =>
             {
@@ -63,17 +63,13 @@ namespace Crunch.Database.Models
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                entity.Property(e => e.Date)
-                    .HasColumnType("date")
-                    .HasColumnName("date");
+                entity.Property(e => e.Date).HasColumnName("date");
 
                 entity.Property(e => e.High).HasColumnName("high");
 
                 entity.Property(e => e.Open).HasColumnName("open");
 
-                entity.Property(e => e.PickDate)
-                    .HasColumnType("date")
-                    .HasColumnName("pick_date");
+                entity.Property(e => e.PickDate).HasColumnName("pick_date");
 
                 entity.Property(e => e.StartPrice).HasColumnName("start_price");
 
@@ -99,9 +95,7 @@ namespace Crunch.Database.Models
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                entity.Property(e => e.Date)
-                    .HasColumnType("date")
-                    .HasColumnName("date");
+                entity.Property(e => e.Date).HasColumnName("date");
 
                 entity.Property(e => e.GapPct).HasColumnName("gap_pct");
 
@@ -152,9 +146,7 @@ namespace Crunch.Database.Models
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                entity.Property(e => e.Date)
-                    .HasColumnType("date")
-                    .HasColumnName("date");
+                entity.Property(e => e.Date).HasColumnName("date");
 
                 entity.Property(e => e.FwdPe).HasColumnName("FwdPE");
 
@@ -186,9 +178,7 @@ namespace Crunch.Database.Models
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                entity.Property(e => e.Date)
-                    .HasColumnType("date")
-                    .HasColumnName("date");
+                entity.Property(e => e.Date).HasColumnName("date");
 
                 entity.Property(e => e.DayVolume).HasColumnName("day_volume");
 
@@ -218,9 +208,46 @@ namespace Crunch.Database.Models
                     .HasColumnName("symbol");
             });
 
-            modelBuilder.Entity<Price>(entity =>
+            modelBuilder.Entity<PricesDaily>(entity =>
             {
-                entity.ToTable("prices");
+                entity.ToTable("prices_daily");
+
+                entity.HasIndex(e => new { e.Timestamp, e.Symbol }, "datetime_symbol")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Close).HasColumnName("close");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_at")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.High).HasColumnName("high");
+
+                entity.Property(e => e.Interval)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasColumnName("interval");
+
+                entity.Property(e => e.Low).HasColumnName("low");
+
+                entity.Property(e => e.Open).HasColumnName("open");
+
+                entity.Property(e => e.Symbol)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("symbol");
+
+                entity.Property(e => e.Timestamp).HasColumnName("timestamp");
+
+                entity.Property(e => e.Volume).HasColumnName("volume");
+            });
+
+            modelBuilder.Entity<PricesIntraday>(entity =>
+            {
+                entity.ToTable("prices_intraday");
 
                 entity.HasIndex(e => new { e.Timestamp, e.Symbol }, "datetime_symbol")
                     .IsUnique();
@@ -318,9 +345,7 @@ namespace Crunch.Database.Models
 
                 entity.Property(e => e.DailyStd).HasColumnName("daily_std");
 
-                entity.Property(e => e.End)
-                    .HasColumnType("date")
-                    .HasColumnName("end");
+                entity.Property(e => e.End).HasColumnName("end");
 
                 entity.Property(e => e.EndingBalance).HasColumnName("ending_balance");
 
@@ -373,9 +398,7 @@ namespace Crunch.Database.Models
 
                 entity.Property(e => e.SortinoRatio).HasColumnName("sortino_ratio");
 
-                entity.Property(e => e.Start)
-                    .HasColumnType("date")
-                    .HasColumnName("start");
+                entity.Property(e => e.Start).HasColumnName("start");
 
                 entity.Property(e => e.StartPrice).HasColumnName("start_price");
 

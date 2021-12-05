@@ -49,7 +49,7 @@ namespace Crunch.Strategies.Overnight.Plots
             
             int areaWidth = endX - startX;
             int areaHeight = endY - startY;
-
+            
             return new Rectangle(startX, startY, areaWidth, areaHeight);
         }
 

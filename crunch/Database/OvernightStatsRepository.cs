@@ -9,6 +9,9 @@ using Crunch.Database.Models;
 
 namespace Crunch.Database
 {
+    /// <summary>
+    /// Repository for Overnight Stats entity
+    /// </summary>
     public class OvernightStatsRepository
     {
         /// <summary>
@@ -19,9 +22,26 @@ namespace Crunch.Database
         public OvernightStats GetOvernightStats(int weekNum)
         {
             var db = new stock_analyticsContext();
-            List<WeeklyOvernightStat> statsDb = db.WeeklyOvernightStats
+
+            List<WeeklyOvernightStat> overnightStats = db.WeeklyOvernightStats
                 .Where(s => s.WeekNum == weekNum)
+                .Where(s => s.Strategy == "overnight")
                 .ToList();
+            List<WeeklyOvernightStat> benchmarkStats = db.WeeklyOvernightStats
+                .Where(s => s.WeekNum == weekNum)
+                .Where(s => s.Strategy == "benchmark")
+                .ToList();
+            var statsDb = overnightStats
+                .Join(benchmarkStats, overnight => overnight.Symbol, benchmark => benchmark.Symbol,
+                    (overnight, benchmark) => new
+                    {
+                        Symbol = overnight.Symbol,
+                        SecurityType = overnight.SecurityType,
+                        OvernightRoi = overnight.ReturnOnInitialCapital,
+                        BenchmarkRoi = benchmark.ReturnOnInitialCapital
+                    })
+                .ToList();
+
             db.Dispose();
 
             var stats = new List<SingleSymbolStats>();
@@ -33,24 +53,18 @@ namespace Crunch.Database
                     "etfs" => SecurityType.Etf,
                     _ => throw new NotImplementedException()
                 };
-                Strategy strategy = statDb.Strategy switch
-                {   // hack: values are from database
-                    "overnight" => Strategy.Overnight,
-                    "benchmark" => Strategy.Benchmark,
-                    _ => throw new NotImplementedException()
-                };
-                
+                                
                 stats.Add(new SingleSymbolStats
-                {
-                    Roi = statDb.ReturnOnInitialCapital,
-                    Symbol = statDb.Symbol,
-                    SecurityType = securityType,
-                    Strategy = strategy
-                });
+                (
+                    Symbol: statDb.Symbol,
+                    SecurityType: securityType,
+                    OvernightRoi: statDb.OvernightRoi,
+                    BenchmarkRoi: statDb.BenchmarkRoi
+                ));
             }
-            var overnightStats = new OvernightStats(stats);
+            var overnightStatsEntity = new OvernightStats(stats);
 
-            return overnightStats;
+            return overnightStatsEntity;
         }
     }
 }

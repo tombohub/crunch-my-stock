@@ -1,4 +1,4 @@
-﻿using Crunch.Domain.OhlcPrice;
+﻿using Crunch.Domain;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -28,13 +28,6 @@ namespace Crunch.Database
                 Console.WriteLine(rdr[0] + "-----" + rdr[1]);
             }
             rdr.Close();
-            conn.Close();
-        }
-
-        public void SavePrices(List<Price> prices)
-        {
-            string sql = "insert into ";
-            var cmd = new MySqlCommand(sql, conn);
             conn.Close();
         }
 

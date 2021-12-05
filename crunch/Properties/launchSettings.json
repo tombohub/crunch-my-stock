@@ -2,7 +2,19 @@
   "profiles": {
     "Crunch": {
       "commandName": "Project",
-      "commandLineArgs": "plot -w 34 -n all -t Stock"
+      "commandLineArgs": "Add --help"
+    },
+    "Download prices intraday": {
+      "commandName": "Project",
+      "commandLineArgs": "download --start 2021-11-11 --end 2021-11-24 --interval 30m"
+    },
+    "Download  prices day": {
+      "commandName": "Project",
+      "commandLineArgs": "download --start 2021-11-21 --end 2021-11-29 --interval 1d"
+    },
+    "Analyze": {
+      "commandName": "Project",
+      "commandLineArgs": "analyze --strategy dadssds --date 2021-11-11"
     }
   }
 }

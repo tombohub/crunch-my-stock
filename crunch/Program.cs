@@ -4,81 +4,101 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Data.Analysis;
 using Crunch.UseCases;
 using CommandLine;
-using ScottPlot;
-using Crunch.Strategies.Overnight;
-using Crunch.DataSources.Fmp;
+using CommandLine.Text;
+using CommandDotNet;
 using Crunch.Domain;
+using Crunch.Strategies;
+using Crunch.Strategies.Overnight.CliControllers;
+using Crunch.CLIControllers;
 
 namespace Crunch
 {
     class Program
     {
-        [Verb("import", HelpText = "Import prices and other data")]
-        class ImportOptions
-        {
-            [Option("overnight", HelpText = "Import prices for weekly overnight strategy", SetName = "overnight")]
-            public bool IsOvernight { get; set; }
+        //[Verb("test")]
+        //class TestOptions
+        //{
+            
+        //}
 
-            [Option('w', "week", HelpText = "Week number", SetName = "overnight")]
-            public int WeekNum { get; set; }
+        //[Verb("download", HelpText ="Download all securities prices data into the database")]
+        //class DownloadOptions
+        //{
+        //    [Option("start", Required =true, HelpText ="Prices starting date, format: yyyy-mm-dd")]
+        //    public string Start { get; set; }
+
+        //    [Option("end", Required =true,HelpText ="Prices ending date, inclusive, format: yyyy-mm-dd")]
+        //    public string End { get; set; }
+
+        //    [Option("interval", Required = true, HelpText = "Prices interval, choices: [30m, 1d]")]
+        //    public string Interval { get; set; }
+        //}
+
+        ///// <summary>
+        ///// Options to run analytics for the chosen strategy
+        ///// </summary>
+        //[Verb("analyze", HelpText = "run analytics for the chosen strategy")]
+        //class AnalyzeOptions
+        //{
+        //    [Option("strategy", HelpText = "Name of the strategy", Required = true)]
+        //    public Strategy StrategyName { get; set; }
+
+
+        //    [Option("date", HelpText = "Date to analyze", Required = true)]
+        //    public string Date { get; set; }
+        //}
+
+        [Command(Description ="Perform calculations")]
+        public class Calculator
+        {
+            [Command(Description = "Adds two numbers")]
+            public void Add(int value1, int value2)
+            {
+                Console.WriteLine($"Answer:  {value1 + value2}");
+            }
+
+            [Command(Description = "Subtracts two numbers")]
+            public void Subtract(int value1, int value2)
+            {
+                Console.WriteLine($"Answer:  {value1 - value2}");
+            }
         }
 
-        [Verb("report", HelpText = "Calculate reports")]
-        class ReportOptions
-        {
-            [Option('n', "name", HelpText = "Name of the report")]
-            public string Name { get; set; }
-
-            [Option('w', "week", HelpText = "Calendar week number", Required = true)]
-            public int WeekNum { get; set; }
-        }
-
-        [Verb("plot", HelpText = "Plot reports")]
-        class PlotOptions
-        {
-            [Option('n', "name", HelpText = "Name of the plot", Required = true)]
-            public string Name { get; set; }
-
-            [Option('w', "week", HelpText = "Calendar week number", Required = true)]
-            public int WeekNum { get; set; }
-
-            [Option('t', "type", HelpText = "Security type", Required =true)]
-            public SecurityType SecurityType { get; set; }
-        }
-
-        [Verb("update", HelpText = "Update the list of securities in database")]
-        class UpdateOptions { }
-        
 
         private static void Main(string[] args)
         {
+            new AppRunner<Calculator>().Run(args);
+            //var parser = new Parser(with =>
+            //{
+            //    with.CaseInsensitiveEnumValues = true;
+            //});
 
-            Parser.Default.ParseArguments<UpdateOptions, ImportOptions, PlotOptions, ReportOptions>(args)
-               .WithParsed<UpdateOptions>(options =>
-               {
-                   UseCase.UpdateSecurities();
-               })
-              .WithParsed<ImportOptions>(options =>
-               {
-                   UseCase.ImportPricesForOvernight(options.WeekNum);
-               })
-              .WithParsed<PlotOptions>(options =>
-              {
-                  if (options.Name == "winners") UseCase.PlotWinnersLosersUseCase(options.WeekNum, options.SecurityType);
-                  if (options.Name == "top10") UseCase.PlotTop10UseCase(options.WeekNum, options.SecurityType);
-                  if (options.Name == "bottom10") UseCase.PlotBottom10UseCase(options.WeekNum, options.SecurityType);
-                  if (options.Name == "spyroi") UseCase.DrawSpyBenchmarkRoiUseCase(options.WeekNum);
-                  if (options.Name == "spyovernightroi") UseCase.DrawSpyOvernightRoiUseCase(options.WeekNum);
-                  if (options.Name == "averageroi") UseCase.DrawAverageOvernightRoiUseCase(options.WeekNum, options.SecurityType);
-                  if (options.Name == "benchmarkroi") UseCase.DrawAverageBenchmarkRoiUseCase(options.WeekNum);
-                  if (options.Name == "all") UseCase.PlotOvernightUseCase(options.WeekNum, options.SecurityType);
+            //var result = parser.ParseArguments<TestOptions, DownloadOptions, AnalyzeOptions>(args);
 
-              });
+            //result.WithParsed<TestOptions>(o =>
+            //{
+            //    var useCase = new RunOvernightAnalyticsUseCase();
+            //    useCase.Execute();
+            //})
+            //.WithParsed<DownloadOptions>(o =>
+            //{
+            //    var controller = new DownloadPriceController(o.Start, o.End, o.Interval);
+            //    controller.RunUseCase();
+            //})
+            //.WithParsed<AnalyzeOptions>(o =>
+            //{
+            //    //TODO: implement
+            //    Console.WriteLine($"This is command line parser for the command 'analyze' {o.StrategyName}");
+            //    Console.WriteLine($"Date is {o.Date}");
+            //    Strategy strategy;
+
+            //    var controller = CliControllersFactory.CreateCliController(o.StrategyName);
+            //    controller.RunAnalytics(o.Date);
+
+            //});
         }
-
     }
 }
 
