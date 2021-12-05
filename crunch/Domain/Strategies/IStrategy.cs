@@ -20,7 +20,7 @@ namespace Crunch.Domain.Strategies
         /// <summary>
         /// Print strategy name to the console
         /// </summary>
-        void PrintStrategyName();
+        void RunAnalytics(DateOnly date);
 
     }
 }

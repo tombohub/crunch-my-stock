@@ -15,9 +15,10 @@ namespace Crunch.Strategies.Overnight
 
         /// <inheritdoc/>
         public string Name { get; } = "Overnight Strategy";
-        public void PrintStrategyName()
+        public void RunAnalytics(DateOnly date)
         {
-            Console.WriteLine(Name);
+            Console.WriteLine($"Running analytics for overnight strategy for date {date}");
+            
         }
     }
 }

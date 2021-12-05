@@ -11,7 +11,7 @@ namespace Crunch.Strategies.Crametorium
     {
         public string Name { get; } = "Crametorium Strategy";
 
-        public void PrintStrategyName()
+        public void RunAnalytics(DateOnly date)
         {
             Console.WriteLine(Name);
         }

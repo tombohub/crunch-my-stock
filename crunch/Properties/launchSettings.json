@@ -2,7 +2,7 @@
   "profiles": {
     "Crunch": {
       "commandName": "Project",
-      "commandLineArgs": "test"
+      "commandLineArgs": "Add --help"
     },
     "Download prices intraday": {
       "commandName": "Project",
@@ -14,7 +14,7 @@
     },
     "Analyze": {
       "commandName": "Project",
-      "commandLineArgs": "analyze"
+      "commandLineArgs": "analyze --strategy dadssds --date 2021-11-11"
     }
   }
 }
