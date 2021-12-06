@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Argu" Version="6.1.1" />
     <PackageReference Include="ScottPlot" Version="4.1.27" />
   </ItemGroup>
 

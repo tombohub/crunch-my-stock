@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crunch", "crunch\Crunch.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrunchTests", "Tests\CrunchTests.csproj", "{AF015D11-5DF0-4466-9E5E-0A5D8C2C7D90}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CrunchFsharp", "CrunchFsharp\CrunchFsharp.fsproj", "{B228D6DA-1A09-4C20-9740-065C263C9665}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,18 +41,6 @@ Global
 		{AF015D11-5DF0-4466-9E5E-0A5D8C2C7D90}.Release|x64.Build.0 = Release|Any CPU
 		{AF015D11-5DF0-4466-9E5E-0A5D8C2C7D90}.Release|x86.ActiveCfg = Release|Any CPU
 		{AF015D11-5DF0-4466-9E5E-0A5D8C2C7D90}.Release|x86.Build.0 = Release|Any CPU
-		{B228D6DA-1A09-4C20-9740-065C263C9665}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B228D6DA-1A09-4C20-9740-065C263C9665}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B228D6DA-1A09-4C20-9740-065C263C9665}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B228D6DA-1A09-4C20-9740-065C263C9665}.Debug|x64.Build.0 = Debug|Any CPU
-		{B228D6DA-1A09-4C20-9740-065C263C9665}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B228D6DA-1A09-4C20-9740-065C263C9665}.Debug|x86.Build.0 = Debug|Any CPU
-		{B228D6DA-1A09-4C20-9740-065C263C9665}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B228D6DA-1A09-4C20-9740-065C263C9665}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B228D6DA-1A09-4C20-9740-065C263C9665}.Release|x64.ActiveCfg = Release|Any CPU
-		{B228D6DA-1A09-4C20-9740-065C263C9665}.Release|x64.Build.0 = Release|Any CPU
-		{B228D6DA-1A09-4C20-9740-065C263C9665}.Release|x86.ActiveCfg = Release|Any CPU
-		{B228D6DA-1A09-4C20-9740-065C263C9665}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
