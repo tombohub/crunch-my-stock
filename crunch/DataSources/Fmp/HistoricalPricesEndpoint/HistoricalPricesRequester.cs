@@ -56,7 +56,7 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
             var prices = new List<PriceDaily>();
             foreach (var jsonPrice in jsonPricesData.Results)
             {
-                DateOnly timestamp = DateOnly.Parse(jsonPrice.Timestamp);
+                DateOnly timestamp = DateOnly.ParseExact(jsonPrice.Timestamp, "yyyy-MM-dd hh:mm:ss");
                 var price = new PriceDaily(
                     Timestamp: timestamp,
                     Open: jsonPrice.Open,
