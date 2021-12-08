@@ -34,7 +34,7 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public DailyPriceSet RequestData(string symbol, TimeRange timeRange, PriceInterval interval)
+        public DailyPriceSet RequestData(string symbol, DateRange timeRange, PriceInterval interval)
         {
             string queryString = CreateQueryString(symbol, timeRange, interval);
             string apiUrl = UrlBuilder.BuildUrl(queryString);
@@ -85,7 +85,7 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
         /// <param name="end"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        private string CreateQueryString(string symbol, TimeRange timeRange, PriceInterval interval)
+        private string CreateQueryString(string symbol, DateRange timeRange, PriceInterval interval)
         {
             string intervalQuery = interval switch
             {

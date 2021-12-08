@@ -32,11 +32,6 @@ namespace Crunch.CLI
                 Console.WriteLine("helooooooo" +
                     "");
             })
-            .WithParsed<DownloadOptions>(o =>
-            {
-                var controller = new DownloadPriceController(o.Start, o.End, o.Interval);
-                controller.RunUseCase();
-            })
             .WithParsed<AnalyzeOptions>(o =>
             {
                 //TODO: implement

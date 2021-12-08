@@ -2,7 +2,7 @@
   "profiles": {
     "Crunch": {
       "commandName": "Project",
-      "commandLineArgs": "Add --help"
+      "commandLineArgs": "Download 11-2021-12 2021-11-23 OneDay"
     },
     "Download prices intraday": {
       "commandName": "Project",
@@ -10,7 +10,7 @@
     },
     "Download  prices day": {
       "commandName": "Project",
-      "commandLineArgs": "download --start 2021-11-21 --end 2021-11-29 --interval 1d"
+      "commandLineArgs": "download --start 2021-11-21 --end 2021-12-07 --interval 1d"
     },
     "Analyze": {
       "commandName": "Project",

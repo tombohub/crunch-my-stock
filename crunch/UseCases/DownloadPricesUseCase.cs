@@ -15,7 +15,7 @@ namespace Crunch.UseCases
     /// <summary>
     /// Download prices for stocks and etfs from data source and save them to database
     /// </summary>
-    internal class ImportPricesUseCase : IUseCase
+    internal class DownloadPricesUseCase : IUseCase
     {
         /// <summary>
         /// Data source prices provider object
@@ -37,7 +37,7 @@ namespace Crunch.UseCases
         /// </summary>
         private readonly DateOnly _endDate;
 
-        private readonly TimeRange _timeRange;
+        private readonly DateRange _dateRange;
 
         /// <summary>
         /// Price data interval
@@ -56,10 +56,10 @@ namespace Crunch.UseCases
         /// <param name="start">Prices data starting date</param>
         /// <param name="end">Prices data ending date, inclusive</param>
         /// <param name="interval">Prices data interval between each price</param>
-        public ImportPricesUseCase(TimeRange timeRange, PriceInterval interval)
+        public DownloadPricesUseCase(DateRange dateRange, PriceInterval interval)
         {
+            _dateRange = dateRange;
             _interval = interval;
-            _timeRange = timeRange;
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Crunch.UseCases
             try
             {
                 Console.WriteLine($"Requesting {symbol}");
-                priceSet = _source.DownloadData(symbol, _timeRange, _interval);
+                priceSet = _source.DownloadData(symbol, _dateRange, _interval);
                 Console.WriteLine(priceSet.Prices[0].High);
             }
             catch (WebException ex)
