@@ -37,7 +37,7 @@ namespace Crunch.UseCases
         /// </summary>
         private readonly DateOnly _endDate;
 
-        private readonly DateRange _dateRange;
+        private readonly Period _dateRange;
 
         /// <summary>
         /// Price data interval
@@ -56,7 +56,7 @@ namespace Crunch.UseCases
         /// <param name="start">Prices data starting date</param>
         /// <param name="end">Prices data ending date, inclusive</param>
         /// <param name="interval">Prices data interval between each price</param>
-        public DownloadPricesUseCase(DateRange dateRange, PriceInterval interval)
+        public DownloadPricesUseCase(Period dateRange, PriceInterval interval)
         {
             _dateRange = dateRange;
             _interval = interval;

@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 namespace Crunch.Domain
 {
     /// <summary>
-    /// Represents starting and ending datetime of date range.
+    /// Represents perio between 2 dates.
     /// Used for filtering data from sources and database.
     /// </summary>
-    internal class DateRange
+    internal class Period
     {
         /// <summary>
-        /// Starting datetime
+        /// Starting date
         /// </summary>
         public DateOnly Start { get; set; }
 
         /// <summary>
-        /// Ending datetime, inclusive
+        /// Ending date, inclusive
         /// </summary>
         public DateOnly End { get; set; }
 
-        public DateRange(DateOnly start, DateOnly end)
+        public Period(DateOnly start, DateOnly end)
         {
             // start must be earlier or the same datetime as end
             if (start <= end)
@@ -32,7 +32,7 @@ namespace Crunch.Domain
             }
             else
             {
-                throw new ArgumentException("Starting datetime cannot be later than ending datetime");
+                throw new ArgumentException("Starting date cannot be later than ending date");
             }
         }
     }

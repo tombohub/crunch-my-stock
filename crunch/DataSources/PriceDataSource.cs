@@ -25,7 +25,7 @@ namespace Crunch.DataSources
         /// <param name="interval">Price interval</param>
         /// 
         /// <returns>Price set for the given symbol</returns>
-        public DailyPriceSet DownloadData(string symbol, DateRange timeRange, PriceInterval interval)
+        public DailyPriceSet DownloadData(string symbol, Period timeRange, PriceInterval interval)
         {
             HistoricalPricesRequester requester = new();
             DailyPriceSet priceSet = requester.RequestData(symbol, timeRange, interval);

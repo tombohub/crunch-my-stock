@@ -14,7 +14,7 @@
     },
     "Analyze": {
       "commandName": "Project",
-      "commandLineArgs": "analyze --strategy dadssds --date 2021-11-11"
+      "commandLineArgs": "Analyze Overnight 2021-11-11"
     }
   }
 }
