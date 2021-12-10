@@ -48,7 +48,7 @@ namespace Crunch.UseCases
         /// Pause between data source API request in miliseconds. 
         /// To avoid 'too many requests' error
         /// </summary>
-        private readonly int _requestPause = 100;
+        private readonly int _requestPause = 300;
 
         /// <summary>
         /// Initialize Import prices use case object.
