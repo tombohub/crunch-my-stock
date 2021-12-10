@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using Crunch.Domain.Strategies;
 using ScottPlot;
 using ScottPlot.Plottable;
-using Crunch.Domain.Strategies;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 
 namespace Crunch.Strategies.Overnight.Reports
 {

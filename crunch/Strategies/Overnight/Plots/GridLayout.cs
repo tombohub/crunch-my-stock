@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace Crunch.Strategies.Overnight.Plots
 {
@@ -13,7 +8,7 @@ namespace Crunch.Strategies.Overnight.Plots
     /// </summary>
     class GridLayout
     {
-         /// <summary>
+        /// <summary>
         /// Collection of individual grid cells
         /// </summary>
         private Rectangle[,] _cells;
@@ -46,10 +41,10 @@ namespace Crunch.Strategies.Overnight.Plots
             int startY = startCell.Y;
             int endX = endCell.Right;
             int endY = endCell.Bottom;
-            
+
             int areaWidth = endX - startX;
             int areaHeight = endY - startY;
-            
+
             return new Rectangle(startX, startY, areaWidth, areaHeight);
         }
 
@@ -77,5 +72,5 @@ namespace Crunch.Strategies.Overnight.Plots
             return cells;
         }
     }
-    
+
 }

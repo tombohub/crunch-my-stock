@@ -3,11 +3,7 @@ using Crunch.Domain;
 using Crunch.Strategies.Overnight;
 using Crunch.Strategies.Overnight.Plots;
 using Crunch.Strategies.Overnight.Reports;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Crunch.UseCases
 {

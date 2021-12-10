@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using Crunch.DataSources.Fmp.Responses;
 using System.Net;
-using Crunch.DataSources.Fmp.Responses;
+using System.Text.Json;
 
 namespace Crunch.DataSources.Fmp.Endpoints
 {

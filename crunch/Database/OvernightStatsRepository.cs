@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Crunch.Database.Models;
 using Crunch.Domain;
 using Crunch.Strategies.Overnight;
-using Crunch.Database.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Crunch.Database
 {
@@ -53,7 +51,7 @@ namespace Crunch.Database
                     "etfs" => SecurityType.Etf,
                     _ => throw new NotImplementedException()
                 };
-                                
+
                 stats.Add(new SingleSymbolStats
                 (
                     Symbol: statDb.Symbol,

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
@@ -27,12 +23,12 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
         [JsonPropertyName("h")]
         public double High { get; set; }
 
-        [JsonPropertyName ("c")]
+        [JsonPropertyName("c")]
         public double Close { get; set; }
 
         [JsonPropertyName("l")]
         public double Low { get; set; }
-        
+
         [JsonPropertyName("v")]
         public long Volume { get; set; }
 

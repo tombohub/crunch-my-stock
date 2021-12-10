@@ -2,7 +2,7 @@
   "profiles": {
     "Crunch": {
       "commandName": "Project",
-      "commandLineArgs": "Download 11-2021-12 2021-11-23 OneDay"
+      "commandLineArgs": "Download --start 2021-11-12 --end 2021-11-13 --interval OneDay"
     },
     "Download prices intraday": {
       "commandName": "Project",
@@ -10,11 +10,11 @@
     },
     "Download  prices day": {
       "commandName": "Project",
-      "commandLineArgs": "download --start 2021-11-21 --end 2021-12-07 --interval 1d"
+      "commandLineArgs": "Download --start 2021-11-12 --end 2021-11-13 --interval OneDay"
     },
     "Analyze": {
       "commandName": "Project",
-      "commandLineArgs": "Analyze Overnight 2021-11-11"
+      "commandLineArgs": "Analyze --strategy Overnight --date 2021-11-13"
     }
   }
 }

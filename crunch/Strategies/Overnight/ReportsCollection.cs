@@ -1,11 +1,5 @@
-﻿using System;
+﻿using Crunch.Strategies.Overnight.Reports;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Crunch.Database.Models;
-using Crunch.Domain;
-using Crunch.Strategies.Overnight.Reports;
 
 namespace Crunch.Strategies.Overnight
 {
@@ -18,7 +12,7 @@ namespace Crunch.Strategies.Overnight
         public double AverageBenchmarkRoi { get; init; }
         public double SpyOvernightRoi { get; init; }
         public double SpyBenchmarkRoi { get; init; }
-      
+
     }
-       
+
 }

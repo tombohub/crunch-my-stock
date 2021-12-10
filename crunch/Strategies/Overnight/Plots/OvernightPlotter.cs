@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-using ScottPlot;
+﻿using ScottPlot;
 using ScottPlot.Plottable;
-using Crunch.Strategies.Overnight.Reports;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 
 //TODO: svaki plot ima dimenzije, dimenzije moraju biti unutar dimenzija generalnog plota
 namespace Crunch.Strategies.Overnight.Plots
@@ -21,7 +17,7 @@ namespace Crunch.Strategies.Overnight.Plots
         /// </summary>
         private int _multiplotWidth = 1200;
 
-        
+
         public OvernightPlotter()
         {
 
@@ -53,13 +49,13 @@ namespace Crunch.Strategies.Overnight.Plots
             Bitmap top10Plot = PlotTop10(reports.Top10, 4 * gridSquareSize, 4 * gridSquareSize);
             //Bitmap bottom10Plot = PlotBottom10(reports.Bottom10, 4 * gridSquareSize, 4 * gridSquareSize);
             // todo: activate bottom10plot
-            
-            graphics.DrawImage(avgOvernightRoiBox, overnightLayout.GetArea(0,0,0,0));
-            graphics.DrawImage(avgBenchRoiBox, overnightLayout.GetArea(0,1,0,1));
-            graphics.DrawImage(spyOvernightRoiBox, overnightLayout.GetArea(0,2,0,2));
-            graphics.DrawImage(spyBenchRoiBox, overnightLayout.GetArea(0,3,0,3));
-            graphics.DrawImage(winnersLosersPlot, overnightLayout.GetArea(1,0, 2,1));
-            graphics.DrawImage(top10Plot, overnightLayout.GetArea(3,0,4,1));
+
+            graphics.DrawImage(avgOvernightRoiBox, overnightLayout.GetArea(0, 0, 0, 0));
+            graphics.DrawImage(avgBenchRoiBox, overnightLayout.GetArea(0, 1, 0, 1));
+            graphics.DrawImage(spyOvernightRoiBox, overnightLayout.GetArea(0, 2, 0, 2));
+            graphics.DrawImage(spyBenchRoiBox, overnightLayout.GetArea(0, 3, 0, 3));
+            graphics.DrawImage(winnersLosersPlot, overnightLayout.GetArea(1, 0, 2, 1));
+            graphics.DrawImage(top10Plot, overnightLayout.GetArea(3, 0, 4, 1));
             //graphics.DrawImage(bottom10Plot, overnightLayout.GetArea(3,2,4,3));
 
 
@@ -132,7 +128,7 @@ namespace Crunch.Strategies.Overnight.Plots
             return plt.Render();
         }
 
-       
+
 
         /// <summary>
         /// Draw the rectangle with text in center

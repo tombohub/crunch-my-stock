@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Crunch.Domain;
+using Crunch.Strategies.Overnight.Reports;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Crunch.Domain;
-using Crunch.Strategies.Overnight.Reports;
 
 namespace Crunch.Strategies.Overnight
 {
@@ -152,7 +150,7 @@ namespace Crunch.Strategies.Overnight
 
             return spyOvernightRoi;
         }
-        
+
         /// <summary>
         /// Get SPY benchmark buy and hold) ROI for the week
         /// </summary>

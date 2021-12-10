@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Crunch.DataSources.Fmp
+﻿namespace Crunch.DataSources.Fmp
 {
     /// <summary>
     /// Builds the URL for the API request
@@ -14,7 +8,7 @@ namespace Crunch.DataSources.Fmp
         /// <summary>
         /// Api key part of the URL.
         /// </summary>
-        private static readonly string _apikey = "?apikey=" + Env.Variables.FmpApiKey;
+        private static readonly string _apikey = "?apikey=" + Configuration.FmpApiKey;
 
         /// <summary>
         /// Domain part of the URL

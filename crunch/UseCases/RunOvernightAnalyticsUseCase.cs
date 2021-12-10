@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Crunch.Database;
-using Crunch.Domain;
+﻿using Crunch.Database;
+using System;
 
 namespace Crunch.UseCases
 {
@@ -28,7 +23,7 @@ namespace Crunch.UseCases
             ////Console.WriteLine(priceSet.Symbol);
             ////Console.WriteLine(priceSet.Prices[0].Open);
             ////Console.WriteLine($"date of price - {priceSet.Prices[0].Timestamp}");
-            
+
             // calculate metrices
             // save those metrics to database
         }

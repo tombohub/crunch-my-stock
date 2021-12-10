@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CommandDotNet;
+﻿using CommandDotNet;
 using Crunch.Domain;
 using Crunch.Strategies;
 using Crunch.UseCases;
+using Dapper;
+using System;
 
 namespace Crunch.CLI
 {
@@ -23,13 +20,13 @@ namespace Crunch.CLI
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <param name="interval"></param>
-        public void Download(DateOnly start, DateOnly end, PriceInterval interval)
+        public void Download([Option] DateOnly start, [Option] DateOnly end, [Option] PriceInterval interval)
         {
             Console.WriteLine(start);
             Console.WriteLine(end);
             Console.WriteLine(interval);
-            var dateRange = new Period(start, end);
-            var useCase = new DownloadPricesUseCase(dateRange, interval);
+            var period = new Period(start, end);
+            var useCase = new DownloadPricesUseCase(period, interval);
             useCase.Execute();
         }
 
@@ -41,13 +38,35 @@ namespace Crunch.CLI
         public void Analyze(
         [Option]
         Strategy strategy,
-            
+
         [Option]
         DateOnly date)
         {
             //TODO: implement
             Console.WriteLine($"This is command line parser for the command 'analyze' {strategy}");
             Console.WriteLine($"Date is {date}");
+
+            // get previous trading day from chosen date
+            var calendarDay = new CalendarDay(date);
+            DateOnly prevTradingDay = calendarDay.PreviousTradingDay;
+
+            // take prices from previous trading day
+            var conn = Database.MySqlDatabase.GetConnection();
+            var res = conn.Query<Res>($"select `symbol`,`close` from prices_daily pd where `timestamp` = '{prevTradingDay}'");
+            foreach (var r in res)
+            {
+                Console.WriteLine(r.Symbol);
+            }
+
+            // compare the previous close price with current date open price
+            // calculate stats - percent change
+            // save stats to database
+        }
+
+        class Res
+        {
+            public string Symbol { get; set; }
+            public double Open { get; set; }
         }
     }
 }

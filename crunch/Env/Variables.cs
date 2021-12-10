@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-/// <summary>
+﻿/// <summary>
 /// Namespace dealing with loading env variables from .env file
 /// </summary>
 namespace Crunch.Env
@@ -31,8 +25,8 @@ namespace Crunch.Env
         /// </summary>
         public static string DatabaseURI
         {
-            get { return GetVariable(_DBName); }    
-        }   
+            get { return GetVariable(_DBName); }
+        }
 
         /// <summary>
         /// URI to connect to dev database

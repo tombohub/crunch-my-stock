@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Crunch.Domain;
 using Crunch.Strategies.Overnight;
-using Crunch.Domain;
 using CsvHelper;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CrunchTests.OvernightStrategy
 {
     /// <summary>
     /// Overight stats repository base on csv file exported from database
     /// </summary>
-    class OvernightStatsCsvRepository 
+    class OvernightStatsCsvRepository
     {
         /// <summary>
         /// Create OvernightStats Entity from data in csv file

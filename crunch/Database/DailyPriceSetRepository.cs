@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Crunch.Database.Models;
+using Crunch.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Crunch.Domain;
-using Crunch.Database.Models;
 
 namespace Crunch.Database
 {
@@ -15,7 +13,7 @@ namespace Crunch.Database
         /// </summary>
         private stock_analyticsContext _db;
 
-        
+
         /// <summary>
         /// Save PriceSet object to the database
         /// </summary>
@@ -44,12 +42,12 @@ namespace Crunch.Database
                 }
                 _db.SaveChanges();
             }
-            
+
         }
 
 
 
-        public DailyPriceSet Load(string symbol, PriceInterval interval, DateOnly start,  DateOnly end)
+        public DailyPriceSet Load(string symbol, PriceInterval interval, DateOnly start, DateOnly end)
         {
             string intervalDb = Helpers.PriceIntervalToString(interval);
 
@@ -66,7 +64,7 @@ namespace Crunch.Database
             Console.WriteLine(pricesDb);
 
             var priceSet = new List<PriceDaily>();
-            foreach(var priceDb in pricesDb)
+            foreach (var priceDb in pricesDb)
             {
                 var price = new PriceDaily(
                     Timestamp: priceDb.Timestamp,

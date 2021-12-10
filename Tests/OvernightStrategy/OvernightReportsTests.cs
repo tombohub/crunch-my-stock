@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Crunch.Domain;
 using Crunch.Strategies.Overnight;
-using Crunch.Database;
-using Crunch.Database.Models;
-using Crunch.Domain;
-using CsvHelper;
-using CsvHelper.Configuration.Attributes;
-using System.IO;
-using System.Reflection;
-using CsvHelper.Configuration;
-using FluentAssertions;
 using Crunch.Strategies.Overnight.Reports;
+using CsvHelper;
+using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
+using System.Linq;
 
 namespace CrunchTests.OvernightStrategy
 {
@@ -22,7 +13,7 @@ namespace CrunchTests.OvernightStrategy
     public class OvernightReportsTests
     {
         public static OvernightStats Stats { get; set; }
-        public static ReportsCalculator ReportsCalculator {get; set;}
+        public static ReportsCalculator ReportsCalculator { get; set; }
 
         [ClassInitialize]
         public static void GetStats(TestContext context)
@@ -82,8 +73,8 @@ namespace CrunchTests.OvernightStrategy
             top10.Should().Equal(expectedTop10);
         }
 
-       [TestMethod]
-       public void CalculateTop10Etfs_OvernightStatsData_ReturnsEqual()
+        [TestMethod]
+        public void CalculateTop10Etfs_OvernightStatsData_ReturnsEqual()
         {
             var reader = new StreamReader("OvernightStrategy/CsvData/Top10EtfsReportData.csv");
             var csv = new CsvReader(reader, System.Globalization.CultureInfo.InvariantCulture);

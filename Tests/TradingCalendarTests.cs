@@ -1,10 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Crunch.Strategies;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using Crunch.Strategies.Overnight;
-using Crunch.Database;
-using Crunch.Database.Models;
-using Crunch.Strategies;
 
 namespace CrunchTests
 {

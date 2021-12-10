@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Crunch.Database.Models
+﻿namespace Crunch.Database.Models
 {
     public partial class Group
     {

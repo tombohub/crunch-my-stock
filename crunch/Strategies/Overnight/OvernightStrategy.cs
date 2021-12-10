@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Crunch.Domain.Strategies;
+﻿using Crunch.Domain.Strategies;
+using System;
 
 namespace Crunch.Strategies.Overnight
 {
@@ -18,7 +14,7 @@ namespace Crunch.Strategies.Overnight
         public void RunAnalytics(DateOnly date)
         {
             Console.WriteLine($"Running analytics for overnight strategy for date {date}");
-            
+
         }
     }
 }

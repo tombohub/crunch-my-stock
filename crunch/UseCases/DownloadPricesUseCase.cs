@@ -1,14 +1,10 @@
-﻿using Crunch.Domain.Strategies;
+﻿using Crunch.Database;
+using Crunch.DataSources;
+using Crunch.Domain;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Crunch.DataSources;
-using Crunch.Database;
-using Crunch.Domain;
 using System.Net;
+using System.Threading;
 
 namespace Crunch.UseCases
 {
@@ -111,6 +107,6 @@ namespace Crunch.UseCases
         }
 
 
-       
+
     }
 }

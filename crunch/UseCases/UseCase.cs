@@ -1,25 +1,14 @@
-﻿using Crunch.Domain;
-using Crunch.Database.Models;
-using Crunch.Database;
-using Crunch.DataSources;
-using Crunch.Strategies.Overnight;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Crunch.Database.Models;
 using Crunch.DataSources.Fmp.Endpoints;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
-using Crunch.Strategies.Overnight.Reports;
-using Crunch.Strategies.Overnight.Plots;
-using Crunch.DataSources.Fmp;
+using System;
+using System.Linq;
 
 namespace Crunch.UseCases
 {
     class UseCase
     {
-        
+
         #region securities operations
         /// <summary>
         /// Update the list of securities in database
