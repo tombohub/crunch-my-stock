@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommandDotNet" Version="6.0.0" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="DotNetEnv" Version="2.2.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.38" />
     <PackageReference Include="Microsoft.Data.Analysis" Version="0.19.0" />
