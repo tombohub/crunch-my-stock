@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
+using System.IO;
 
 namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
 {
@@ -36,7 +37,17 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
             string queryString = CreateQueryString(symbol, timeRange, interval);
             string apiUrl = UrlBuilder.BuildUrl(queryString);
             string apiResponse = _webClient.DownloadString(apiUrl);
-            HistoricalPricesJsonModel jsonPricesData = JsonSerializer.Deserialize<HistoricalPricesJsonModel>(apiResponse);
+            HistoricalPricesJsonModel jsonPricesData = null;
+            try
+            {
+                jsonPricesData = JsonSerializer.Deserialize<HistoricalPricesJsonModel>(apiResponse);
+
+            }
+            catch (Exception e)
+            {
+
+                File.WriteAllText("log.txt", apiResponse);
+            }
             DailyPriceSet priceSet = MapJsonToPriceSet(symbol, interval, jsonPricesData);
             return priceSet;
         }
@@ -53,7 +64,7 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
             var prices = new List<PriceDaily>();
             foreach (var jsonPrice in jsonPricesData.Results)
             {
-                DateOnly timestamp = DateOnly.ParseExact(jsonPrice.Timestamp, "yyyy-MM-dd hh:mm:ss");
+                DateOnly timestamp = DateOnly.ParseExact(jsonPrice.Timestamp, "yyyy-MM-dd HH:mm:ss");
                 var price = new PriceDaily(
                     Timestamp: timestamp,
                     Open: jsonPrice.Open,

@@ -33,7 +33,7 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
         public long Volume { get; set; }
 
         /// <summary>
-        /// Timestamp in format yyyy-mm-dd hh:mm:ss
+        /// Timestamp in format yyyy-MM-dd HH:mm:ss
         /// </summary>
         [JsonPropertyName("formated")]
         public string Timestamp { get; set; }
