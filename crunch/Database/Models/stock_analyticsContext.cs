@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Crunch.Database.Models;
 
 namespace Crunch.Database.Models
 {
@@ -18,6 +22,7 @@ namespace Crunch.Database.Models
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<GroupsDailyOverview> GroupsDailyOverviews { get; set; }
         public virtual DbSet<IntranightStat> IntranightStats { get; set; }
+        public virtual DbSet<NewView> NewViews { get; set; }
         public virtual DbSet<PricesDaily> PricesDailies { get; set; }
         public virtual DbSet<PricesIntraday> PricesIntradays { get; set; }
         public virtual DbSet<Security> Securities { get; set; }
@@ -205,6 +210,42 @@ namespace Crunch.Database.Models
                     .HasColumnName("symbol");
             });
 
+            modelBuilder.Entity<NewView>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("NewView");
+
+                entity.Property(e => e.Close).HasColumnName("close");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_at")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.High).HasColumnName("high");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Interval)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasColumnName("interval");
+
+                entity.Property(e => e.Low).HasColumnName("low");
+
+                entity.Property(e => e.Open).HasColumnName("open");
+
+                entity.Property(e => e.Symbol)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("symbol");
+
+                entity.Property(e => e.Timestamp).HasColumnName("timestamp");
+
+                entity.Property(e => e.Volume).HasColumnName("volume");
+            });
+
             modelBuilder.Entity<PricesDaily>(entity =>
             {
                 entity.ToTable("prices_daily");
@@ -309,7 +350,7 @@ namespace Crunch.Database.Models
                 entity.ToTable("test");
 
                 entity.Property(e => e.Momo)
-                    .HasMaxLength(200)
+                    .HasMaxLength(5)
                     .HasColumnName("momo");
             });
 

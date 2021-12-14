@@ -1,4 +1,7 @@
-﻿namespace Crunch.Database.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace Crunch.Database.Models
 {
     public partial class Security
     {
