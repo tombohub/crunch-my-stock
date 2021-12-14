@@ -44,7 +44,7 @@ namespace Crunch.UseCases
         /// Pause between data source API request in miliseconds. 
         /// To avoid 'too many requests' error
         /// </summary>
-        private readonly int _requestPause = 300;
+        private readonly int _requestPause = 500;
 
         /// <summary>
         /// Initialize Import prices use case object.
@@ -63,8 +63,13 @@ namespace Crunch.UseCases
         /// </summary>
         public void Execute()
         {
+            // get list of symbols
             List<string> symbols = Helpers.GetSecuritySymbols();
+
+            // truncate the database because EF core does not implement UPSERT
+            // and overnight strategy has not implemented start date and end date calculation
             Helpers.TruncatePricesTable(_interval);
+
             foreach (string symbol in symbols)
             {
                 var thread = new Thread(() => ImportPrices(symbol));

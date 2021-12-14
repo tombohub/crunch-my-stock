@@ -47,39 +47,39 @@ namespace Crunch.Database
 
 
 
-        public DailyPriceSet Load(string symbol, PriceInterval interval, DateOnly start, DateOnly end)
-        {
-            string intervalDb = Helpers.PriceIntervalToString(interval);
+        //public DailyPriceSet Load(string symbol, PriceInterval interval, DateOnly start, DateOnly end)
+        //{
+        //    string intervalDb = Helpers.PriceIntervalToString(interval);
 
-            var pricesDb = new List<PricesDaily>();
-            using (_db = new stock_analyticsContext())
-            {
-                pricesDb = _db.PricesDailies
-                    .Where(price => price.Symbol == symbol)
-                    .Where(price => price.Interval == intervalDb)
-                    .Where(price => (price.Timestamp >= start) && (price.Timestamp <= end))
-                    .ToList();
-            }
+        //    var pricesDb = new List<PricesDaily>();
+        //    using (_db = new stock_analyticsContext())
+        //    {
+        //        pricesDb = _db.PricesDailies
+        //            .Where(price => price.Symbol == symbol)
+        //            .Where(price => price.Interval == intervalDb)
+        //            .Where(price => (price.Timestamp >= start) && (price.Timestamp <= end))
+        //            .ToList();
+        //    }
 
-            Console.WriteLine(pricesDb);
+        //    Console.WriteLine(pricesDb);
 
-            var priceSet = new List<PriceDaily>();
-            foreach (var priceDb in pricesDb)
-            {
-                var price = new PriceDaily(
-                    Timestamp: priceDb.Timestamp,
-                    Open: priceDb.Open,
-                    High: priceDb.High,
-                    Low: priceDb.Low,
-                    Close: priceDb.Close,
-                    Volume: priceDb.Volume);
-                priceSet.Add(price);
-            }
+        //    var priceSet = new List<PriceDaily>();
+        //    foreach (var priceDb in pricesDb)
+        //    {
+        //        var price = new PriceDaily(
+        //            Timestamp: priceDb.Timestamp,
+        //            Open: priceDb.Open,
+        //            High: priceDb.High,
+        //            Low: priceDb.Low,
+        //            Close: priceDb.Close,
+        //            Volume: priceDb.Volume);
+        //        priceSet.Add(price);
+        //    }
 
-            return new DailyPriceSet(
-                Symbol: symbol,
-                Interval: interval,
-                Prices: priceSet);
-        }
+        //    return new DailyPriceSet(
+        //        Symbol: symbol,
+        //        Interval: interval,
+        //        Prices: priceSet);
+        //}
     }
 }

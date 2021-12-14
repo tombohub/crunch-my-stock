@@ -23,7 +23,17 @@ namespace Crunch.Database
         /// <returns></returns>
         public static MySqlConnection GetConnection()
         {
-            string dbUri = Env.Variables.DatabaseURI;
+            string dbUri = Configuration.DbConnectionString;
+            return new MySqlConnection(dbUri);
+        }
+
+        /// <summary>
+        /// Create local MySql database connection object
+        /// </summary>
+        /// <returns></returns>
+        public static MySqlConnection GetLocalConnection()
+        {
+            string dbUri = Configuration.DbLocalConnectionString;
             return new MySqlConnection(dbUri);
         }
 
