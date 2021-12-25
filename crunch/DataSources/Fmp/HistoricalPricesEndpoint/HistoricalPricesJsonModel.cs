@@ -18,16 +18,16 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
     internal class HistoricalPricesItem
     {
         [JsonPropertyName("o")]
-        public double Open { get; set; }
+        public decimal Open { get; set; }
 
         [JsonPropertyName("h")]
-        public double High { get; set; }
+        public decimal High { get; set; }
 
         [JsonPropertyName("c")]
-        public double Close { get; set; }
+        public decimal Close { get; set; }
 
         [JsonPropertyName("l")]
-        public double Low { get; set; }
+        public decimal Low { get; set; }
 
         [JsonPropertyName("v")]
         public long Volume { get; set; }
