@@ -20,7 +20,7 @@ namespace Crunch.Database
         /// </summary>
         /// <param name="priceSet"></param>
         /// <exception cref="ArgumentException"></exception>
-        public void Save(DailyPriceSet priceSet, PriceInterval interval)
+        public void SaveWithEFCore(DailyPriceSet priceSet, PriceInterval interval)
         {
             string intervalDb = Helpers.PriceIntervalToString(interval);
             using (_db = new stock_analyticsContext())
@@ -46,10 +46,36 @@ namespace Crunch.Database
         }
 
         // TODO: unfinished method for inserting into prices_daily using Dapper
-        public void Save(DailyPriceSet priceSet, PriceInterval interval, string db)
+        public void SaveWithDapper(DailyPriceSet priceSet, PriceInterval interval)
         {
+            string sql = @"insert into 
+                public.prices_daily (date, symbol, open, high, low, close, volume, interval) 
+                VALUES (@Date, @Symbol, @Open, @High, @Low, @Close, @Volume, @Interval)
+                ON CONFLICT ON CONSTRAINT date_symbol_un
+                DO UPDATE SET 
+                              open = @Open,
+                              high = @High,
+                              low = @Low,
+                              close = @Close,
+                              volume = @Volume;";
             using var conn = DbConnections.CreatePsqlConnection();
-            
+            foreach (var price in priceSet.Prices)
+            {
+                var parameters = new
+                {
+                    Date = price.Timestamp,
+                    Symbol = priceSet.Symbol,
+                    Open = price.Open,
+                    High = price.High,
+                    Low = price.Low,
+                    Close = price.Close,
+                    Volume = price.Volume,
+                    Interval = priceSet.Interval.ToString()
+                };
+                
+                conn.Execute(sql, parameters);
+            }  
+
         }
 
 

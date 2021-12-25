@@ -4,6 +4,8 @@ using Crunch.Strategies;
 using Crunch.UseCases;
 using Dapper;
 using System;
+using System.Data;
+using System.Collections.Generic;
 
 namespace Crunch.CLI
 {
@@ -35,7 +37,7 @@ namespace Crunch.CLI
         /// </summary>
         /// <param name="strategy"></param>
         /// <param name="date"></param>
-        public void Analyze(
+        public void Run(
         [Option]
         Strategy strategy,
 
@@ -43,30 +45,30 @@ namespace Crunch.CLI
         DateOnly date)
         {
             //TODO: implement
-            Console.WriteLine($"This is command line parser for the command 'analyze' {strategy}");
+            Console.WriteLine($"This is command line parser for the command 'run' {strategy}");
             Console.WriteLine($"Date is {date}");
 
-            // get previous trading day from chosen date
+            // get previous trading day from chosen date for overnight strategy it is
             var calendarDay = new CalendarDay(date);
             DateOnly prevTradingDay = calendarDay.PreviousTradingDay;
 
             // take prices from previous trading day
-            var conn = Database.MySqlDatabase.GetConnection();
-            var res = conn.Query<Res>($"select `symbol`,`close` from prices_daily pd where `timestamp` = '{prevTradingDay}'");
-            foreach (var r in res)
-            {
-                Console.WriteLine(r.Symbol);
-            }
-
-            // compare the previous close price with current date open price
-            // calculate stats - percent change
-            // save stats to database
+            var conn = Database.DbConnections.CreatePsqlConnection();
+            conn.Open();
+            string sql = $"CALL overnight.insert_overnight_prices('{date}','{prevTradingDay}');";
+            conn.Execute(sql);
+            conn.Close();
         }
 
-        class Res
+        record OvernightStrategyPriceDTO
         {
+            public DateOnly StrategyDate { get; set; }
             public string Symbol { get; set; }
-            public double Open { get; set; }
+            public SecurityType SecurityType { get; set; }
+            public double StartPrice { get; set; }
+            public double EndPrice { get; set; }
         }
+
+       
     }
 }

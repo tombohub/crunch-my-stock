@@ -19,20 +19,8 @@ namespace Crunch.UseCases
         PriceDataSource _source = new PriceDataSource();
 
         /// <summary>
-        /// Prices repository object
+        /// Period for which too download prices
         /// </summary>
-        //PriceSetRepository _repo = new PriceSetRepository();
-
-        /// <summary>
-        /// Prices data starting date
-        /// </summary>
-        private readonly DateOnly _startDate;
-
-        /// <summary>
-        /// Prices data ending date, inclusive
-        /// </summary>
-        private readonly DateOnly _endDate;
-
         private readonly Period _dateRange;
 
         /// <summary>
@@ -49,8 +37,7 @@ namespace Crunch.UseCases
         /// <summary>
         /// Initialize Import prices use case object.
         /// </summary>
-        /// <param name="start">Prices data starting date</param>
-        /// <param name="end">Prices data ending date, inclusive</param>
+        ///<param name="dateRange">Period for the price set</param>
         /// <param name="interval">Prices data interval between each price</param>
         public DownloadPricesUseCase(Period dateRange, PriceInterval interval)
         {
@@ -68,7 +55,7 @@ namespace Crunch.UseCases
 
             // truncate the database because EF core does not implement UPSERT
             // and overnight strategy has not implemented start date and end date calculation
-            Helpers.TruncatePricesTable(_interval);
+            //Helpers.TruncatePricesTable(_interval);
 
             foreach (string symbol in symbols)
             {
@@ -104,7 +91,7 @@ namespace Crunch.UseCases
 
                 //HACK: creating new instance of repo to make it thread safe
                 DailyPriceSetRepository repo = new DailyPriceSetRepository();
-                repo.Save(priceSet, _interval);
+                repo.SaveWithDapper(priceSet, _interval);
             }
             else Console.WriteLine($"{symbol} data is NULL");
 

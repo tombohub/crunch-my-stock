@@ -1,6 +1,8 @@
 ﻿using MySql.Data.MySqlClient;
 using Npgsql;
 using System;
+using System.Data;
+using Dapper;
 
 
 namespace Crunch.Database
@@ -29,6 +31,7 @@ namespace Crunch.Database
             string dbUri = Configuration.DbConnectionString;
             return new MySqlConnection(dbUri);
         }
+        
 
         /// <summary>
         /// Create local MySql database connection object
@@ -47,6 +50,8 @@ namespace Crunch.Database
         public static NpgsqlConnection CreatePsqlConnection()
         {
             string dbUri = Configuration.PostgresSQLConnectionString;
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+            SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
             return new NpgsqlConnection(dbUri);
         }
 
@@ -73,5 +78,26 @@ namespace Crunch.Database
             cmd.Prepare();
             cmd.ExecuteNonQuery();
         }
+        
+        }
+    internal class DateOnlyTypeHandler : SqlMapper.TypeHandler<DateOnly>
+        {
+            /// <summary>
+            /// Parse the database 'date' type to C# DateOnly.
+            /// Reason is because Dapper and ADO.NET converts the 'date' type to
+            /// DateTime.
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public override DateOnly Parse(object value)
+            {
+                var dateTime = (DateTime)value;
+                return DateOnly.Parse(dateTime.ToShortDateString());
+            }
+            public override void SetValue(IDbDataParameter parameter, DateOnly value)
+            {
+                parameter.Value = value;
+            }
     }
+    
 }
