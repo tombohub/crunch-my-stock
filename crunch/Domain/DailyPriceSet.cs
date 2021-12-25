@@ -17,10 +17,10 @@ namespace Crunch.Domain
 
     record PriceDaily(
         DateOnly Timestamp,
-        double Open,
-        double High,
-        double Low,
-        double Close,
+        decimal Open,
+        decimal High,
+        decimal Low,
+        decimal Close,
         long Volume
     );
 }

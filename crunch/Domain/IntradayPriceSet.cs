@@ -17,10 +17,10 @@ namespace Crunch.Domain
 
     record PriceIntraday(
         DateTime Timestamp,
-        double Open,
-        double High,
-        double Low,
-        double Close,
+        decimal Open,
+        decimal High,
+        decimal Low,
+        decimal Close,
         int Volume
     );
 }
