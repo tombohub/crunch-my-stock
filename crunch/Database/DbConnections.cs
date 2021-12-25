@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Npgsql;
 using System;
 
 
@@ -7,15 +8,17 @@ namespace Crunch.Database
     /// <summary>
     /// Providing the connection to MySql production database
     /// </summary>
-    class MySqlDatabase
+    class DbConnections
     {
-        public MySqlConnection Conn { get; set; }
+        /// <summary>
+        /// MySql connection object
+        /// </summary>
+        public MySqlConnection MySqlConnection { get; set; }
 
-        public MySqlDatabase()
-        {
-            string dbUri = Configuration.DbConnectionString;
-            Conn = new MySqlConnection(dbUri);
-        }
+        /// <summary>
+        /// PostgreSQL connection object
+        /// </summary>
+        public NpgsqlConnection PsqlConnection { get; set; }
 
         /// <summary>
         /// Create MySql connection object
@@ -37,25 +40,35 @@ namespace Crunch.Database
             return new MySqlConnection(dbUri);
         }
 
+        /// <summary>
+        /// Create PostgreSQL remote connection
+        /// </summary>
+        /// <returns></returns>
+        public static NpgsqlConnection CreatePsqlConnection()
+        {
+            string dbUri = Configuration.PostgresSQLConnectionString;
+            return new NpgsqlConnection(dbUri);
+        }
+
         public void GetData()
         {
-            Conn.Open();
+            MySqlConnection.Open();
             string sql = "SELECT * FROM `groups`";
-            var cmd = new MySqlCommand(sql, Conn);
+            var cmd = new MySqlCommand(sql, MySqlConnection);
             var rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
                 Console.WriteLine(rdr[0] + "-----" + rdr[1]);
             }
             rdr.Close();
-            Conn.Close();
+            MySqlConnection.Close();
         }
 
         public void Insert(string text)
         {
-            Conn.Open();
+            MySqlConnection.Open();
             string sql = "insert into `test` values(@text)";
-            var cmd = new MySqlCommand(sql, Conn);
+            var cmd = new MySqlCommand(sql, MySqlConnection);
             cmd.Parameters.AddWithValue("@text", text);
             cmd.Prepare();
             cmd.ExecuteNonQuery();

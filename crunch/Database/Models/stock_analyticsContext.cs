@@ -17,248 +17,83 @@ namespace Crunch.Database.Models
         {
         }
 
-        public virtual DbSet<Crametorium> Crametoria { get; set; }
-        public virtual DbSet<GappersStat> GappersStats { get; set; }
-        public virtual DbSet<Group> Groups { get; set; }
-        public virtual DbSet<GroupsDailyOverview> GroupsDailyOverviews { get; set; }
-        public virtual DbSet<IntranightStat> IntranightStats { get; set; }
-        public virtual DbSet<NewView> NewViews { get; set; }
+        public virtual DbSet<OvernightDailyStat> OvernightDailyStats { get; set; }
         public virtual DbSet<PricesDaily> PricesDailies { get; set; }
         public virtual DbSet<PricesIntraday> PricesIntradays { get; set; }
         public virtual DbSet<Security> Securities { get; set; }
-        public virtual DbSet<Test> Tests { get; set; }
+        public virtual DbSet<SingleMetric> SingleMetrics { get; set; }
         public virtual DbSet<WeeklyOvernightStat> WeeklyOvernightStats { get; set; }
+        public virtual DbSet<WinnersLosersCount> WinnersLosersCounts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySql("server=***REMOVED***;user=***REMOVED***;database***REMOVED***;port=3306;password=***REMOVED***", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
+                optionsBuilder.UseNpgsql("server=***REMOVED***;user id=***REMOVED***;database***REMOVED***;port=5432;password=***REMOVED***");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.UseCollation("utf8mb4_0900_ai_ci")
-                .HasCharSet("utf8mb4");
+            modelBuilder.HasPostgresEnum("price_interval", new[] { "OneDay", "ThirtyMinutes" })
+                .HasPostgresEnum("security_type", new[] { "Stock", "Etf" });
 
-            modelBuilder.Entity<Crametorium>(entity =>
+            modelBuilder.Entity<OvernightDailyStat>(entity =>
             {
-                entity.ToTable("crametorium");
+                entity.ToTable("overnight_daily_stats", "overnight");
 
-                entity.HasIndex(e => new { e.Date, e.Symbol }, "symbol date")
+                entity.HasIndex(e => new { e.Date, e.Symbol }, "overnight_daily_stats__date_symbol_un")
                     .IsUnique();
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
 
-                entity.Property(e => e.ChangeClose).HasColumnName("change_close");
+                entity.Property(e => e.ChangePct)
+                    .HasColumnName("change_pct")
+                    .HasComputedColumnSql("round((((end_price - start_price) / start_price) * (100)::numeric), 2)", true)
+                    .HasComment("Change between previous day close and today open price in %");
 
-                entity.Property(e => e.ChangeHigh).HasColumnName("change_high");
+                entity.Property(e => e.Date)
+                    .HasColumnName("date")
+                    .HasComment("Date of the strategy");
 
-                entity.Property(e => e.ChangeOpen).HasColumnName("change_open");
+                entity.Property(e => e.EndPrice)
+                    .HasColumnName("end_price")
+                    .HasComment("Strategy date opening price");
 
-                entity.Property(e => e.Close).HasColumnName("close");
-
-                entity.Property(e => e.CreatedAt)
-                    .HasColumnType("timestamp")
-                    .HasColumnName("created_at")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                entity.Property(e => e.Date).HasColumnName("date");
-
-                entity.Property(e => e.High).HasColumnName("high");
-
-                entity.Property(e => e.Open).HasColumnName("open");
-
-                entity.Property(e => e.PickDate).HasColumnName("pick_date");
-
-                entity.Property(e => e.StartPrice).HasColumnName("start_price");
+                entity.Property(e => e.StartPrice)
+                    .HasColumnName("start_price")
+                    .HasComment("Previous trading day closing price");
 
                 entity.Property(e => e.Symbol)
                     .IsRequired()
-                    .HasMaxLength(10)
-                    .HasColumnName("symbol");
-            });
-
-            modelBuilder.Entity<GappersStat>(entity =>
-            {
-                entity.ToTable("gappers_stats");
-
-                entity.HasIndex(e => new { e.Symbol, e.Date }, "symbol_date")
-                    .IsUnique();
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Close).HasColumnName("close");
-
-                entity.Property(e => e.CreatedAt)
-                    .HasColumnType("timestamp")
-                    .HasColumnName("created_at")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                entity.Property(e => e.Date).HasColumnName("date");
-
-                entity.Property(e => e.GapPct).HasColumnName("gap_pct");
-
-                entity.Property(e => e.HalfHourPct).HasColumnName("half_hour_pct");
-
-                entity.Property(e => e.IsGain).HasColumnName("is_gain");
-
-                entity.Property(e => e.IsGapUp).HasColumnName("is_gap_up");
-
-                entity.Property(e => e.Open).HasColumnName("open");
-
-                entity.Property(e => e.PrevDayClose).HasColumnName("prev_day_close");
-
-                entity.Property(e => e.Symbol)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("symbol");
-            });
-
-            modelBuilder.Entity<Group>(entity =>
-            {
-                entity.ToTable("groups");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Industry)
-                    .IsRequired()
-                    .HasColumnType("text")
-                    .HasColumnName("industry");
-
-                entity.Property(e => e.Sector)
-                    .IsRequired()
-                    .HasColumnType("text")
-                    .HasColumnName("sector");
-            });
-
-            modelBuilder.Entity<GroupsDailyOverview>(entity =>
-            {
-                entity.ToTable("groups_daily_overview");
-
-                entity.HasIndex(e => new { e.Date, e.Name }, "date_name_UN")
-                    .IsUnique();
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.CreatedAt)
-                    .HasColumnType("timestamp")
-                    .HasColumnName("created_at")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                entity.Property(e => e.Date).HasColumnName("date");
-
-                entity.Property(e => e.FwdPe).HasColumnName("FwdPE");
-
-                entity.Property(e => e.Group)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .HasColumnName("group");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.Pe).HasColumnName("PE");
-
-                entity.Property(e => e.Peg).HasColumnName("PEG");
-            });
-
-            modelBuilder.Entity<IntranightStat>(entity =>
-            {
-                entity.ToTable("intranight_stats");
-
-                entity.HasIndex(e => new { e.Date, e.Symbol }, "date_symbol")
-                    .IsUnique();
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.CreatedAt)
-                    .HasColumnType("timestamp")
-                    .HasColumnName("created_at")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                entity.Property(e => e.Date).HasColumnName("date");
-
-                entity.Property(e => e.DayVolume).HasColumnName("day_volume");
-
-                entity.Property(e => e.EndPrice).HasColumnName("end_price");
-
-                entity.Property(e => e.MaxPrice).HasColumnName("max_price");
-
-                entity.Property(e => e.MaxPriceChange).HasColumnName("max_price_change");
-
-                entity.Property(e => e.MaxPriceTime)
-                    .HasColumnType("time")
-                    .HasColumnName("max_price_time");
-
-                entity.Property(e => e.MinPrice).HasColumnName("min_price");
-
-                entity.Property(e => e.MinPriceChange).HasColumnName("min_price_change");
-
-                entity.Property(e => e.MinPriceTime)
-                    .HasColumnType("time")
-                    .HasColumnName("min_price_time");
-
-                entity.Property(e => e.StartPrice).HasColumnName("start_price");
-
-                entity.Property(e => e.Symbol)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .HasColumnName("symbol");
-            });
-
-            modelBuilder.Entity<NewView>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("NewView");
-
-                entity.Property(e => e.Close).HasColumnName("close");
-
-                entity.Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasColumnName("created_at")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                entity.Property(e => e.High).HasColumnName("high");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Interval)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .HasColumnName("interval");
-
-                entity.Property(e => e.Low).HasColumnName("low");
-
-                entity.Property(e => e.Open).HasColumnName("open");
-
-                entity.Property(e => e.Symbol)
-                    .IsRequired()
-                    .HasMaxLength(50)
+                    .HasMaxLength(4)
                     .HasColumnName("symbol");
 
-                entity.Property(e => e.Timestamp).HasColumnName("timestamp");
-
-                entity.Property(e => e.Volume).HasColumnName("volume");
+                entity.Property(e => e.Weekday)
+                    .IsRequired()
+                    .HasMaxLength(3)
+                    .HasColumnName("weekday")
+                    .HasComputedColumnSql("date_part('isodow'::text, date)", true);
             });
 
             modelBuilder.Entity<PricesDaily>(entity =>
             {
                 entity.ToTable("prices_daily");
 
-                entity.HasIndex(e => new { e.Timestamp, e.Symbol }, "datetime_symbol")
+                entity.HasIndex(e => new { e.Symbol, e.Timestamp }, "symbol_timestamp_un")
                     .IsUnique();
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.Close).HasColumnName("close");
 
                 entity.Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
+                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
@@ -275,7 +110,7 @@ namespace Crunch.Database.Models
 
                 entity.Property(e => e.Symbol)
                     .IsRequired()
-                    .HasMaxLength(50)
+                    .HasMaxLength(4)
                     .HasColumnName("symbol");
 
                 entity.Property(e => e.Timestamp).HasColumnName("timestamp");
@@ -285,24 +120,21 @@ namespace Crunch.Database.Models
 
             modelBuilder.Entity<PricesIntraday>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.ToTable("prices_intraday");
-
-                entity.HasIndex(e => new { e.Timestamp, e.Symbol }, "datetime_symbol")
-                    .IsUnique();
-
-                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Close).HasColumnName("close");
 
                 entity.Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasColumnName("created_at")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("created_at");
 
                 entity.Property(e => e.High).HasColumnName("high");
 
+                entity.Property(e => e.Id).HasColumnName("id");
+
                 entity.Property(e => e.Interval)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("interval");
 
@@ -311,12 +143,11 @@ namespace Crunch.Database.Models
                 entity.Property(e => e.Open).HasColumnName("open");
 
                 entity.Property(e => e.Symbol)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("symbol");
 
                 entity.Property(e => e.Timestamp)
-                    .HasColumnType("datetime")
+                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("timestamp");
 
                 entity.Property(e => e.Volume).HasColumnName("volume");
@@ -324,44 +155,42 @@ namespace Crunch.Database.Models
 
             modelBuilder.Entity<Security>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.ToTable("securities");
 
-                entity.HasIndex(e => e.Symbol, "symbol")
-                    .IsUnique();
+                entity.HasComment("List of available securities on market. Stocks and ETFs");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Symbol)
-                    .IsRequired()
                     .HasMaxLength(50)
-                    .HasColumnName("symbol")
-                    .HasDefaultValueSql("''");
-
-                entity.Property(e => e.Type)
-                    .HasColumnType("text")
-                    .HasColumnName("type");
+                    .HasColumnName("symbol");
             });
 
-            modelBuilder.Entity<Test>(entity =>
+            modelBuilder.Entity<SingleMetric>(entity =>
             {
-                entity.HasKey(e => e.Momo)
-                    .HasName("PRIMARY");
+                entity.HasNoKey();
 
-                entity.ToTable("test");
+                entity.ToView("single_metrics", "overnight");
 
-                entity.Property(e => e.Momo)
-                    .HasMaxLength(5)
-                    .HasColumnName("momo");
+                entity.HasComment("Calculates single measures and important metrics");
+
+                entity.Property(e => e.AverageRoi).HasColumnName("average_roi");
+
+                entity.Property(e => e.Date).HasColumnName("date");
+
+                entity.Property(e => e.SpyRoi).HasColumnName("spy_roi");
             });
 
             modelBuilder.Entity<WeeklyOvernightStat>(entity =>
             {
-                entity.ToTable("weekly_overnight_stats");
+                entity.HasNoKey();
 
-                entity.HasIndex(e => new { e.Symbol, e.WeekNum, e.Strategy }, "symbol_week_num")
+                entity.ToTable("weekly_overnight_stats", "overnight");
+
+                entity.HasIndex(e => new { e.Symbol, e.Strategy, e.WeekNum }, "symbol_strategy_week_UNIQUE")
                     .IsUnique();
-
-                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.AvgDay).HasColumnName("avg_day");
 
@@ -390,6 +219,11 @@ namespace Crunch.Database.Models
                 entity.Property(e => e.GrossLoss).HasColumnName("gross_loss");
 
                 entity.Property(e => e.GrossProfit).HasColumnName("gross_profit");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
 
                 entity.Property(e => e.LargestLossLosingTrade).HasColumnName("largest_loss_losing_trade");
 
@@ -425,7 +259,7 @@ namespace Crunch.Database.Models
 
                 entity.Property(e => e.SecurityType)
                     .IsRequired()
-                    .HasMaxLength(100)
+                    .HasMaxLength(5)
                     .HasColumnName("security_type");
 
                 entity.Property(e => e.SharpeRatio).HasColumnName("sharpe_ratio");
@@ -442,12 +276,12 @@ namespace Crunch.Database.Models
 
                 entity.Property(e => e.Strategy)
                     .IsRequired()
-                    .HasMaxLength(50)
+                    .HasMaxLength(15)
                     .HasColumnName("strategy");
 
                 entity.Property(e => e.Symbol)
                     .IsRequired()
-                    .HasMaxLength(50)
+                    .HasMaxLength(4)
                     .HasColumnName("symbol");
 
                 entity.Property(e => e.TotalNetProfit).HasColumnName("total_net_profit");
@@ -456,6 +290,23 @@ namespace Crunch.Database.Models
 
                 entity.Property(e => e.WorstDay).HasColumnName("worst_day");
             });
+
+            modelBuilder.Entity<WinnersLosersCount>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("winners_losers_count", "overnight");
+
+                entity.HasComment("Report counting how many stocks were up overnight (winners) how many down (losers)");
+
+                entity.Property(e => e.Date).HasColumnName("date");
+
+                entity.Property(e => e.LosersCount).HasColumnName("losers_count");
+
+                entity.Property(e => e.WinnersCount).HasColumnName("winners_count");
+            });
+
+            modelBuilder.HasSequence("id");
 
             OnModelCreatingPartial(modelBuilder);
         }

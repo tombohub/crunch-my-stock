@@ -3,6 +3,7 @@ using Crunch.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
 
 namespace Crunch.Database
 {
@@ -42,7 +43,13 @@ namespace Crunch.Database
                 }
                 _db.SaveChanges();
             }
+        }
 
+        // TODO: unfinished method for inserting into prices_daily using Dapper
+        public void Save(DailyPriceSet priceSet, PriceInterval interval, string db)
+        {
+            using var conn = DbConnections.CreatePsqlConnection();
+            
         }
 
 
