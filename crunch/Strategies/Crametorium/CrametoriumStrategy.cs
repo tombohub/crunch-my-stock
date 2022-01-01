@@ -3,7 +3,7 @@ using System;
 
 namespace Crunch.Strategies.Crametorium
 {
-    class CrametoriumStrategy : IStrategy
+    class CrametoriumStrategy : IStrategyFacade
     {
         public string Name { get; } = "Crametorium Strategy";
 
@@ -15,6 +15,11 @@ namespace Crunch.Strategies.Crametorium
         public void CreateDataSource()
         {
             Console.WriteLine("Crametorium data source");
+        }
+
+        public void Plot()
+        {
+            Console.WriteLine("Plotting Crametorium");
         }
     }
 }

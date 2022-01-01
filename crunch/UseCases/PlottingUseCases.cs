@@ -27,7 +27,7 @@ namespace Crunch.UseCases
 
         public void PlotWinnersLosersUseCase(SecurityType securityType)
         {
-            WinnersLosersRatioReport winLosData = _reportsCalculator.CalculateWinnersLosersRatio(securityType);
+            WinnersLosersReport winLosData = _reportsCalculator.CalculateWinnersLosersRatio(securityType);
             OvernightPlotter overnightMultiplot = new();
             overnightMultiplot.PlotWinnersLosers(winLosData, 300, 300);
         }

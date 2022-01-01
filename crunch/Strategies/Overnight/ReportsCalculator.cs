@@ -18,7 +18,7 @@ namespace Crunch.Strategies.Overnight
         /// Calculate the count of winners and losers
         /// </summary>
         /// <returns>Winners and losers count data</returns>
-        public WinnersLosersRatioReport CalculateWinnersLosersRatio(SecurityType securityType)
+        public WinnersLosersReport CalculateWinnersLosersRatio(SecurityType securityType)
         {
             var winnersCount = _stats.Stats.Where(s => s.OvernightRoi >= 0)
                 .Where(s => s.SecurityType == securityType)
@@ -27,7 +27,7 @@ namespace Crunch.Strategies.Overnight
                 .Where(s => s.SecurityType == securityType)
                 .Count();
 
-            var reportData = new WinnersLosersRatioReport
+            var reportData = new WinnersLosersReport
             {
                 SecurityType = securityType,
                 WinnersCount = winnersCount,

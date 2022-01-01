@@ -27,7 +27,7 @@ namespace CrunchTests.OvernightStrategy
         [DataRow(320, 2019, SecurityType.Etf)]
         public void CalculateWinnersLosersRatio_OvernightStatsData_ReturnsEqual(int winnersCount, int losersCount, SecurityType securityType)
         {
-            var expectedRatio = new WinnersLosersRatioReport
+            var expectedRatio = new WinnersLosersReport
             {
                 WinnersCount = winnersCount,
                 LosersCount = losersCount,

@@ -68,7 +68,7 @@ namespace Crunch.Strategies.Overnight.Plots
         /// <param name="width">Plot width in pixels</param>
         /// <param name="height">Plot height in pixels</param>
         /// <param name="winLosData">Plot data</param>
-        public Bitmap PlotWinnersLosers(Overnight.Reports.WinnersLosersRatioReport winLosData, int width, int height)
+        public Bitmap PlotWinnersLosers(Overnight.Reports.WinnersLosersReport winLosData, int width, int height)
         {
             var plt = new ScottPlot.Plot(width, height);
 

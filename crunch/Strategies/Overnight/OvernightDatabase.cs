@@ -36,6 +36,13 @@ namespace Crunch.Strategies.Overnight
             else Console.WriteLine($"There's no prices data for the {strategyDate}. Download prices first.");
         }
 
+
+        /// <summary>
+        /// Check if prices for the selected days are in database
+        /// </summary>
+        /// <param name="strategyDate"></param>
+        /// <param name="prevTradingDay"></param>
+        /// <returns></returns>
         private bool CheckPricesExist(DateOnly strategyDate, DateOnly prevTradingDay)
         {
             string strategyDatePricesSql = "SELECT count(*) FROM overnight.overnight_daily_stats WHERE date = @StrategyDate;";
@@ -46,5 +53,6 @@ namespace Crunch.Strategies.Overnight
 
             return (strategyDateRowCount > 0) && (prevTradingDayRowCount > 0);
         }
+
     }
 }

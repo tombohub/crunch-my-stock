@@ -1,14 +1,18 @@
-﻿using Crunch.Domain;
+﻿using System;
+using Crunch.Domain;
 
 namespace Crunch.Strategies.Overnight.Reports
 {
     /// <summary>
-    /// Report data model for Winners and Losers count
+    /// Represents report for Winners and Losers count
     /// </summary>
-    public record WinnersLosersRatioReport
+    public class WinnersLosersReport
     {
+        public DateOnly Date { get; set; }
         public SecurityType SecurityType { get; init; }
         public int WinnersCount { get; init; }
         public int LosersCount { get; init; }
+        
+
     }
 }

@@ -6,6 +6,7 @@ using Dapper;
 using System;
 using System.Data;
 using System.Collections.Generic;
+using Crunch.Strategies;
 using Crunch.Strategies.Overnight;
 
 namespace Crunch.CLI
@@ -55,6 +56,23 @@ namespace Crunch.CLI
             var overnightDb = new OvernightDatabase();
             overnightDb.SavePrices(date, prevTradingDay);
 
+        }
+
+        /// <summary>
+        /// Plot strategy reports all in one image
+        /// </summary>
+        /// <param name="strategy"></param>
+        /// <param name="date"></param>
+        public void Plot([Option] Strategy strategy)
+        {
+            // get data from database for each report
+            // create individual plot
+            // get coordinates for each plot to add in multiplot
+            // create multiplot using individual plots and coordinates
+            // save as image file
+            IStrategyFacade strategyFacade = StrategyFacadeFactory.CreateFacade(strategy);
+            strategyFacade.Plot();
+            
         }
     }
 }
