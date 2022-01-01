@@ -53,10 +53,7 @@ namespace Crunch.UseCases
             // get list of symbols
             List<string> symbols = Helpers.GetSecuritySymbols();
 
-            // truncate the database because EF core does not implement UPSERT
-            // and overnight strategy has not implemented start date and end date calculation
-            //Helpers.TruncatePricesTable(_interval);
-
+            
             foreach (string symbol in symbols)
             {
                 var thread = new Thread(() => ImportPrices(symbol));

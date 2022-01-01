@@ -6,6 +6,7 @@ using Dapper;
 using System;
 using System.Data;
 using System.Collections.Generic;
+using Crunch.Strategies.Overnight;
 
 namespace Crunch.CLI
 {
@@ -44,7 +45,6 @@ namespace Crunch.CLI
         [Option]
         DateOnly date)
         {
-            //TODO: implement
             Console.WriteLine($"This is command line parser for the command 'run' {strategy}");
             Console.WriteLine($"Date is {date}");
 
@@ -52,23 +52,9 @@ namespace Crunch.CLI
             var calendarDay = new CalendarDay(date);
             DateOnly prevTradingDay = calendarDay.PreviousTradingDay;
 
-            // take prices from previous trading day
-            var conn = Database.DbConnections.CreatePsqlConnection();
-            conn.Open();
-            string sql = $"CALL overnight.insert_overnight_prices('{date}','{prevTradingDay}');";
-            conn.Execute(sql);
-            conn.Close();
-        }
+            var overnightDb = new OvernightDatabase();
+            overnightDb.SavePrices(date, prevTradingDay);
 
-        record OvernightStrategyPriceDTO
-        {
-            public DateOnly StrategyDate { get; set; }
-            public string Symbol { get; set; }
-            public SecurityType SecurityType { get; set; }
-            public double StartPrice { get; set; }
-            public double EndPrice { get; set; }
         }
-
-       
     }
 }
