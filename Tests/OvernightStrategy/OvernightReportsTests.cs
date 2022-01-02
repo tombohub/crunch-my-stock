@@ -38,19 +38,6 @@ namespace CrunchTests.OvernightStrategy
 
         }
 
-        [TestMethod]
-        public void GetSpyOvernightRoi_OvernightStatsData_ReturnsCorrectNumber()
-        {
-            var spyOvernightRoi = ReportsCalculator.GetSpyOvernightRoi();
-            Assert.AreEqual(spyOvernightRoi, -0.0165, delta: 0.0001);
-        }
-
-        [TestMethod]
-        public void GetSpyBenchmarkRoi_OvernightStatsData_ReturnsCorrectNumber()
-        {
-            var spyBenchmarkRoi = ReportsCalculator.GetSpyBenchmarkRoi();
-            Assert.AreEqual(spyBenchmarkRoi, -0.0260, delta: 0.0001);
-        }
 
         [DataTestMethod]
         [DataRow(SecurityType.Stock, -0.0177)]
