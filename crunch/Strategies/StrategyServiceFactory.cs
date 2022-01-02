@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Crunch.Strategies
 {
-    internal class StrategyFacadeFactory
+    internal class StrategyServiceFactory
     {
-        public static IStrategyFacade CreateFacade(Strategy strategy)
+        public static IStrategyService CreateService(Strategy strategy)
         {
             return strategy switch
             {
-                Strategy.Overnight => new Overnight.OvernightStrategyFacade(),
+                Strategy.Overnight => new Overnight.OvernightStrategyService(),
                 Strategy.Crametorium => new Crametorium.CrametoriumStrategy(),
                 _ => throw new ArgumentException(nameof(strategy))
             };

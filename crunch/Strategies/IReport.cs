@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Crunch.Domain.Strategies
+namespace Crunch.Strategies
 {
     interface IReport
     {

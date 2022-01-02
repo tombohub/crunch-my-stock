@@ -70,8 +70,8 @@ namespace Crunch.CLI
             // get coordinates for each plot to add in multiplot
             // create multiplot using individual plots and coordinates
             // save as image file
-            IStrategyFacade strategyFacade = StrategyFacadeFactory.CreateFacade(strategy);
-            strategyFacade.Plot();
+            IStrategyService strategyService = StrategyServiceFactory.CreateService(strategy);
+            strategyService.Plot();
             
         }
     }

@@ -25,13 +25,6 @@ namespace Crunch.UseCases
             _reportsCalculator = new ReportsCalculator(overnightStats);
         }
 
-        public void PlotWinnersLosersUseCase(SecurityType securityType)
-        {
-            WinnersLosersReport winLosData = _reportsCalculator.CalculateWinnersLosersRatio(securityType);
-            OvernightPlotter overnightMultiplot = new();
-            overnightMultiplot.PlotWinnersLosers(winLosData, 300, 300);
-        }
-
         public void PlotTop10UseCase(SecurityType securityType)
         {
             List<Strategies.Overnight.SingleSymbolStats> top10Data = _reportsCalculator.CalculateTop10(securityType);

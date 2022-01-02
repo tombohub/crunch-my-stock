@@ -3,6 +3,7 @@ using ScottPlot.Plottable;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Crunch.Strategies.Overnight.Reports;
 
 //TODO: svaki plot ima dimenzije, dimenzije moraju biti unutar dimenzija generalnog plota
 namespace Crunch.Strategies.Overnight.Plots
@@ -35,8 +36,8 @@ namespace Crunch.Strategies.Overnight.Plots
             int rowsNumber = 12;
             int gridSquareSize = _multiplotWidth / columnsNumber;
             int multiplotHeight = rowsNumber * gridSquareSize;
-            Bitmap plot = new Bitmap(_multiplotWidth, multiplotHeight);
-            var graphics = Graphics.FromImage(plot);
+            Bitmap multiPlot = new Bitmap(_multiplotWidth, multiplotHeight);
+            var graphics = Graphics.FromImage(multiPlot);
 
             (int Width, int Height) avgOvernightRoiBoxSize = (2, 1);
 
@@ -45,7 +46,8 @@ namespace Crunch.Strategies.Overnight.Plots
             Bitmap avgBenchRoiBox = DrawAverageBenchmarkRoi(reports.AverageBenchmarkRoi, 2 * gridSquareSize, 1 * gridSquareSize);
             Bitmap spyOvernightRoiBox = DrawSpyOvernightRoi(reports.SpyOvernightRoi, 2 * gridSquareSize, 1 * gridSquareSize);
             Bitmap spyBenchRoiBox = DrawSpyBenchmarkRoi(reports.SpyBenchmarkRoi, 2 * gridSquareSize, 1 * gridSquareSize);
-            Bitmap winnersLosersPlot = PlotWinnersLosers(reports.WinnersLosersRatio, 4 * gridSquareSize, 4 * gridSquareSize);
+            var winnersLosersReport = new WinnersLosersReport();
+            Bitmap winnersLosersPlot = winnersLosersReport.Plot(4 * gridSquareSize, 4 * gridSquareSize);
             Bitmap top10Plot = PlotTop10(reports.Top10, 4 * gridSquareSize, 4 * gridSquareSize);
             //Bitmap bottom10Plot = PlotBottom10(reports.Bottom10, 4 * gridSquareSize, 4 * gridSquareSize);
             // todo: activate bottom10plot
@@ -59,7 +61,7 @@ namespace Crunch.Strategies.Overnight.Plots
             //graphics.DrawImage(bottom10Plot, overnightLayout.GetArea(3,2,4,3));
 
 
-            plot.Save("D:\\PROJEKTI\\koko.png");
+            multiPlot.Save("D:\\PROJEKTI\\koko.png");
         }
 
         /// <summary>
@@ -83,6 +85,7 @@ namespace Crunch.Strategies.Overnight.Plots
 
             return plt.Render();
         }
+
 
         /// <summary>
         /// Plot Weekly Overnight top 10 ROI

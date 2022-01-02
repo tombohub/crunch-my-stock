@@ -3,8 +3,7 @@
 namespace Crunch.Strategies.Overnight.Plots
 {
     /// <summary>
-    /// Setup a grid layout for composite plotting.
-    /// Composite plotting is drawing single plots into one image - multiplot.
+    /// Setup a grid layout for multiplot.
     /// </summary>
     class GridLayout
     {
