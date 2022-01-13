@@ -3,7 +3,7 @@ using System;
 
 namespace Crunch.Strategies.Crametorium
 {
-    class CrametoriumStrategy : IStrategyService
+    class CrametoriumStrategyService : IStrategyService
     {
         public string Name { get; } = "Crametorium Strategy";
 

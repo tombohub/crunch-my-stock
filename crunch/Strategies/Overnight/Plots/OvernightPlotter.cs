@@ -46,7 +46,7 @@ namespace Crunch.Strategies.Overnight.Plots
             Bitmap avgBenchRoiBox = DrawAverageBenchmarkRoi(reports.AverageBenchmarkRoi, 2 * gridSquareSize, 1 * gridSquareSize);
             Bitmap spyOvernightRoiBox = DrawSpyOvernightRoi(reports.SpyOvernightRoi, 2 * gridSquareSize, 1 * gridSquareSize);
             Bitmap spyBenchRoiBox = DrawSpyBenchmarkRoi(reports.SpyBenchmarkRoi, 2 * gridSquareSize, 1 * gridSquareSize);
-            var winnersLosersReport = new WinnersLosersReport();
+            var winnersLosersReport = new WinnersLosersReport(12,12);
             Bitmap winnersLosersPlot = winnersLosersReport.Plot(4 * gridSquareSize, 4 * gridSquareSize);
             Bitmap top10Plot = PlotTop10(reports.Top10, 4 * gridSquareSize, 4 * gridSquareSize);
             //Bitmap bottom10Plot = PlotBottom10(reports.Bottom10, 4 * gridSquareSize, 4 * gridSquareSize);
@@ -63,29 +63,6 @@ namespace Crunch.Strategies.Overnight.Plots
 
             multiPlot.Save("D:\\PROJEKTI\\koko.png");
         }
-
-        /// <summary>
-        /// Plot Winners vs Losers pie chart Overnight strategy
-        /// </summary>
-        /// <param name="width">Plot width in pixels</param>
-        /// <param name="height">Plot height in pixels</param>
-        /// <param name="winLosData">Plot data</param>
-        public Bitmap PlotWinnersLosers(Overnight.Reports.WinnersLosersReport winLosData, int width, int height)
-        {
-            var plt = new ScottPlot.Plot(width, height);
-
-            double[] values = { winLosData.WinnersCount, winLosData.LosersCount };
-            string[] labels = { "Winners", "Losers" };
-            var pie = plt.AddPie(values);
-            pie.SliceLabels = labels;
-            pie.ShowLabels = true;
-            pie.ShowPercentages = true;
-            pie.SliceFillColors = new Color[] { Color.DarkGreen, Color.DarkRed };
-            pie.Explode = true;
-
-            return plt.Render();
-        }
-
 
         /// <summary>
         /// Plot Weekly Overnight top 10 ROI

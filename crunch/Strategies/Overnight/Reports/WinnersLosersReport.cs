@@ -13,7 +13,18 @@ namespace Crunch.Strategies.Overnight.Reports
         public SecurityType SecurityType { get; init; }
         public int WinnersCount { get; init; }
         public int LosersCount { get; init; }
+
+        public WinnersLosersReport(int winnersCount, int losersCount)
+        {
+            WinnersCount = winnersCount;
+            LosersCount = losersCount;
+        }
         
+        /// <summary>
+        /// Plot Winners vs Losers pie chart Overnight strategy
+        /// </summary>
+        /// <param name="width">Plot width in pixels</param>
+        /// <param name="height">Plot height in pixels</param>
         public Bitmap Plot(int width, int height)
         {
             var plt = new ScottPlot.Plot(width, height);

@@ -8,6 +8,9 @@ using Dapper;
 
 namespace Crunch.Strategies.Overnight
 {
+    /// <summary>
+    /// Methods for executing database commands and queries related to Overnight strategy
+    /// </summary>
     internal class OvernightDatabase
     {
         private Npgsql.NpgsqlConnection _connection;
@@ -35,8 +38,8 @@ namespace Crunch.Strategies.Overnight
             }
             else Console.WriteLine($"There's no prices data for the {strategyDate}. Download prices first.");
         }
-
-
+        
+        
         /// <summary>
         /// Check if prices for the selected days are in database
         /// </summary>
@@ -53,6 +56,8 @@ namespace Crunch.Strategies.Overnight
 
             return (strategyDateRowCount > 0) && (prevTradingDayRowCount > 0);
         }
+        
+        
 
     }
 }
