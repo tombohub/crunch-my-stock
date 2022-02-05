@@ -18,7 +18,12 @@
     },
     "Plot": {
       "commandName": "Project",
-      "commandLineArgs": "Plot --strategy Overnight"
+      "commandLineArgs": "Plot --strategy Overnight --date 2021-12-07"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "environmentVariables": {},
+      "distributionName": ""
     }
   }
 }

@@ -1,10 +1,11 @@
 ﻿namespace Crunch.Strategies.Overnight;
 
-public enum Report
+public enum ReportName
 {
     AvgRoi,
     SpyRoi,
     WinnersLosers,
+    WinnersLosersByPrice,
     Top10,
     Bottom10
 }

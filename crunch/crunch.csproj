@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CLIControllers\" />
     <Folder Include="Database\Models\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>

@@ -52,14 +52,12 @@ namespace Crunch.Database
         public static MultiplotSize GetMultiplotSize(Strategy strategy)
         {
             var dbConnection = DbConnections.CreatePsqlConnection();
-            var sql = @"SELECT  max(x+width) as width, max(y+height) as height 
+            var sql = @"SELECT  max((x+width)*scale) as width, max((y+height)*scale) as height  
                         FROM public.multiplot_coordinates 
                         WHERE strategy = 'Overnight' and is_included = true";
             var parameters = new { Strategy = strategy.ToString() };
             var multiplotSize = dbConnection.QuerySingle<MultiplotSize>(sql, parameters);
             return multiplotSize;
         }
-
-
     }
 }

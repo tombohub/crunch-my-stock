@@ -15,36 +15,6 @@ namespace Crunch.Database
         private stock_analyticsContext _db;
 
 
-        /// <summary>
-        /// Save PriceSet object to the database
-        /// </summary>
-        /// <param name="priceSet"></param>
-        /// <exception cref="ArgumentException"></exception>
-        public void SaveWithEFCore(DailyPriceSet priceSet, PriceInterval interval)
-        {
-            string intervalDb = Helpers.PriceIntervalToString(interval);
-            using (_db = new stock_analyticsContext())
-            {
-                foreach (var price in priceSet.Prices)
-                {
-                    var priceDb = new Models.PricesDaily
-                    {
-                        Symbol = priceSet.Symbol,
-                        Open = price.Open,
-                        High = price.High,
-                        Low = price.Low,
-                        Close = price.Close,
-                        Volume = price.Volume,
-                        Timestamp = price.Timestamp,
-                        Interval = intervalDb
-                    };
-                    //TODO: manage intraday and daily prices separatelly 
-                    _db.PricesDailies.Add(priceDb);
-                }
-                _db.SaveChanges();
-            }
-        }
-
         // TODO: unfinished method for inserting into prices_daily using Dapper
         public void SaveWithDapper(DailyPriceSet priceSet, PriceInterval interval)
         {

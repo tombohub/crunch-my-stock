@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Crunch.Database;
+using Crunch.Domain;
 using Dapper;
 
 namespace Crunch.Strategies.Overnight
@@ -39,6 +40,19 @@ namespace Crunch.Strategies.Overnight
             else Console.WriteLine($"There's no prices data for the {strategyDate}. Download prices first.");
         }
         
+        /// <summary>
+        /// Get coordinates and dimensions for plots which are included in strategy multiplot.
+        /// Queries database directly.
+        /// </summary>
+        /// <returns>List of objects containing plot coordinates and dimensions for each plot report</returns>
+        public List<PlotCoordinates> GetIncludedPlotsCoordinates()
+        {
+            string sql = @"SELECT report, x*scale as x, y*scale as y, width*scale as width, height*scale as height
+                           FROM multiplot_coordinates
+                            WHERE strategy = 'Overnight' AND is_included = true";
+            var plotCoordinates = _connection.Query<PlotCoordinates>(sql).ToList();
+            return plotCoordinates;
+        }
         
         /// <summary>
         /// Check if prices for the selected days are in database
@@ -56,6 +70,8 @@ namespace Crunch.Strategies.Overnight
 
             return (strategyDateRowCount > 0) && (prevTradingDayRowCount > 0);
         }
+
+
         
         
 

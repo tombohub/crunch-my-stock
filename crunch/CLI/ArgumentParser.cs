@@ -63,7 +63,7 @@ namespace Crunch.CLI
         /// </summary>
         /// <param name="strategy"></param>
         /// <param name="date"></param>
-        public void Plot([Option] Strategy strategy)
+        public void Plot([Option] Strategy strategy, [Option] DateOnly date)
         {
             // get data from database for each report
             // create individual plot
@@ -71,7 +71,7 @@ namespace Crunch.CLI
             // create multiplot using individual plots and coordinates
             // save as image file
             IStrategyService strategyService = StrategyServiceFactory.CreateService(strategy);
-            strategyService.Plot();
+            strategyService.CreateStrategyMultiplot(date);
             
         }
     }

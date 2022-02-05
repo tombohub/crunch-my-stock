@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using Crunch.Domain;
+using Crunch.Plots;
+using Crunch.Database;
+using Dapper;
 
 namespace Crunch.Strategies.Overnight.Reports
 {
@@ -9,36 +12,33 @@ namespace Crunch.Strategies.Overnight.Reports
     /// </summary>
     public class WinnersLosersReport : IReport
     {
-        public DateOnly Date { get; set; }
-        public SecurityType SecurityType { get; init; }
-        public int WinnersCount { get; init; }
-        public int LosersCount { get; init; }
+        /// <summary>
+        /// Number of securities with positive gain
+        /// </summary>
+        private int _winnersCount;
+
+        /// <summary>
+        /// Number of securities with negative gain
+        /// </summary>
+        private int _losersCount;
 
         public WinnersLosersReport(int winnersCount, int losersCount)
         {
-            WinnersCount = winnersCount;
-            LosersCount = losersCount;
+            _winnersCount = winnersCount;
+            _losersCount = losersCount;
         }
-        
+
         /// <summary>
         /// Plot Winners vs Losers pie chart Overnight strategy
         /// </summary>
-        /// <param name="width">Plot width in pixels</param>
-        /// <param name="height">Plot height in pixels</param>
+        /// <inheritdoc/>
         public Bitmap Plot(int width, int height)
         {
-            var plt = new ScottPlot.Plot(width, height);
-
-            double[] values = { WinnersCount, LosersCount };
-            string[] labels = { "Winners", "Losers" };
-            var pie = plt.AddPie(values);
-            pie.SliceLabels = labels;
-            pie.ShowLabels = true;
-            pie.ShowPercentages = true;
-            pie.SliceFillColors = new Color[] { Color.DarkGreen, Color.DarkRed };
-            pie.Explode = true;
-
-            return plt.Render();
+            var plotter = new Plotter();
+            var plot = plotter.PlotWinnersLosersPie(_winnersCount, _losersCount, width, height);
+            return plot;
         }
+
+
     }
 }

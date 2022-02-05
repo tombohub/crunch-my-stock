@@ -12,6 +12,6 @@ namespace Crunch.Strategies
     /// </summary>
     internal interface IStrategyService
     {
-        public void Plot();
+        public void CreateStrategyMultiplot(DateOnly date);
     }
 }

@@ -17,7 +17,7 @@ namespace Crunch.Strategies.Crametorium
             Console.WriteLine("Crametorium data source");
         }
 
-        public void Plot()
+        public void CreateStrategyMultiplot(DateOnly date)
         {
             Console.WriteLine("Plotting Crametorium");
         }
