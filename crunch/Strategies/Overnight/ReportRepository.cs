@@ -89,7 +89,7 @@ namespace Crunch.Strategies.Overnight
             string sql = @"SELECT winners_count, losers_count FROM overnight.winners_losers_count WHERE date = @Date";
             var parameters = new { Date = _date };
             var reportData = _connection.QuerySingle<WinnersLosersCount>(sql, parameters);
-            return new WinnersLosersReport(reportData.WinnersCount, reportData.LosersCount);
+            return new WinnersLosersReport(reportData);
         }
 
         /// <summary>

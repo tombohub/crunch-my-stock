@@ -22,10 +22,11 @@ namespace Crunch.Strategies.Overnight.Reports
         /// </summary>
         private int _losersCount;
 
-        public WinnersLosersReport(int winnersCount, int losersCount)
+        private WinnersLosersCount _reportData;
+
+        public WinnersLosersReport(WinnersLosersCount reportData)
         {
-            _winnersCount = winnersCount;
-            _losersCount = losersCount;
+            _reportData = reportData;
         }
 
         /// <summary>
