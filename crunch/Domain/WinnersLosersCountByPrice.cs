@@ -13,11 +13,6 @@ namespace Crunch.Domain
     internal record WinnersLosersCountByPrice
     {
         /// <summary>
-        /// Date of the report
-        /// </summary>
-        internal DateOnly Date {get; set;}
-
-        /// <summary>
         /// Number of winning securities in the price range
         /// </summary>
         internal int WinnersCount { get; set;}

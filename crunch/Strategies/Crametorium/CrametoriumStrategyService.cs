@@ -1,5 +1,4 @@
-﻿using Crunch.Domain.Strategies;
-using System;
+﻿using System;
 
 namespace Crunch.Strategies.Crametorium
 {

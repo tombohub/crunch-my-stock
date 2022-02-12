@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using Crunch.Database;
-using Crunch.Plots;
 using Dapper;
+using Crunch.Images;
 
 namespace Crunch.Strategies.Overnight.Reports
 {
@@ -28,7 +28,7 @@ namespace Crunch.Strategies.Overnight.Reports
             string text = $"SPY ROI\n{_spyRoi}%";
             var plotter = new Plotter();
 
-            var spyRoiPlot = plotter.DrawMetricBox(text, width, height);
+            var spyRoiPlot = plotter.RenderTextRectangle(text, width, height);
             return spyRoiPlot;
         }
     }

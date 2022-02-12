@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Crunch.Plots;
 using System.Drawing;
 using Crunch.Domain;
+using Crunch.Images;
 
 namespace Crunch.Strategies.Overnight.Reports
 {

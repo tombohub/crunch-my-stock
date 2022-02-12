@@ -8,15 +8,64 @@ using Crunch.Domain;
 using ScottPlot.Plottable;
 using ScottPlot;
 
-namespace Crunch.Plots
+namespace Crunch.Images
 {
+
     internal class Plotter
     {
+        // TODO: scale should be in constructor
+        /// <summary>
+        /// Multiplier for scaling the sizes of plots and fonts.
+        /// </summary>
+        private float _scale;
+
+        /// <summary>
+        /// Font family to use in plots
+        /// </summary>
+        private string _fontFamily;
+
+        /// <summary>
+        /// Font size for single metric box
+        /// </summary>
+        private float _singleMetricFontSize;
+
+        /// <summary>
+        /// Individual plot title font size
+        /// </summary>
+        private float _plotTitleFontSize;
+
+        /// <summary>
+        /// Tick labels are primarly numbers on X and Y axis
+        /// </summary>
+        private float _tickLabelsFontSize;
+
+        /// <summary>
+        /// Color to visualize winning securities and positive numbers in general
+        /// </summary>
+        private Color _winnerColor;
+
+        /// <summary>
+        /// Color to visualize losing securities and negative numbers in general
+        /// </summary>
+        private Color _loserColor;
+
+        public Plotter()
+        {
+            // TODO: make scale dynamic
+            _scale = 6;
+            _fontFamily = "Arial";
+            _singleMetricFontSize = 20 * _scale/2;
+            _plotTitleFontSize = 18 * _scale/2;
+            _tickLabelsFontSize = 14 * _scale/2; 
+            _winnerColor = Color.ForestGreen;
+            _loserColor = Color.Crimson;
+        }
+
         /// <summary>
         /// Draw the general rectangle with desired text in center.
-        /// Used for single metrics data.
+        /// Used for single metrics data and title.
         /// </summary>
-        public Bitmap DrawMetricBox(string text, int width, int height)
+        public Bitmap RenderTextRectangle(string text, int width, int height)
         {
             // initialize objects
             Bitmap box = new Bitmap(width, height);
@@ -33,32 +82,76 @@ namespace Crunch.Plots
                 LineAlignment = StringAlignment.Center
             };
 
-            graphics.DrawString(text, new Font("Verdana", 24), Brushes.Black, rect, format);
+            graphics.DrawString(text, new Font(_fontFamily, _singleMetricFontSize), Brushes.Black, rect, format);
 
             return box;
         }
 
         /// <summary>
-        /// Plot pie with winners vs losers securuties count.
+        /// Plot pie with winners vs losers securities count.
         /// </summary>
-        /// <param name="winnersCount">Number of winning securities</param>
-        /// <param name="losersCount">Number of losing securities</param>
+        /// <param name="reportData">value object containing report data</param>
         /// <param name="width">Width of plot in pixels</param>
         /// <param name="height">Height of plot in pixels</param>
         /// <returns>Plot image</returns>
-        public Bitmap PlotWinnersLosersPie(int winnersCount, int losersCount, int width, int height)
+        public Bitmap PlotWinnersLosersPie(WinnersLosersCount reportData, int width, int height)
         {
             var plt = new ScottPlot.Plot(width, height);
-            double[] values = { winnersCount, losersCount };
+            plt.Title("Winners Losers Total");
+            SetFontSizes(plt);
+
+            double[] values = { reportData.WinnersCount, reportData.LosersCount };
             string[] labels = { "Winners", "Losers" };
             var pie = plt.AddPie(values);
             pie.SliceLabels = labels;
-            pie.ShowLabels = true;
-            pie.ShowPercentages = true;
-            pie.SliceFillColors = new Color[] { Color.DarkGreen, Color.DarkRed };
-            
+            pie.SliceFillColors = new Color[] { _winnerColor, _loserColor };
+
             return plt.Render();
         }
+
+        /// <summary>
+        /// Plot bars with winners vs losers securities count.
+        /// </summary>
+        /// <param name="reportData">value object containing report data</param>
+        /// <param name="width">Width of plot in pixels</param>
+        /// <param name="height">Height of plot in pixels</param>
+        /// <returns>Plot image</returns>
+        public Bitmap PlotWinnersLosersBar(WinnersLosersCount reportData, int width, int height)
+        {
+            var plt = new ScottPlot.Plot(width,height);
+            plt.Title("Winners Losers Total");
+            SetFontSizes(plt);
+
+            double[] values = {reportData.WinnersCount, reportData.LosersCount};
+            string[] labels = { "Winners", "Losers" };
+            
+            var bar = plt.AddBar(values);
+
+            return plt.Render();
+        }
+
+        public Bitmap PlotWinnersLosersGroupBars(WinnersLosersCount reportData, int width, int height)
+        {
+            var plt = new ScottPlot.Plot(width, height);
+            plt.Title("Winners Losers Total");
+            SetFontSizes(plt);
+
+            // only one group name
+            string[] groupNames = { "Total" };
+            string[] seriesNames = { "Winners", "Losers" };
+            double[] winnersCount = { reportData.WinnersCount };
+            double[] losersCount = { reportData.LosersCount };
+            double[][] values = { winnersCount, losersCount };
+
+            // null means no error values. Error values are required in plot method, but we dont wanna plot them.
+            var barGroups = plt.AddBarGroups(groupNames, seriesNames, values, null);
+            barGroups[0].FillColor = _winnerColor;
+            barGroups[1].FillColor = _loserColor;
+
+            return plt.Render();
+        }
+
+
 
         /// <summary>
         /// Plot horizontal bars to the left showing bottom 10 securities
@@ -72,6 +165,7 @@ namespace Crunch.Plots
             var plt = new ScottPlot.Plot(width, height);
             // order in list will affect the order in plot
             List<SecurityPerformance> orderedBottom10 = reportData.OrderBy(b => b.ChangePct).ToList();
+            SetFontSizes(plt);
 
             double[] values = orderedBottom10
                 .Select(b => b.ChangePct)
@@ -82,7 +176,7 @@ namespace Crunch.Plots
                 .ToArray();
 
 
-            BarPlot bar = plt.AddBar(values, Color.IndianRed);
+            BarPlot bar = plt.AddBar(values, _loserColor);
             bar.FillColorNegative = bar.FillColor;
             bar.Label = "Overnight";
             bar.Orientation = Orientation.Horizontal;
@@ -117,9 +211,6 @@ namespace Crunch.Plots
             plt.XLabel("ROI");
             plt.XAxis.TickLabelFormat(AddPctToTick);
 
-            // XAxis2 is plot title
-            plt.XAxis2.LabelStyle(fontSize: 50);
-
             return plt.Render();
         }
 
@@ -130,11 +221,12 @@ namespace Crunch.Plots
         /// <param name="width">Width of plot in pixels</param>
         /// <param name="height">Height of plot in pixels</param>
         /// <returns>Plot bitmap image</returns>
-        public Bitmap PlotTop10Bars(List<SecurityPerformance> top10Data, int width, int height)
+        public Bitmap PlotTop10Bars(List<SecurityPerformance> reportData, int width, int height)
         {
             ScottPlot.Plot plt = new(width, height);
+            SetFontSizes(plt);
 
-            List<SecurityPerformance> orderedTop10 = top10Data.OrderBy(t => t.ChangePct).ToList();
+            List<SecurityPerformance> orderedTop10 = reportData.OrderBy(t => t.ChangePct).ToList();
 
             // bars overnight roi
             double[] values = orderedTop10
@@ -146,7 +238,7 @@ namespace Crunch.Plots
                 .ToArray();
 
 
-            BarPlot bar = plt.AddBar(values, color: Color.DarkGreen);
+            BarPlot bar = plt.AddBar(values, color: _winnerColor);
             bar.Orientation = Orientation.Horizontal;
 
             // adds % sign to tick number because the value is already
@@ -162,13 +254,22 @@ namespace Crunch.Plots
             plt.XAxis.TickLabelFormat(AddPctToTick);
             plt.Legend();
 
+
             return plt.Render();
         }
 
+        /// <summary>
+        /// Plot Winners and Losers count grouped by manually selected price ranges.
+        /// </summary>
+        /// <param name="reportData">Data to plot</param>
+        /// <param name="width">Plot width (pixels)</param>
+        /// <param name="height">Plot height (pixels)</param>
+        /// <returns>Rendered plot image</returns>
         public Bitmap PlotWinnersLosersCountByPrice(List<WinnersLosersCountByPrice> reportData, int width, int height)
         {
             var plt = new Plot(width, height);
             plt.Title("Winners vs Losers by price");
+            SetFontSizes(plt);
             
             string[] groupNames = reportData.Select(s => s.PriceUpperBound.ToString()).ToArray();
             string[] seriesName = { "Winners", "Losers" };
@@ -177,9 +278,22 @@ namespace Crunch.Plots
             double[][] countValues = { winnersCounts, losersCounts };
             double[][] errors = { new double[winnersCounts.Length], new double[losersCounts.Length] };
 
-            plt.AddBarGroups(groupNames, seriesName, countValues, errors);
+            var barPlots = plt.AddBarGroups(groupNames, seriesName, countValues, errors);
+            barPlots[0].FillColor = _winnerColor;
+            barPlots[1].FillColor = _loserColor;
+
+         
+            var legend = plt.Legend();
+            legend.Location = Alignment.UpperRight;
 
             return plt.Render();
+        }
+
+        private void SetFontSizes(Plot plt)
+        {
+            plt.XAxis2.LabelStyle(fontSize: _plotTitleFontSize);
+            plt.XAxis.TickLabelStyle(fontSize: _tickLabelsFontSize);
+            plt.YAxis.TickLabelStyle(fontSize:_tickLabelsFontSize);
         }
     }
 }

@@ -1,19 +1,22 @@
-﻿using Crunch.Strategies.Overnight;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Crunch.Strategies.Overnight.Multiplot;
 
-namespace Crunch.Domain
+namespace Crunch.Strategies.Overnight
 {
     /// <summary>
-    /// Coordinates and size of individual plot inside the multiplot layout
+    /// DTO for getting area coordinates and name from database.
     /// </summary>
-    internal record PlotCoordinates
+    internal record AreaDTO
     {
-        public ReportName Report { get; init; }
-        
+        /// <summary>
+        /// Name of the report
+        /// </summary>
+        public AreaName AreaName { get; init; }
+
         /// <summary>
         /// X coordinate of the plot
         /// </summary>
@@ -33,5 +36,10 @@ namespace Crunch.Domain
         /// Height of the plot in multiplot
         /// </summary>
         public int Height { get; init; }
+
+        /// <summary>
+        /// Scale used to multiply the dimensions of rendered image
+        /// </summary>
+        internal float Scale { get; init; }
     }
 }

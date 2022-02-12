@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
 using Crunch.Database;
-using Crunch.Plots;
+using Crunch.Images;
 
 namespace Crunch.Strategies.Overnight.Reports
 {
@@ -35,7 +35,7 @@ namespace Crunch.Strategies.Overnight.Reports
         {
             string text = $"Average ROI\n{_avgRoi}%";
             var plotter = new Plotter();
-            var avgRoiPlot = plotter.DrawMetricBox(text, width, height);
+            var avgRoiPlot = plotter.RenderTextRectangle(text, width, height);
 
             return avgRoiPlot;
         }

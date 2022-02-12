@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using Crunch.Domain;
-using Crunch.Plots;
 using Crunch.Database;
 using Dapper;
+using Crunch.Images;
 
 namespace Crunch.Strategies.Overnight.Reports
 {
@@ -12,19 +12,9 @@ namespace Crunch.Strategies.Overnight.Reports
     /// </summary>
     public class WinnersLosersReport : IReport
     {
-        /// <summary>
-        /// Number of securities with positive gain
-        /// </summary>
-        private int _winnersCount;
-
-        /// <summary>
-        /// Number of securities with negative gain
-        /// </summary>
-        private int _losersCount;
-
         private WinnersLosersCount _reportData;
 
-        public WinnersLosersReport(WinnersLosersCount reportData)
+        internal WinnersLosersReport(WinnersLosersCount reportData)
         {
             _reportData = reportData;
         }
@@ -36,7 +26,7 @@ namespace Crunch.Strategies.Overnight.Reports
         public Bitmap Plot(int width, int height)
         {
             var plotter = new Plotter();
-            var plot = plotter.PlotWinnersLosersPie(_winnersCount, _losersCount, width, height);
+            var plot = plotter.PlotWinnersLosersGroupBars(_reportData, width, height);
             return plot;
         }
 

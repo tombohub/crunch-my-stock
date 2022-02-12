@@ -1,7 +1,10 @@
 ﻿using Crunch.Database;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
-using Crunch.Plots;
+using Crunch.Domain;
+using Crunch.Strategies.Overnight.Multiplot;
+using Crunch.Domain.Multiplots;
 
 namespace Crunch.Strategies.Overnight
 {
@@ -13,22 +16,27 @@ namespace Crunch.Strategies.Overnight
 
         public void CreateStrategyMultiplot(DateOnly date)
         {
-            var multiplotSize = Helpers.GetMultiplotSize(Strategy.Overnight);
-            Bitmap multiplot = new Bitmap(multiplotSize.Width, multiplotSize.Height);
-            using Graphics multiplotGraphics = Graphics.FromImage(multiplot);
-            var plotter = new Plotter();
-
-            // foreach report in reports
             var overnightDb   = new OvernightDatabase();
-            var includedPlots = overnightDb.GetIncludedPlotsCoordinates();
-            var reportRepo = new ReportRepository(date);
-            foreach (var includedPlot in includedPlots)
+            List<AreaDTO> includedAreasDto = overnightDb.GetIncludedAreas();
+            List<Area> areas = new List<Area>();
+            foreach (AreaDTO areaDto in includedAreasDto)
             {
-                var report = reportRepo.CreateReport(includedPlot.Report);
-                var reportPlot = report.Plot(includedPlot.Width, includedPlot.Height);
-                multiplotGraphics.DrawImage(reportPlot, includedPlot.X, includedPlot.Y);
+                Area area = AreaFactory.CreateArea(areaDto, date);
+                areas.Add(area);
             }
-            multiplot.Save("D:\\PROJEKTI\\noant.png");
+
+            var multiplot = new Domain.Multiplots.Multiplot(areas);
+            multiplot.SaveToFile("D:\\PROJEKTI\\moko.png");
+
+            //var reportRepo = new ReportRepository(date);
+            //foreach (var includedArea in includedAreas)
+            //{
+            //    IReport report = reportRepo.CreateReport(includedArea.AreaName);
+            //    Bitmap reportPlot = report.Plot(includedArea.Width, includedArea.Height);
+            //    multiplotGraphics.DrawImage(reportPlot, includedArea.X, includedArea.Y);
+            //}
+            //Multiplot multiplot = new Multiplot(includedAreas);
+            //multiplot.Save("D:\\PROJEKTI\\noant.png");
         }
     }
 }

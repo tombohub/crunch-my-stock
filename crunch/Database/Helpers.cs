@@ -2,6 +2,7 @@
 using Crunch.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using Crunch.Strategies;
@@ -49,14 +50,14 @@ namespace Crunch.Database
         /// </summary>
         /// <param name="strategy"></param>
         /// <returns></returns>
-        public static MultiplotSize GetMultiplotSize(Strategy strategy)
+        public static Size GetMultiplotSize(StrategyName strategy)
         {
             var dbConnection = DbConnections.CreatePsqlConnection();
             var sql = @"SELECT  max((x+width)*scale) as width, max((y+height)*scale) as height  
                         FROM public.multiplot_coordinates 
                         WHERE strategy = 'Overnight' and is_included = true";
             var parameters = new { Strategy = strategy.ToString() };
-            var multiplotSize = dbConnection.QuerySingle<MultiplotSize>(sql, parameters);
+            var multiplotSize = dbConnection.QuerySingle<Size>(sql, parameters);
             return multiplotSize;
         }
     }

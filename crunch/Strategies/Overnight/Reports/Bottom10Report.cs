@@ -1,11 +1,10 @@
-﻿using Crunch.Domain.Strategies;
-using ScottPlot;
+﻿using ScottPlot;
 using ScottPlot.Plottable;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Crunch.Domain;
-using Crunch.Plots;
+using Crunch.Images;
 
 namespace Crunch.Strategies.Overnight.Reports
 {

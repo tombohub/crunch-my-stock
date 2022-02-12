@@ -1,4 +1,5 @@
-﻿namespace Crunch.Strategies.Overnight;
+﻿using Crunch.Strategies.Overnight;
+namespace Crunch.Strategies.Overnight.Reports;
 
 public enum ReportName
 {
@@ -7,5 +8,5 @@ public enum ReportName
     WinnersLosers,
     WinnersLosersByPrice,
     Top10,
-    Bottom10
+    Bottom10,
 }

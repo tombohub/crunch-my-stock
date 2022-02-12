@@ -1,9 +1,10 @@
-﻿namespace Crunch.Strategies
+﻿using Crunch.Strategies;
+namespace Crunch.Domain
 {
     /// <summary>
     /// Enumeration of available strategies.
     /// </summary>
-    enum Strategy
+    enum StrategyName
     {
         Overnight,
         Crametorium

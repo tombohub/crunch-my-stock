@@ -41,7 +41,7 @@ namespace Crunch.CLI
         /// <param name="date"></param>
         public void Run(
         [Option]
-        Strategy strategy,
+        StrategyName strategy,
 
         [Option]
         DateOnly date)
@@ -63,7 +63,7 @@ namespace Crunch.CLI
         /// </summary>
         /// <param name="strategy"></param>
         /// <param name="date"></param>
-        public void Plot([Option] Strategy strategy, [Option] DateOnly date)
+        public void Plot([Option] StrategyName strategy, [Option] DateOnly date)
         {
             // get data from database for each report
             // create individual plot

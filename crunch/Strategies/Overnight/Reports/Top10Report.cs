@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Crunch.Domain;
 using System.Drawing;
-using Crunch.Plots;
+using Crunch.Images;
 
 namespace Crunch.Strategies.Overnight.Reports
 {
     internal class Top10Report : IReport
     {
-            private List<SecurityPerformance> _reportData;
+        private List<SecurityPerformance> _reportData;
 
         public Top10Report(List<SecurityPerformance> reportData)
         {

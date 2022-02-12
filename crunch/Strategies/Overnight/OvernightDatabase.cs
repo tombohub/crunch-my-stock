@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,16 +42,16 @@ namespace Crunch.Strategies.Overnight
         }
         
         /// <summary>
-        /// Get coordinates and dimensions for plots which are included in strategy multiplot.
+        /// Get list of areas included in multiplot layout
         /// Queries database directly.
         /// </summary>
-        /// <returns>List of objects containing plot coordinates and dimensions for each plot report</returns>
-        public List<PlotCoordinates> GetIncludedPlotsCoordinates()
+        /// <returns>List of objects containing multiplot area with coordinates and dimensions</returns>
+        public List<AreaDTO> GetIncludedAreas()
         {
-            string sql = @"SELECT report, x*scale as x, y*scale as y, width*scale as width, height*scale as height
+            string sql = @"SELECT area_name, x*scale as x, y*scale as y, width*scale as width, height*scale as height, scale
                            FROM multiplot_coordinates
                             WHERE strategy = 'Overnight' AND is_included = true";
-            var plotCoordinates = _connection.Query<PlotCoordinates>(sql).ToList();
+            var plotCoordinates = _connection.Query<AreaDTO>(sql).ToList();
             return plotCoordinates;
         }
         

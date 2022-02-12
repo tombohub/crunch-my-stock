@@ -14,12 +14,12 @@ namespace Crunch.Strategies
         /// <param name="strategy"></param>
         /// <returns>Instance of chosen strategy service</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static IStrategyService CreateService(Strategy strategy)
+        public static IStrategyService CreateService(StrategyName strategy)
         {
             return strategy switch
             {
-                Strategy.Overnight => new Overnight.OvernightStrategyService(),
-                Strategy.Crametorium => new Crametorium.CrametoriumStrategyService(),
+                StrategyName.Overnight => new Overnight.OvernightStrategyService(),
+                StrategyName.Crametorium => new Crametorium.CrametoriumStrategyService(),
                 _ => throw new ArgumentException(nameof(strategy))
             };
         }

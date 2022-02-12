@@ -23,8 +23,31 @@ namespace Crunch.Domain
             new DateOnly(2021, 11, 25),
 
             // christmas day
-            new DateOnly(2021, 12, 24)
+            new DateOnly(2021, 12, 24),
 
+            // Marthing Luther Jr. day
+            new DateOnly(2022, 1,17),
+
+            // Washington's birthday
+            new DateOnly(2022, 2, 21),
+
+            // Good Friday
+            new DateOnly(2022, 4, 15),
+
+            // Memorial day
+            new DateOnly(2022, 5, 30),
+
+            // Juneteenth National Independence Day
+            new DateOnly(2022, 6, 20),
+
+            // Independence day
+            new DateOnly(2022, 7, 4),
+
+            // labor day
+            new DateOnly(2022, 9, 5),
+
+            // Christmass
+            new DateOnly(2022, 12,26)
         };
         public DateOnly Date { get; init; }
 
