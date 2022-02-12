@@ -1,5 +1,4 @@
-﻿using Crunch.Strategies;
-namespace Crunch.Domain
+﻿namespace Crunch.Domain
 {
     /// <summary>
     /// Enumeration of available strategies.
