@@ -42,7 +42,7 @@ namespace Crunch.Strategies.Overnight
         {
             return report switch
             {
-                ReportName.AvgRoi => CreateAvgRoStocksiReport(),
+                ReportName.AvgRoi => CreateAvgRoiStocksReport(),
                 ReportName.SpyRoi => CreateSpyRoiReport(),
                 ReportName.WinnersLosers => CreateWinnersLosersStocksReport(),
                 ReportName.Bottom10 => CreateBottom10Report(),
@@ -57,9 +57,9 @@ namespace Crunch.Strategies.Overnight
         /// </summary>
         /// <param name="date">Date for the Average ROI</param>
         /// <returns>Single metrics: average ROI in % for the strategy on the given date</returns>
-        private AvgRoiReport CreateAvgRoStocksiReport()
+        private AvgRoiReport CreateAvgRoiStocksReport()
         {
-            string sql = "SELECT average_roi FROM overnight.single_metrics WHERE date = @Date";
+            string sql = "SELECT average_roi FROM overnight.average_roi WHERE date = @Date";
             var parameters = new { Date = _date };
 
             decimal avgRoi = _connection.ExecuteScalar<decimal>(sql, parameters);
@@ -73,7 +73,7 @@ namespace Crunch.Strategies.Overnight
         /// <returns>Single metrics: SPY ROI in % for the strategy on the given date</returns>
         private SpyRoiReport CreateSpyRoiReport()
         {
-            string sql = "SELECT spy_roi FROM overnight.single_metrics WHERE date = @Date";
+            string sql = "SELECT spy_roi FROM overnight.spy_roi WHERE date = @Date";
             var parameters = new { Date = _date };
 
             decimal spyRoi = _connection.ExecuteScalar<decimal>(sql, parameters);
