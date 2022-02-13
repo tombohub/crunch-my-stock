@@ -9,10 +9,10 @@ namespace Crunch.Images
 {
     internal class SingleMetric : TextImageBase
     {
-        internal SingleMetric(string text, float scale) 
+        internal SingleMetric(string text) 
         {
             Text = text;
-            FontSize = 18 * scale / 2;
+            FontSize = 18 * Scale / 2;
         }
     }
 }

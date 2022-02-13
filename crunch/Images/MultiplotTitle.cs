@@ -9,10 +9,10 @@ namespace Crunch.Images
 {
     internal class MultiplotTitle : TextImageBase
     {
-        internal MultiplotTitle(string title, float scale) 
+        internal MultiplotTitle(string title) 
         {
             Text = title;
-            FontSize = 24 * scale/2;
+            FontSize = 24 * Scale/2;
         }
     }
 }

@@ -36,10 +36,5 @@ namespace Crunch.Strategies.Overnight
         /// Height of the plot in multiplot
         /// </summary>
         public int Height { get; init; }
-
-        /// <summary>
-        /// Scale used to multiply the dimensions of rendered image
-        /// </summary>
-        internal float Scale { get; init; }
     }
 }

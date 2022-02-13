@@ -48,7 +48,7 @@ namespace Crunch.Strategies.Overnight
         /// <returns>List of objects containing multiplot area with coordinates and dimensions</returns>
         public List<AreaDTO> GetIncludedAreas()
         {
-            string sql = @"SELECT area_name, x*scale as x, y*scale as y, width*scale as width, height*scale as height, scale
+            string sql = @"SELECT area_name, x, y, width, height
                            FROM multiplot_coordinates
                             WHERE strategy = 'Overnight' AND is_included = true";
             var plotCoordinates = _connection.Query<AreaDTO>(sql).ToList();

@@ -32,6 +32,7 @@ namespace Crunch.Images
         internal TextImageBase()
         {
             FontFamily = "Consolas";
+            Scale = 1;
         }
 
         /// <summary>

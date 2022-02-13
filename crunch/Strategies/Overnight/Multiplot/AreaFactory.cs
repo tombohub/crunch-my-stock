@@ -35,7 +35,7 @@ namespace Crunch.Strategies.Overnight.Multiplot
 
         private static Area CreateTitleArea(AreaDTO areaDto, string title)
         {
-            var multiplotTitle = new MultiplotTitle(title, areaDto.Scale);
+            var multiplotTitle = new MultiplotTitle(title);
             Bitmap titleImage = multiplotTitle.Render(areaDto.Width, areaDto.Height);
             return new Area(areaDto.X, areaDto.Y, areaDto.Width, areaDto.Height, titleImage);
         }
