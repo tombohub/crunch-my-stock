@@ -5,10 +5,11 @@ using System.Drawing;
 using System.Linq;
 using Crunch.Domain;
 using Crunch.Images;
+using Crunch.Domain.Multiplots;
 
 namespace Crunch.Strategies.Overnight.Reports
 {
-    internal class Bottom10Report : IReport
+    internal class Bottom10Report : IAreaContent
     {
 
         private List<SecurityPerformance> _reportData;
@@ -21,7 +22,7 @@ namespace Crunch.Strategies.Overnight.Reports
         /// Plot Bottom 10 securities based on ROI
         /// </summary>
         /// <inheritdoc/>
-        public Bitmap Plot(int width, int height)
+        public Bitmap RenderImage(int width, int height)
         {
             var plotter = new Plotter();
             Bitmap plot = plotter.PlotBottom10Bars(_reportData, width, height);

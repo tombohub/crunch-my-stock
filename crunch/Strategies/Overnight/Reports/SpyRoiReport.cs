@@ -7,10 +7,11 @@ using System.Drawing;
 using Crunch.Database;
 using Dapper;
 using Crunch.Images;
+using Crunch.Domain.Multiplots;
 
 namespace Crunch.Strategies.Overnight.Reports
 {
-    internal class SpyRoiReport: IReport
+    internal class SpyRoiReport: IAreaContent
     {
         /// <summary>
         /// SPY roi metric in percentage
@@ -23,7 +24,7 @@ namespace Crunch.Strategies.Overnight.Reports
         }
 
         /// <inheritdoc/>
-        public Bitmap Plot(int width, int height)
+        public Bitmap RenderImage(int width, int height)
         {
             string text = $"SPY ROI\n{_spyRoi}%";
             var plotter = new Plotter();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Crunch.Strategies.Overnight.Multiplot;
+using Crunch.Strategies.Overnight;
 
 namespace Crunch.Strategies.Overnight
 {
@@ -15,7 +15,7 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Name of the report
         /// </summary>
-        public AreaName AreaName { get; init; }
+        public string AreaName { get; init; }
 
         /// <summary>
         /// X coordinate of the plot

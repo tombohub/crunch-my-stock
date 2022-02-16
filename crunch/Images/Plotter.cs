@@ -52,7 +52,7 @@ namespace Crunch.Images
         public Plotter()
         {
             // TODO: make scale dynamic
-            _scale = 1;
+            _scale = 2;
             _fontFamily = "Arial";
             _singleMetricFontSize = 20 * _scale/2;
             _plotTitleFontSize = 18 * _scale/2;

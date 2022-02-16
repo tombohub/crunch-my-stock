@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using System.Drawing;
 using Crunch.Domain;
 using Crunch.Images;
+using Crunch.Domain.Multiplots;
 
 namespace Crunch.Strategies.Overnight.Reports
 {
 
-    internal class WinnersLosersByPriceReport: IReport
+    internal class WinnersLosersByPriceReport: IAreaContent
     {
         private List<WinnersLosersCountByPrice> _reportData;
         public WinnersLosersByPriceReport(List<WinnersLosersCountByPrice> reportData)
@@ -21,7 +22,7 @@ namespace Crunch.Strategies.Overnight.Reports
         ///Plot comparison of number of winners and losers securities by security price
         /// </summary>
         /// <inheritdoc/>
-        public Bitmap Plot(int width, int height)
+        public Bitmap RenderImage(int width, int height)
         {
             var plotter = new Plotter();
             Bitmap plot = plotter.PlotWinnersLosersCountByPrice(_reportData, width, height);

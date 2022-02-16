@@ -8,7 +8,8 @@ using Crunch.Strategies.Overnight;
 namespace Crunch.Domain
 {
     /// <summary>
-    /// Represents single security DTO for the Bottom 10 Report
+    /// Represents single security performance over time.
+    /// Performance is values as change in percent.
     /// </summary>
     internal record SecurityPerformance
     {

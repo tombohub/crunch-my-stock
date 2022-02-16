@@ -7,6 +7,7 @@ using Crunch.Strategies.Overnight.Reports;
 using Crunch.Database;
 using Dapper;
 using Crunch.Domain;
+using Crunch.Domain.Multiplots;
 
 namespace Crunch.Strategies.Overnight
 {
@@ -38,7 +39,7 @@ namespace Crunch.Strategies.Overnight
         /// <param name="report">Report to create instance of</param>
         /// <returns>Instance for the given report</returns>
         /// <exception cref="ArgumentException">Non existing or unsupported report</exception>
-        public IReport CreateReport(ReportName report)
+        public IAreaContent CreateReport(ReportName report)
         {
             return report switch
             {
@@ -57,7 +58,8 @@ namespace Crunch.Strategies.Overnight
         /// </summary>
         /// <param name="date">Date for the Average ROI</param>
         /// <returns>Single metrics: average ROI in % for the strategy on the given date</returns>
-        private AvgRoiReport CreateAvgRoiStocksReport()
+        [AreaName("AvgRoi")]
+        public AvgRoiReport CreateAvgRoiStocksReport()
         {
             string sql = "SELECT average_roi FROM overnight.average_roi WHERE date = @Date";
             var parameters = new { Date = _date };
@@ -71,7 +73,8 @@ namespace Crunch.Strategies.Overnight
         /// </summary>
         /// <param name="date">Date for the SPY ROI</param>
         /// <returns>Single metrics: SPY ROI in % for the strategy on the given date</returns>
-        private SpyRoiReport CreateSpyRoiReport()
+        [AreaName("SpyRoi")]
+        public SpyRoiReport CreateSpyRoiReport()
         {
             string sql = "SELECT spy_roi FROM overnight.spy_roi WHERE date = @Date";
             var parameters = new { Date = _date };
@@ -84,7 +87,8 @@ namespace Crunch.Strategies.Overnight
         /// Gets report for number of winning and losing securities
         /// </summary>
         /// <returns>Winners and Losers Report object</returns>
-        private WinnersLosersReport CreateWinnersLosersStocksReport()
+        [AreaName("WinnersLosers")]
+        public WinnersLosersReport CreateWinnersLosersStocksReport()
         {
             string sql = @"SELECT winners_count, losers_count FROM overnight.winners_losers_count WHERE date = @Date";
             var parameters = new { Date = _date };
@@ -96,7 +100,8 @@ namespace Crunch.Strategies.Overnight
         /// Create Bottom 10 report instance
         /// </summary>
         /// <returns>Bottom 10 report object instance</returns>
-        private Bottom10Report CreateBottom10Report()
+        [AreaName("Bottom10")]
+        public Bottom10Report CreateBottom10Report()
         {
             string sql = @"SELECT symbol, change_pct FROM overnight.bottom10_stocks WHERE date = @Date";
             var parameters = new {Date = _date };
@@ -108,7 +113,8 @@ namespace Crunch.Strategies.Overnight
         /// Create Top 10 report instance
         /// </summary>
         /// <returns>Bottom 10 report object instance</returns>
-        private Top10Report CreateTop10Report()
+        [AreaName("Top10")]
+        public Top10Report CreateTop10Report()
         {
             string sql = @"SELECT symbol, change_pct FROM overnight.top10_stocks WHERE date = @Date";
             var parameters = new { Date = _date };
@@ -116,7 +122,8 @@ namespace Crunch.Strategies.Overnight
             return new Top10Report(reportData);
         }
 
-        private WinnersLosersByPriceReport CreateWinnersLosersByPriceReport()
+        [AreaName("WinnersLosersByPrice")]
+        public WinnersLosersByPriceReport CreateWinnersLosersByPriceReport()
         {
             string sql = @"SELECT winners_count, losers_count, price_upper_bound FROM overnight.winners_losers_count_by_price WHERE date = @Date";
             var parameters = new {Date = _date};

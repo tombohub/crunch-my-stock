@@ -8,13 +8,14 @@ using Dapper;
 using Npgsql;
 using Crunch.Database;
 using Crunch.Images;
+using Crunch.Domain.Multiplots;
 
 namespace Crunch.Strategies.Overnight.Reports
 {
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
-    internal class AvgRoiReport: IReport
+    internal class AvgRoiReport: IAreaContent
     {
         /// <summary>
         /// Average roi metric in percentage
@@ -31,7 +32,7 @@ namespace Crunch.Strategies.Overnight.Reports
         }
 
         /// <inheritdoc/>
-        public Bitmap Plot(int width, int height)
+        public Bitmap RenderImage(int width, int height)
         {
             string text = $"Average ROI\n{_avgRoi}%";
             var plotter = new Plotter();

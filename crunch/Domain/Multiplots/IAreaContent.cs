@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Crunch.Domain.Multiplots
 {
     /// <summary>
-    /// Represents image which is contained in multiplot area
+    /// Represents content of single multiplot area
     /// </summary>
-    internal class Image
+    internal interface IAreaContent
     {
+        Bitmap RenderImage(int width, int height);
+
     }
 }

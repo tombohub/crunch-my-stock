@@ -7,6 +7,7 @@ namespace Crunch.Strategies
     /// </summary>
     interface IReport
     {
+
         /// <summary>
         /// Create a plot for out of the report data
         /// </summary>

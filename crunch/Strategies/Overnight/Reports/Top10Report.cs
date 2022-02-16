@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Crunch.Domain;
 using System.Drawing;
 using Crunch.Images;
+using Crunch.Domain.Multiplots;
 
 namespace Crunch.Strategies.Overnight.Reports
 {
-    internal class Top10Report : IReport
+    internal class Top10Report : IAreaContent
     {
         private List<SecurityPerformance> _reportData;
 
@@ -22,7 +23,7 @@ namespace Crunch.Strategies.Overnight.Reports
         /// Plot Top 10 securities based on ROI
         /// </summary>
         /// <inheritdoc/>
-        public Bitmap Plot(int width, int height)
+        public Bitmap RenderImage(int width, int height)
         {
             var plotter = new Plotter();
             Bitmap plot = plotter.PlotTop10Bars(_reportData, width, height);

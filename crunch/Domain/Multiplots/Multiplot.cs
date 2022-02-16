@@ -48,7 +48,7 @@ namespace Crunch.Domain.Multiplots
         /// Save multiplot image to the file
         /// </summary>
         /// <param name="filename">filename path</param>
-        internal void SaveToFile(string filename)
+        public void SaveToFile(string filename)
         {
             Bitmap multiplotImage = CreateImage();
             multiplotImage.Save(filename);
@@ -65,16 +65,17 @@ namespace Crunch.Domain.Multiplots
             var graphics = Graphics.FromImage(multiplotImage);
             foreach (var area in _areas)
             {
-                graphics.DrawImage(area.Image, area.X, area.Y);
+                //graphics.DrawImage(area.Image, area.X, area.Y);
+                area.DrawContent(graphics);
             }
-            return multiplotImage; 
+            return multiplotImage;
 
         }
 
         /// <summary>
         /// Calculate the Multiplot image size depending on sizes of included Areas
         /// </summary>
-        /// <returns>Size object with width and height in pixels</returns>
+        /// <returns cref="Size">Size object with width and height in pixels</returns>
         /// <exception cref="Exception">In case the Areas field is null</exception>
         private Size CalculateImageSize()
         {
