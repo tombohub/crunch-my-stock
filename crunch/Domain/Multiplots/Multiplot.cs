@@ -39,7 +39,7 @@ namespace Crunch.Domain.Multiplots
             _areas = areas;
         }
 
-        public Multiplot(StrategyName strategy)
+        public Multiplot(StrategyName strategy, DateOnly date)
         {
 
         }
@@ -65,7 +65,6 @@ namespace Crunch.Domain.Multiplots
             var graphics = Graphics.FromImage(multiplotImage);
             foreach (var area in _areas)
             {
-                //graphics.DrawImage(area.Image, area.X, area.Y);
                 area.DrawContent(graphics);
             }
             return multiplotImage;

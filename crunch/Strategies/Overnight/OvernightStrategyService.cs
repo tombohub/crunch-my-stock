@@ -18,28 +18,8 @@ namespace Crunch.Strategies.Overnight
 
         public void CreateStrategyMultiplot(DateOnly date)
         {
-            var overnightDb   = new OvernightDatabase();
-            List<AreaDTO> includedAreasDto = overnightDb.GetIncludedAreas();
-            var reportRepo = new ReportRepository(date);
-            MethodInfo[] methods = reportRepo.GetType().GetMethods();
-            List<Area> areas = new List<Area>();
-            foreach (AreaDTO areaDto in includedAreasDto)
-            {
-                string methodName = methods.Where(m => m.GetCustomAttribute<AreaNameAttribute>()?.Name == areaDto.AreaName)
-                    .Select(m => m.Name)
-                    .FirstOrDefault();
-
-                if (methodName != null)
-                {
-                    IAreaContent areaContent = (IAreaContent)reportRepo.GetType().GetMethod(methodName).Invoke(reportRepo, null);
-                    Area area = new Area(areaDto.X, areaDto.Y, areaDto.Width, areaDto.Height, areaContent);
-                    areas.Add(area);
-                }
-
-                
-            }
-
-            var multiplot = new Domain.Multiplots.Multiplot(areas);
+            var repo = new MultiplotRepository(StrategyName.Overnight, date);
+            Multiplot multiplot = repo.GetMultiplot();
             multiplot.SaveToFile("D:\\PROJEKTI\\moko.png");
         }
     }

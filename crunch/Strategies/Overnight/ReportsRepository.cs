@@ -11,7 +11,7 @@ using Crunch.Domain.Multiplots;
 
 namespace Crunch.Strategies.Overnight
 {
-    internal class ReportRepository
+    internal class ReportsRepository
     {
         /// <summary>
         /// Date of the reports
@@ -27,7 +27,7 @@ namespace Crunch.Strategies.Overnight
         /// Initialize reports repository for the reports on the given date
         /// </summary>
         /// <param name="date"></param>
-        public ReportRepository(DateOnly date)
+        public ReportsRepository(DateOnly date)
         {
             _date = date;
             _connection = DbConnections.CreatePsqlConnection();

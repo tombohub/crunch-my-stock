@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Crunch.Strategies.Overnight;
-
-namespace Crunch.Strategies.Overnight
+﻿namespace Crunch.Database
 {
     /// <summary>
     /// DTO for getting area coordinates and name from database.
