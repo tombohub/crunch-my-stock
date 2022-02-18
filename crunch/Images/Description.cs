@@ -11,7 +11,7 @@ namespace Crunch.Images
         internal Description(string text)
         {
             Text = text;
-            FontSize = 14 * Scale;
+            FontSize = 14;
         }
     }
 }

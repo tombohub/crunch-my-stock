@@ -12,7 +12,7 @@ namespace Crunch.Images
         internal MultiplotTitle(string title) 
         {
             Text = title;
-            FontSize = 24 * Scale/2;
+            FontSize = 30;
         }
     }
 }

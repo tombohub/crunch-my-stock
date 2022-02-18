@@ -106,7 +106,7 @@ namespace Crunch.Strategies.Overnight
         [Area(Name = "WinnersLosersByPrice", Strategy = "Overnight")]
         public WinnersLosersByPriceReport CreateWinnersLosersByPriceReport()
         {
-            string sql = @"SELECT winners_count, losers_count, price_upper_bound FROM overnight.winners_losers_count_by_price WHERE date = @Date";
+            string sql = @"SELECT winners_count, losers_count, price_range FROM overnight.winners_losers_count_by_price WHERE date = @Date";
             var parameters = new {Date = _date};
             var reportData = _connection.Query<WinnersLosersCountByPrice>(sql, parameters).ToList();
             return new WinnersLosersByPriceReport(reportData);

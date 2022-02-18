@@ -16,12 +16,14 @@ namespace Crunch.Database
         NpgsqlConnection _connection;
         private StrategyName _strategy;
         private DateOnly _date;
+        private int _scale;
 
         public MultiplotRepository(StrategyName strategy, DateOnly date)
         {
             _connection = DbConnections.CreatePsqlConnection();
             _strategy = strategy;
             _date = date;
+            _scale = 2;
         }
 
         public Multiplot GetMultiplot()
@@ -42,7 +44,7 @@ namespace Crunch.Database
             foreach (var areaDto in areasDto)
             {
                 IAreaContent areaContent = GetAreaContent(areaDto.AreaName);
-                Area area = new Area(areaDto.X, areaDto.Y, areaDto.Width, areaDto.Height, areaContent);
+                Area area = new Area(areaDto.X*_scale, areaDto.Y*_scale, areaDto.Width*_scale, areaDto.Height*_scale, areaContent);
                 areas.Add(area);
 
             }

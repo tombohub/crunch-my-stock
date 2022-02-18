@@ -12,7 +12,7 @@ namespace Crunch.Images
         internal SingleMetric(string text) 
         {
             Text = text;
-            FontSize = 18 * Scale / 2;
+            FontSize = 18;
         }
     }
 }

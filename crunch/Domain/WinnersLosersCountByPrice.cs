@@ -25,6 +25,12 @@ namespace Crunch.Domain
         /// <summary>
         /// Upper bound of the price range, inclusive.
         /// </summary>
-        internal int PriceUpperBound { get; set;}
+        internal string PriceRange { get; set;}
+
+        /// <summary>
+        /// Number by which to order price ranges.
+        /// Because price range is string and it's not ordered correctly in plot.
+        /// </summary>
+        internal int GroupOrder { get; set;}
     }
 }

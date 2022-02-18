@@ -24,15 +24,10 @@ namespace Crunch.Images
         /// </summary>
         protected float FontSize;
 
-        /// <summary>
-        /// Multiplier to affect multiplot dimensions and font sizes.
-        /// </summary>
-        protected float Scale;
 
         internal TextImageBase()
         {
             FontFamily = "Arial";
-            Scale = 1;
         }
 
         /// <summary>

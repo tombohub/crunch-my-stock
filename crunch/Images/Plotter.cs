@@ -39,6 +39,8 @@ namespace Crunch.Images
         /// </summary>
         private float _tickLabelsFontSize;
 
+        private float _legendFontSize;
+
         /// <summary>
         /// Color to visualize winning securities and positive numbers in general
         /// </summary>
@@ -53,9 +55,10 @@ namespace Crunch.Images
         {
             // TODO: make scale dynamic
             _fontFamily = "Arial";
-            _singleMetricFontSize = 12;
-            _plotTitleFontSize = 10;
-            _tickLabelsFontSize = 8; 
+            _singleMetricFontSize = 20;
+            _plotTitleFontSize = 18;
+            _tickLabelsFontSize = 16; 
+            _legendFontSize = 16;
             _winnerColor = Color.ForestGreen;
             _loserColor = Color.Crimson;
         }
@@ -125,6 +128,7 @@ namespace Crunch.Images
             string[] labels = { "Winners", "Losers" };
             
             var bar = plt.AddBar(values);
+            
 
             return plt.Render();
         }
@@ -146,6 +150,8 @@ namespace Crunch.Images
             var barGroups = plt.AddBarGroups(groupNames, seriesNames, values, null);
             barGroups[0].FillColor = _winnerColor;
             barGroups[1].FillColor = _loserColor;
+            barGroups[0].ShowValuesAboveBars = true;
+            barGroups[1].ShowValuesAboveBars = true;
 
             return plt.Render();
         }
@@ -270,7 +276,7 @@ namespace Crunch.Images
             plt.Title("Winners vs Losers by price");
             SetFontSizes(plt);
             
-            string[] groupNames = reportData.Select(s => s.PriceUpperBound.ToString()).ToArray();
+            string[] groupNames = reportData.Select(s => s.PriceRange).ToArray();
             string[] seriesName = { "Winners", "Losers" };
             double[] winnersCounts = reportData.Select(s => (double)s.WinnersCount).ToArray();
             double[] losersCounts = reportData.Select(s => (double)s.LosersCount).ToArray();
@@ -281,9 +287,11 @@ namespace Crunch.Images
             barPlots[0].FillColor = _winnerColor;
             barPlots[1].FillColor = _loserColor;
 
+            plt.YAxis.Label("Count");
          
             var legend = plt.Legend();
             legend.Location = Alignment.UpperRight;
+            legend.FontSize = _legendFontSize;
 
             return plt.Render();
         }
