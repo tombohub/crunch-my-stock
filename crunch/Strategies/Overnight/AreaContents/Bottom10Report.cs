@@ -7,7 +7,7 @@ using Crunch.Domain;
 using Crunch.Images;
 using Crunch.Domain.Multiplots;
 
-namespace Crunch.Strategies.Overnight.Reports
+namespace Crunch.Strategies.Overnight.AreaContents
 {
     internal class Bottom10Report : IAreaContent
     {

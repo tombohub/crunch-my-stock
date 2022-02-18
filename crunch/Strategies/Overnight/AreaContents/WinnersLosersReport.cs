@@ -6,7 +6,7 @@ using Dapper;
 using Crunch.Images;
 using Crunch.Domain.Multiplots;
 
-namespace Crunch.Strategies.Overnight.Reports
+namespace Crunch.Strategies.Overnight.AreaContents
 {
     /// <summary>
     /// Represents report for Winners and Losers count

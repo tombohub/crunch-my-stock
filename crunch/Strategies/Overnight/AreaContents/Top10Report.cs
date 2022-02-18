@@ -8,7 +8,7 @@ using System.Drawing;
 using Crunch.Images;
 using Crunch.Domain.Multiplots;
 
-namespace Crunch.Strategies.Overnight.Reports
+namespace Crunch.Strategies.Overnight.AreaContents
 {
     internal class Top10Report : IAreaContent
     {

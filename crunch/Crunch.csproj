@@ -33,6 +33,7 @@
   <ItemGroup>
     <Folder Include="Database\Models\" />
     <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Strategies\Overnight\AreaContentRepositories\" />
   </ItemGroup>
 
 </Project>

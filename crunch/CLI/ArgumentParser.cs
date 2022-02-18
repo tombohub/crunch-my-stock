@@ -6,7 +6,6 @@ using Dapper;
 using System;
 using System.Data;
 using System.Collections.Generic;
-using Crunch.Strategies;
 using Crunch.Strategies.Overnight;
 
 namespace Crunch.CLI

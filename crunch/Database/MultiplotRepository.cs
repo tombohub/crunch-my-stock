@@ -51,16 +51,17 @@ namespace Crunch.Database
 
         private IAreaContent GetAreaContent(string areaName)
         {
-            var reportRepo = new Strategies.Overnight.ReportsRepository(_date);
-            MethodInfo[] methods = reportRepo.GetType().GetMethods();
-            string methodName = methods.Where(m => m.GetCustomAttribute<AreaNameAttribute>()?.Name == areaName)
+            var reportRepo = new Strategies.Overnight.AreaContentsRepository(_date);
+            Type repoType = typeof(Strategies.Overnight.AreaContentsRepository);
+            MethodInfo[] methods = repoType.GetMethods();
+            string methodName = methods.Where(m => m.GetCustomAttribute<AreaAttribute>()?.Name == areaName)
                     .Select(m => m.Name)
                     .FirstOrDefault();
 
             IAreaContent areaContent = null;
             if (methodName != null)
             {
-                areaContent = (IAreaContent)reportRepo.GetType().GetMethod(methodName).Invoke(reportRepo, null);
+                areaContent = (IAreaContent)repoType.GetMethod(methodName).Invoke(reportRepo, null);
             }
             return areaContent;
         }

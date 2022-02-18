@@ -10,7 +10,7 @@ using Crunch.Database;
 using Crunch.Images;
 using Crunch.Domain.Multiplots;
 
-namespace Crunch.Strategies.Overnight.Reports
+namespace Crunch.Strategies.Overnight.AreaContents
 {
     /// <summary>
     /// <inheritdoc/>

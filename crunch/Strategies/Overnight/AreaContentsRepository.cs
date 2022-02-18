@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Crunch.Strategies.Overnight.Reports;
+using Crunch.Strategies.Overnight;
 using Crunch.Database;
 using Dapper;
 using Crunch.Domain;
 using Crunch.Domain.Multiplots;
+using Crunch.Strategies.Overnight.AreaContents;
 
 namespace Crunch.Strategies.Overnight
 {
-    internal class ReportsRepository
+    internal class AreaContentsRepository
     {
         /// <summary>
         /// Date of the reports
@@ -27,30 +28,10 @@ namespace Crunch.Strategies.Overnight
         /// Initialize reports repository for the reports on the given date
         /// </summary>
         /// <param name="date"></param>
-        public ReportsRepository(DateOnly date)
+        public AreaContentsRepository(DateOnly date)
         {
             _date = date;
             _connection = DbConnections.CreatePsqlConnection();
-        }
-
-        /// <summary>
-        /// Create instance for the given report
-        /// </summary>
-        /// <param name="report">Report to create instance of</param>
-        /// <returns>Instance for the given report</returns>
-        /// <exception cref="ArgumentException">Non existing or unsupported report</exception>
-        public IAreaContent CreateReport(ReportName report)
-        {
-            return report switch
-            {
-                ReportName.AvgRoi => CreateAvgRoiStocksReport(),
-                ReportName.SpyRoi => CreateSpyRoiReport(),
-                ReportName.WinnersLosers => CreateWinnersLosersStocksReport(),
-                ReportName.Bottom10 => CreateBottom10Report(),
-                ReportName.Top10 => CreateTop10Report(), 
-                ReportName.WinnersLosersByPrice => CreateWinnersLosersByPriceReport(),
-                _ => throw new ArgumentException("This report is not handled by Report Repository", report.ToString())
-            };
         }
 
         /// <summary>
@@ -58,7 +39,7 @@ namespace Crunch.Strategies.Overnight
         /// </summary>
         /// <param name="date">Date for the Average ROI</param>
         /// <returns>Single metrics: average ROI in % for the strategy on the given date</returns>
-        [AreaName("AvgRoi")]
+        [Area(Name = "AvgRoi", Strategy = "Overnight")]
         public AvgRoiReport CreateAvgRoiStocksReport()
         {
             string sql = "SELECT average_roi FROM overnight.average_roi WHERE date = @Date";
@@ -73,7 +54,7 @@ namespace Crunch.Strategies.Overnight
         /// </summary>
         /// <param name="date">Date for the SPY ROI</param>
         /// <returns>Single metrics: SPY ROI in % for the strategy on the given date</returns>
-        [AreaName("SpyRoi")]
+        [Area(Name = "SpyRoi", Strategy = "Overnight")]
         public SpyRoiReport CreateSpyRoiReport()
         {
             string sql = "SELECT spy_roi FROM overnight.spy_roi WHERE date = @Date";
@@ -87,7 +68,7 @@ namespace Crunch.Strategies.Overnight
         /// Gets report for number of winning and losing securities
         /// </summary>
         /// <returns>Winners and Losers Report object</returns>
-        [AreaName("WinnersLosers")]
+        [Area(Name = "WinnersLosers", Strategy = "Overnight")]
         public WinnersLosersReport CreateWinnersLosersStocksReport()
         {
             string sql = @"SELECT winners_count, losers_count FROM overnight.winners_losers_count WHERE date = @Date";
@@ -100,7 +81,7 @@ namespace Crunch.Strategies.Overnight
         /// Create Bottom 10 report instance
         /// </summary>
         /// <returns>Bottom 10 report object instance</returns>
-        [AreaName("Bottom10")]
+        [Area(Name = "Bottom10", Strategy = "Overnight")]
         public Bottom10Report CreateBottom10Report()
         {
             string sql = @"SELECT symbol, change_pct FROM overnight.bottom10_stocks WHERE date = @Date";
@@ -113,7 +94,7 @@ namespace Crunch.Strategies.Overnight
         /// Create Top 10 report instance
         /// </summary>
         /// <returns>Bottom 10 report object instance</returns>
-        [AreaName("Top10")]
+        [Area(Name = "Top10", Strategy = "Overnight")]
         public Top10Report CreateTop10Report()
         {
             string sql = @"SELECT symbol, change_pct FROM overnight.top10_stocks WHERE date = @Date";
@@ -122,13 +103,19 @@ namespace Crunch.Strategies.Overnight
             return new Top10Report(reportData);
         }
 
-        [AreaName("WinnersLosersByPrice")]
+        [Area(Name = "WinnersLosersByPrice", Strategy = "Overnight")]
         public WinnersLosersByPriceReport CreateWinnersLosersByPriceReport()
         {
             string sql = @"SELECT winners_count, losers_count, price_upper_bound FROM overnight.winners_losers_count_by_price WHERE date = @Date";
             var parameters = new {Date = _date};
             var reportData = _connection.Query<WinnersLosersCountByPrice>(sql, parameters).ToList();
             return new WinnersLosersByPriceReport(reportData);
+        }
+
+        [Area(Name = "Title")]
+        public Title CreateTitle()
+        {
+            return new Title(_date);
         }
     }
 }

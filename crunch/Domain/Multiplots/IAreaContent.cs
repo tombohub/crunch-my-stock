@@ -12,7 +12,13 @@ namespace Crunch.Domain.Multiplots
     /// </summary>
     internal interface IAreaContent
     {
-        Bitmap RenderImage(int width, int height);
 
+        /// <summary>
+        /// Renders the image for the designated area
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        Bitmap RenderImage(int width, int height);
     }
 }

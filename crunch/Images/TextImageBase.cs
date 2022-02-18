@@ -31,7 +31,7 @@ namespace Crunch.Images
 
         internal TextImageBase()
         {
-            FontFamily = "Consolas";
+            FontFamily = "Arial";
             Scale = 1;
         }
 
@@ -39,7 +39,7 @@ namespace Crunch.Images
         /// Draw the general rectangle with desired text in center.
         /// Used for single metrics data and title.
         /// </summary>
-        internal Bitmap Render(int width, int height)
+        public Bitmap RenderImage(int width, int height)
         {
 
             // initialize objects

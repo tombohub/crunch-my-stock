@@ -8,8 +8,9 @@ using Crunch.Database;
 using Dapper;
 using Crunch.Images;
 using Crunch.Domain.Multiplots;
+using Crunch.Strategies.Overnight.AreaContents;
 
-namespace Crunch.Strategies.Overnight.Reports
+namespace Crunch.Strategies.Overnight.AreaContents
 {
     internal class SpyRoiReport: IAreaContent
     {

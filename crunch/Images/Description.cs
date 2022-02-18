@@ -8,10 +8,10 @@ namespace Crunch.Images
 {
     internal class Description: TextImageBase
     {
-        internal Description(string text, float scale)
+        internal Description(string text)
         {
             Text = text;
-            FontSize = 14 * scale;
+            FontSize = 14 * Scale;
         }
     }
 }

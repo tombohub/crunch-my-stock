@@ -52,11 +52,10 @@ namespace Crunch.Images
         public Plotter()
         {
             // TODO: make scale dynamic
-            _scale = 2;
             _fontFamily = "Arial";
-            _singleMetricFontSize = 20 * _scale/2;
-            _plotTitleFontSize = 18 * _scale/2;
-            _tickLabelsFontSize = 14 * _scale/2; 
+            _singleMetricFontSize = 12;
+            _plotTitleFontSize = 10;
+            _tickLabelsFontSize = 8; 
             _winnerColor = Color.ForestGreen;
             _loserColor = Color.Crimson;
         }
