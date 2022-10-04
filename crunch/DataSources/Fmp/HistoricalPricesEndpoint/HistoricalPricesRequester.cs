@@ -1,9 +1,9 @@
 ﻿using Crunch.Domain;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text.Json;
-using System.IO;
 
 namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
 {
@@ -36,6 +36,9 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
         {
             string queryString = CreateQueryString(symbol, timeRange, interval);
             string apiUrl = UrlBuilder.BuildUrl(queryString);
+
+            Console.WriteLine(apiUrl);
+
             string apiResponse = _webClient.DownloadString(apiUrl);
             HistoricalPricesJsonModel jsonPricesData = null;
             try
@@ -102,8 +105,8 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
                 _ => throw new ArgumentException($"Interval {interval} doesn't Exist")
             };
 
-            string start = timeRange.Start.ToShortDateString();
-            string end = timeRange.End.ToShortDateString();
+            string start = timeRange.Start.ToString("yyyy-MM-dd");
+            string end = timeRange.End.ToString("yyyy-MM-dd");
 
             // HACK: string templating
             string queryString = _queryTemplate
