@@ -56,18 +56,18 @@ namespace Crunch.Strategies.Overnight
         }
         
         /// <summary>
-        /// Check if prices for the selected days are in database
+        /// Check if prices for the selected days are in database public schema
         /// </summary>
         /// <param name="strategyDate"></param>
         /// <param name="prevTradingDay"></param>
         /// <returns></returns>
         private bool CheckPricesExist(DateOnly strategyDate, DateOnly prevTradingDay)
         {
-            string strategyDatePricesSql = "SELECT count(*) FROM overnight.overnight_daily_stats WHERE date = @StrategyDate;";
-            string prevTradingDayPricesSql = "SELECT count(*) FROM overnight.overnight_daily_stats WHERE date = @PrevTradingDay;";
+            string strategyDatePricesSql = "SELECT count(*) FROM public.prices_daily WHERE date = @StrategyDate;";
+            string prevTradingDayPricesSql = "SELECT count(*) FROM public.prices_daily WHERE date = @PrevTradingDay;";
             var parameters = new { StrategyDate = strategyDate, PrevTradingDay = prevTradingDay };
-            int strategyDateRowCount = _connection.Execute(strategyDatePricesSql, parameters);
-            int prevTradingDayRowCount = _connection.Execute(prevTradingDayPricesSql, parameters);
+            int strategyDateRowCount = _connection.ExecuteScalar<int>(strategyDatePricesSql, parameters);
+            int prevTradingDayRowCount = _connection.ExecuteScalar<int>(prevTradingDayPricesSql, parameters);
 
             return (strategyDateRowCount > 0) && (prevTradingDayRowCount > 0);
         }

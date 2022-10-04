@@ -34,7 +34,8 @@ namespace Crunch.CLI
         }
 
         /// <summary>
-        /// Run strategy analytics command
+        /// Run strategy analytics command. 
+        /// Selects target security already downloaded prices and saves into the database table.
         /// </summary>
         /// <param name="strategy"></param>
         /// <param name="date"></param>

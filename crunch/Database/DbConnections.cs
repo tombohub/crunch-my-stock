@@ -8,7 +8,7 @@ using Dapper;
 namespace Crunch.Database
 {
     /// <summary>
-    /// Providing the connection to MySql production database
+    /// Providing the connection to database
     /// </summary>
     class DbConnections
     {
@@ -16,11 +16,6 @@ namespace Crunch.Database
         /// MySql connection object
         /// </summary>
         public MySqlConnection MySqlConnection { get; set; }
-
-        /// <summary>
-        /// PostgreSQL connection object
-        /// </summary>
-        public NpgsqlConnection PsqlConnection { get; set; }
 
         /// <summary>
         /// Create MySql connection object
@@ -44,7 +39,7 @@ namespace Crunch.Database
         }
 
         /// <summary>
-        /// Create PostgreSQL remote connection
+        /// Create PostgreSQL remote connection customized for use with Dapper
         /// </summary>
         /// <returns></returns>
         public static NpgsqlConnection CreatePsqlConnection()
@@ -81,23 +76,23 @@ namespace Crunch.Database
         
         }
     internal class DateOnlyTypeHandler : SqlMapper.TypeHandler<DateOnly>
+    {
+        /// <summary>
+        /// Parse the database 'date' type to C# DateOnly.
+        /// Reason is because Dapper and ADO.NET converts the 'date' type to
+        /// DateTime.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public override DateOnly Parse(object value)
         {
-            /// <summary>
-            /// Parse the database 'date' type to C# DateOnly.
-            /// Reason is because Dapper and ADO.NET converts the 'date' type to
-            /// DateTime.
-            /// </summary>
-            /// <param name="value"></param>
-            /// <returns></returns>
-            public override DateOnly Parse(object value)
-            {
-                var dateTime = (DateTime)value;
-                return DateOnly.Parse(dateTime.ToShortDateString());
-            }
-            public override void SetValue(IDbDataParameter parameter, DateOnly value)
-            {
-                parameter.Value = value;
-            }
+            var dateTime = (DateTime)value;
+            return DateOnly.Parse(dateTime.ToShortDateString());
+        }
+        public override void SetValue(IDbDataParameter parameter, DateOnly value)
+        {
+            parameter.Value = value;
+        }
     }
     
 }

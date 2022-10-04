@@ -10,11 +10,11 @@
     },
     "Download  prices day": {
       "commandName": "Project",
-      "commandLineArgs": "Download --start 2021-11-12 --end 2021-12-25 --interval OneDay"
+      "commandLineArgs": "Download --start 2022-06-15 --end 2022-07-07 --interval OneDay"
     },
     "Run Strategy": {
       "commandName": "Project",
-      "commandLineArgs": "Run --strategy Overnight --date 2021-12-05"
+      "commandLineArgs": "Run --strategy Overnight --date 2022-02-15"
     },
     "Plot": {
       "commandName": "Project",
