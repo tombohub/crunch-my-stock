@@ -6,7 +6,7 @@ namespace Crunch.Database.Models
     public partial class PricesDaily
     {
         public int Id { get; set; }
-        public DateOnly Timestamp { get; set; }
+        public DateOnly Date { get; set; }
         public string Symbol { get; set; }
         public decimal Open { get; set; }
         public decimal High { get; set; }

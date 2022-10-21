@@ -1,8 +1,8 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Dapper;
+using MySql.Data.MySqlClient;
 using Npgsql;
 using System;
 using System.Data;
-using Dapper;
 
 
 namespace Crunch.Database
@@ -10,7 +10,7 @@ namespace Crunch.Database
     /// <summary>
     /// Providing the connection to database
     /// </summary>
-    class DbConnections
+    public class DbConnections
     {
         /// <summary>
         /// MySql connection object
@@ -26,7 +26,7 @@ namespace Crunch.Database
             string dbUri = Configuration.DbConnectionString;
             return new MySqlConnection(dbUri);
         }
-        
+
 
         /// <summary>
         /// Create local MySql database connection object
@@ -73,8 +73,8 @@ namespace Crunch.Database
             cmd.Prepare();
             cmd.ExecuteNonQuery();
         }
-        
-        }
+
+    }
     internal class DateOnlyTypeHandler : SqlMapper.TypeHandler<DateOnly>
     {
         /// <summary>
@@ -94,5 +94,5 @@ namespace Crunch.Database
             parameter.Value = value;
         }
     }
-    
+
 }

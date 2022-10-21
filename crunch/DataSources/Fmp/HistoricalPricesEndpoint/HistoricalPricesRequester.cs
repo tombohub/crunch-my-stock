@@ -105,6 +105,7 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
                 _ => throw new ArgumentException($"Interval {interval} doesn't Exist")
             };
 
+            // using date format because otherwise would be different on linux than windows
             string start = timeRange.Start.ToString("yyyy-MM-dd");
             string end = timeRange.End.ToString("yyyy-MM-dd");
 

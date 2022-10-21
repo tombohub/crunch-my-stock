@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Crunch.Database.Models;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Crunch.Database.Models
 {
@@ -17,20 +13,25 @@ namespace Crunch.Database.Models
         {
         }
 
+        public virtual DbSet<AverageRoi> AverageRois { get; set; }
+        public virtual DbSet<Bottom10Stock> Bottom10Stocks { get; set; }
+        public virtual DbSet<MultiplotCoordinate> MultiplotCoordinates { get; set; }
         public virtual DbSet<OvernightDailyStat> OvernightDailyStats { get; set; }
         public virtual DbSet<PricesDaily> PricesDailies { get; set; }
         public virtual DbSet<PricesIntraday> PricesIntradays { get; set; }
         public virtual DbSet<Security> Securities { get; set; }
-        public virtual DbSet<SingleMetric> SingleMetrics { get; set; }
+        public virtual DbSet<SpyRoi> SpyRois { get; set; }
+        public virtual DbSet<Top10Stock> Top10Stocks { get; set; }
         public virtual DbSet<WeeklyOvernightStat> WeeklyOvernightStats { get; set; }
         public virtual DbSet<WinnersLosersCount> WinnersLosersCounts { get; set; }
+        public virtual DbSet<WinnersLosersCountByPrice> WinnersLosersCountByPrices { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("server=***REMOVED***;user id=***REMOVED***;database***REMOVED***;port=5432;password=***REMOVED***");
+                optionsBuilder.UseNpgsql("Server=***REMOVED***;Port=5432;Database***REMOVED***;User Id=***REMOVED***;Password=***REMOVED***;");
             }
         }
 
@@ -38,6 +39,77 @@ namespace Crunch.Database.Models
         {
             modelBuilder.HasPostgresEnum("price_interval", new[] { "OneDay", "ThirtyMinutes" })
                 .HasPostgresEnum("security_type", new[] { "Stock", "Etf" });
+
+            modelBuilder.Entity<AverageRoi>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("average_roi", "overnight");
+
+                entity.HasComment("Daily average ROI for the strategy accross all securities. Value is in %");
+
+                entity.Property(e => e.AreaId).HasColumnName("area_id");
+
+                entity.Property(e => e.AverageRoi1).HasColumnName("average_roi");
+
+                entity.Property(e => e.Date).HasColumnName("date");
+            });
+
+            modelBuilder.Entity<Bottom10Stock>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("bottom10_stocks", "overnight");
+
+                entity.Property(e => e.AreaId).HasColumnName("area_id");
+
+                entity.Property(e => e.ChangePct).HasColumnName("change_pct");
+
+                entity.Property(e => e.Date).HasColumnName("date");
+
+                entity.Property(e => e.EndPrice).HasColumnName("end_price");
+
+                entity.Property(e => e.Rank).HasColumnName("rank");
+
+                entity.Property(e => e.StartPrice).HasColumnName("start_price");
+
+                entity.Property(e => e.Symbol)
+                    .HasMaxLength(4)
+                    .HasColumnName("symbol");
+            });
+
+            modelBuilder.Entity<MultiplotCoordinate>(entity =>
+            {
+                entity.ToTable("multiplot_coordinates");
+
+                entity.HasComment("Coordinates  and size for each report plot so it can be draw properly inside the code and create multiplot image.\r\n\r\nCoordinates x and y represen top left corner of the rectangle. Size is marked by 'width' and 'height'. width goes along x axis left to right and height along y axis top down.");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
+
+                entity.Property(e => e.AreaName)
+                    .IsRequired()
+                    .HasColumnName("area_name")
+                    .HasComment("name of the report which also corresponds with Enum in application code");
+
+                entity.Property(e => e.Height).HasColumnName("height");
+
+                entity.Property(e => e.IsIncluded)
+                    .HasColumnName("is_included")
+                    .HasComment("true if report is included in multiplot");
+
+                entity.Property(e => e.Strategy)
+                    .IsRequired()
+                    .HasColumnName("strategy")
+                    .HasComment("name of the strategy which also corresponds with Enum in application code");
+
+                entity.Property(e => e.Width).HasColumnName("width");
+
+                entity.Property(e => e.X).HasColumnName("x");
+
+                entity.Property(e => e.Y).HasColumnName("y");
+            });
 
             modelBuilder.Entity<OvernightDailyStat>(entity =>
             {
@@ -71,19 +143,13 @@ namespace Crunch.Database.Models
                     .IsRequired()
                     .HasMaxLength(4)
                     .HasColumnName("symbol");
-
-                entity.Property(e => e.Weekday)
-                    .IsRequired()
-                    .HasMaxLength(3)
-                    .HasColumnName("weekday")
-                    .HasComputedColumnSql("date_part('isodow'::text, date)", true);
             });
 
             modelBuilder.Entity<PricesDaily>(entity =>
             {
                 entity.ToTable("prices_daily");
 
-                entity.HasIndex(e => new { e.Symbol, e.Timestamp }, "symbol_timestamp_un")
+                entity.HasIndex(e => new { e.Symbol, e.Date }, "date_symbol_un")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -97,12 +163,15 @@ namespace Crunch.Database.Models
                     .HasColumnName("created_at")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                entity.Property(e => e.Date).HasColumnName("date");
+
                 entity.Property(e => e.High).HasColumnName("high");
 
                 entity.Property(e => e.Interval)
                     .IsRequired()
                     .HasMaxLength(10)
-                    .HasColumnName("interval");
+                    .HasColumnName("interval")
+                    .HasDefaultValueSql("'OneDay'::character varying");
 
                 entity.Property(e => e.Low).HasColumnName("low");
 
@@ -112,8 +181,6 @@ namespace Crunch.Database.Models
                     .IsRequired()
                     .HasMaxLength(4)
                     .HasColumnName("symbol");
-
-                entity.Property(e => e.Timestamp).HasColumnName("timestamp");
 
                 entity.Property(e => e.Volume).HasColumnName("volume");
             });
@@ -164,23 +231,56 @@ namespace Crunch.Database.Models
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Symbol)
-                    .HasMaxLength(50)
+                    .HasMaxLength(4)
                     .HasColumnName("symbol");
             });
 
-            modelBuilder.Entity<SingleMetric>(entity =>
+            modelBuilder.Entity<SpyRoi>(entity =>
             {
                 entity.HasNoKey();
 
-                entity.ToView("single_metrics", "overnight");
+                entity.ToView("spy_roi", "overnight");
 
-                entity.HasComment("Calculates single measures and important metrics");
+                entity.HasComment("Daily SPY ROI for the strategy accross all securities. Value is in %");
 
-                entity.Property(e => e.AverageRoi).HasColumnName("average_roi");
+                entity.Property(e => e.AreaId).HasColumnName("area_id");
 
                 entity.Property(e => e.Date).HasColumnName("date");
 
-                entity.Property(e => e.SpyRoi).HasColumnName("spy_roi");
+                entity.Property(e => e.SpyRoi1).HasColumnName("spy_roi");
+            });
+
+            modelBuilder.Entity<Top10Stock>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("top10_stocks", "overnight");
+
+                entity.HasComment("Top 10 stocks each day according to performance(change_pct)");
+
+                entity.Property(e => e.AreaId).HasColumnName("area_id");
+
+                entity.Property(e => e.ChangePct)
+                    .HasColumnName("change_pct")
+                    .HasComment("Change between previous day close and today open price in %");
+
+                entity.Property(e => e.Date)
+                    .HasColumnName("date")
+                    .HasComment("Date of the strategy");
+
+                entity.Property(e => e.EndPrice)
+                    .HasColumnName("end_price")
+                    .HasComment("Strategy date opening price");
+
+                entity.Property(e => e.Rank).HasColumnName("rank");
+
+                entity.Property(e => e.StartPrice)
+                    .HasColumnName("start_price")
+                    .HasComment("Previous trading day closing price");
+
+                entity.Property(e => e.Symbol)
+                    .HasMaxLength(4)
+                    .HasColumnName("symbol");
             });
 
             modelBuilder.Entity<WeeklyOvernightStat>(entity =>
@@ -299,9 +399,30 @@ namespace Crunch.Database.Models
 
                 entity.HasComment("Report counting how many stocks were up overnight (winners) how many down (losers)");
 
+                entity.Property(e => e.AreaId).HasColumnName("area_id");
+
                 entity.Property(e => e.Date).HasColumnName("date");
 
                 entity.Property(e => e.LosersCount).HasColumnName("losers_count");
+
+                entity.Property(e => e.WinnersCount).HasColumnName("winners_count");
+            });
+
+            modelBuilder.Entity<WinnersLosersCountByPrice>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("winners_losers_count_by_price", "overnight");
+
+                entity.HasComment("Number of winning and losing securities grouped by custom price ranges");
+
+                entity.Property(e => e.Date).HasColumnName("date");
+
+                entity.Property(e => e.GroupOrder).HasColumnName("group_order");
+
+                entity.Property(e => e.LosersCount).HasColumnName("losers_count");
+
+                entity.Property(e => e.PriceRange).HasColumnName("price_range");
 
                 entity.Property(e => e.WinnersCount).HasColumnName("winners_count");
             });
