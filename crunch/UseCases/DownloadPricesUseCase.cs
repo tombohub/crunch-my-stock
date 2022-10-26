@@ -11,6 +11,7 @@ namespace Crunch.UseCases
     /// <summary>
     /// Download prices for stocks and etfs from data source and save them to database
     /// </summary>
+    [Obsolete("Importing now from CrunchImport project")]
     internal class DownloadPricesUseCase : IUseCase
     {
         /// <summary>
@@ -53,7 +54,7 @@ namespace Crunch.UseCases
             // get list of symbols
             List<string> symbols = Helpers.GetSecuritySymbols();
 
-            
+
             foreach (string symbol in symbols)
             {
                 var thread = new Thread(() => ImportPrices(symbol));
@@ -75,7 +76,6 @@ namespace Crunch.UseCases
             {
                 Console.WriteLine($"Requesting {symbol}");
                 priceSet = _source.DownloadData(symbol, _dateRange, _interval);
-                Console.WriteLine(priceSet.Prices[0].High);
             }
             catch (WebException ex)
             {

@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Import": {
+      "commandName": "Project",
+      "commandLineArgs": "-h"
+    },
+    "securities": {
+      "commandName": "Project",
+      "commandLineArgs": "securities"
+    },
+    "prices": {
+      "commandName": "Project",
+      "commandLineArgs": "prices"
+    }
+  }
+}

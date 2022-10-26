@@ -4,14 +4,6 @@
       "commandName": "Project",
       "commandLineArgs": "Download --start 2021-10-12 --end 2021-12-25 --interval OneDay"
     },
-    "Download prices intraday": {
-      "commandName": "Project",
-      "commandLineArgs": "download --start 2021-11-11 --end 2021-11-24 --interval 30m"
-    },
-    "Download  prices day": {
-      "commandName": "Project",
-      "commandLineArgs": "Download --start 2022-06-15 --end 2022-07-07 --interval OneDay"
-    },
     "Run Strategy": {
       "commandName": "Project",
       "commandLineArgs": "Run --strategy Overnight --date 2022-02-15"
@@ -24,6 +16,10 @@
       "commandName": "WSL2",
       "environmentVariables": {},
       "distributionName": ""
+    },
+    "help flag": {
+      "commandName": "Project",
+      "commandLineArgs": "-h"
     }
   }
 }

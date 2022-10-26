@@ -1,12 +1,10 @@
 ﻿using CommandDotNet;
 using Crunch.Domain;
 using Crunch.Strategies;
-using Crunch.UseCases;
-using Dapper;
-using System;
-using System.Data;
-using System.Collections.Generic;
 using Crunch.Strategies.Overnight;
+using Crunch.UseCases;
+using System;
+
 
 namespace Crunch.CLI
 {
@@ -72,7 +70,7 @@ namespace Crunch.CLI
             // save as image file
             IStrategyService strategyService = StrategyServiceFactory.CreateService(strategy);
             strategyService.CreateStrategyMultiplot(date);
-            
+
         }
     }
 }
