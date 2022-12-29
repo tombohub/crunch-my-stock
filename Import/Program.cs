@@ -1,9 +1,10 @@
-﻿using Crunch.Database;
+﻿using System.Net;
+using System.Text.Json;
+using Crunch.Database;
 using Crunch.Database.Models;
+using Crunch.Extensions;
 using CrunchImport.FmpDataProvider;
 using Dapper;
-using System.Net;
-using System.Text.Json;
 
 namespace CrunchImport
 {
@@ -12,28 +13,28 @@ namespace CrunchImport
         private static string _fmpApiKey = "***REMOVED***";
         private static string _fmpDomain = "https://financialmodelingprep.com/";
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             switch (args[0])
             {
                 case "prices":
                     ImportPrices();
                     break;
+
                 case "securities":
                     UpdateSecurities();
                     break;
+
                 default:
                     Console.WriteLine("Valid commands are: 'prices', 'securities'");
                     break;
             }
-
-
-
         }
 
         private static void UpdateSecurities()
         {
             Console.WriteLine("Updating securities...");
+
             // get list of tradeable symbols from fmp
             string queryTradeableSymbols = $"/api/v3/available-traded/list?apikey={_fmpApiKey}";
             string urlTradeableSymbols = _fmpDomain + queryTradeableSymbols;
@@ -61,7 +62,8 @@ namespace CrunchImport
             // import to database
             foreach (var security in securities)
             {
-                string sql = $@"INSERT INTO public.securities (symbol, type, exchange, updated_at) 
+                Console.WriteLine($"Updating {security.Symbol}...");
+                string sql = $@"INSERT INTO public.securities (symbol, type, exchange, updated_at)
                             VALUES('{security.Symbol}', '{security.Type.Capitalize()}', '{security.Exchange}', '{DateTime.Now}')
                             ON CONFLICT ON CONSTRAINT securities_symbol_un
                             DO UPDATE SET type = '{security.Type.Capitalize()}',
@@ -69,14 +71,15 @@ namespace CrunchImport
                                            updated_at = '{DateTime.Now}'";
                 using var conn = DbConnections.CreatePsqlConnection();
                 conn.Execute(sql);
+                Console.WriteLine($"{security.Symbol} updated.");
             }
-
         }
 
+        /// <summary>
+        /// Import today's prices for all securities into database
+        /// </summary>
         private static void ImportPrices()
         {
-            // set today's date. If it's before 16:00 it's not valid because 
-            // prices close at 16:00
             var currentDateTime = DateTime.Now;
             Console.WriteLine($"Current date and time is: {currentDateTime}");
 
@@ -85,7 +88,7 @@ namespace CrunchImport
             // get symbols from database
             List<string> symbols = GetSymbols();
 
-            // loop over each symbol, get price for the day and save into database. 
+            // loop over each symbol, get price for the day and save into database.
             // One OHLC price - one save to database
             foreach (var symbol in symbols)
             {
@@ -95,18 +98,6 @@ namespace CrunchImport
                 Thread.Sleep(300);
                 Console.WriteLine("Prices imported.");
             }
-        }
-
-        /// <summary>
-        /// Capitalize first letter in a string
-        /// </summary>
-        /// <param name="str">string to capitalize</param>
-        /// <returns>Capitalized string</returns>
-        private static string Capitalize(this string str)
-        {
-            if (string.IsNullOrEmpty(str))
-                return string.Empty;
-            return char.ToUpper(str[0]) + str.Substring(1);
         }
 
         /// <summary>
@@ -135,7 +126,6 @@ namespace CrunchImport
             }
         }
 
-
         /// <summary>
         /// Send a request for the daily price of particular security for period between start and end date
         /// </summary>
@@ -150,7 +140,6 @@ namespace CrunchImport
             var webClient = new WebClient();
             string response = webClient.DownloadString(url);
             return response;
-
         }
 
         /// <summary>
@@ -166,18 +155,18 @@ namespace CrunchImport
         }
 
         /// <summary>
-        /// Save daily price data to database. If price for that day/symbol exists 
-        /// then it will be updated. 
+        /// Save daily price data to database. If price for that day/symbol exists
+        /// then it will be updated.
         /// </summary>
         /// <param name="price"></param>
         private static void SaveDailyPrice(DailyPriceDTO price)
         {
-            string sql = @$"insert into 
-                 public.prices_daily (date, symbol, open, high, low, close, volume) 
-                VALUES ('{price.Date}', '{price.Symbol}', '{price.Open}', '{price.High}', 
+            string sql = @$"insert into
+                 public.prices_daily (date, symbol, open, high, low, close, volume)
+                VALUES ('{price.Date}', '{price.Symbol}', '{price.Open}', '{price.High}',
                 '{price.Low}', '{price.Close}', '{price.Volume}')
                 ON CONFLICT ON CONSTRAINT date_symbol_un
-                DO UPDATE SET 
+                DO UPDATE SET
                               open = '{price.Open}',
                               high = '{price.High}',
                               low = '{price.Low}',
@@ -186,7 +175,6 @@ namespace CrunchImport
 
             using var conn = DbConnections.CreatePsqlConnection();
             conn.Execute(sql);
-
         }
 
         /// <summary>
@@ -199,8 +187,5 @@ namespace CrunchImport
             var symbols = context.Securities.Select(x => x.Symbol).ToList();
             return symbols;
         }
-
-
-
     }
 }
