@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CrunchImport.FmpDataProvider
+namespace CrunchImport.DataProviders.Fmp.Responses
 {
     internal class SymbolPricesJsonResponse
     {

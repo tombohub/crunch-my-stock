@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CrunchImport.FmpDataProvider
+namespace CrunchImport.DataProviders.Fmp.Responses
 {
-    internal record TradeableSymbolsJsonModel
+    internal record SymbolsListJsonModel
     {
         [JsonPropertyName("symbol")]
         public string Symbol { get; init; }
@@ -18,5 +18,8 @@ namespace CrunchImport.FmpDataProvider
 
         [JsonPropertyName("exchangeShortName")]
         public string ExchangeShortName { get; init; }
+
+        [JsonPropertyName("type")]
+        public string Type { get; init; }
     }
 }
