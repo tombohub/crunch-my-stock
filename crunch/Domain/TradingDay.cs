@@ -3,17 +3,17 @@ using System.Linq;
 
 namespace Crunch.Domain
 {
-    internal class CalendarDay
+    public record TradingDay
     {
         /// <summary>
         /// Holiday dates in 2021 when market is closed
         /// </summary>
-        private static readonly DateOnly[] _holidays =
+        private readonly DateOnly[] _holidays =
         {
             // memorial day
             new DateOnly(2021, 5, 31),
 
-            // independance day 
+            // independance day
             new DateOnly(2021, 7, 5),
 
             // labor day
@@ -46,17 +46,16 @@ namespace Crunch.Domain
             // labor day
             new DateOnly(2022, 9, 5),
 
+            // thanks giving day
+            new DateOnly(2022, 11, 24),
+
             // Christmass
             new DateOnly(2022, 12,26)
         };
         public DateOnly Date { get; init; }
-
-        public bool IsTradingDay => CheckIfTradingDay(Date);
-
-        public DateOnly PreviousTradingDay => FindPreviousTradingDay();
-
-        public CalendarDay(DateOnly date)
+        public TradingDay(DateOnly date)
         {
+            CheckIfTradingDay(date);
             Date = date;
         }
 
@@ -64,39 +63,17 @@ namespace Crunch.Domain
         /// Check if stock market is open on the given date
         /// </summary>
         /// <param name="date">Date to check
-        /// .</param>
         /// <returns></returns>
-        private bool CheckIfTradingDay(DateOnly date)
+        private void CheckIfTradingDay(DateOnly date)
         {
-            bool isTradingDay;
-            if ((date.DayOfWeek == DayOfWeek.Saturday) || (date.DayOfWeek == DayOfWeek.Sunday))
+            if (
+                (date.DayOfWeek == DayOfWeek.Saturday) ||
+                (date.DayOfWeek == DayOfWeek.Sunday) ||
+                _holidays.Contains(date)
+               )
             {
-                isTradingDay = false;
+                throw new ArgumentException($"Date {date} is not a trading day.", nameof(date));
             }
-            else if (_holidays.Contains(date))
-            {
-                isTradingDay = false;
-            }
-            else
-            {
-                isTradingDay = true;
-            }
-
-            return isTradingDay;
-        }
-
-        /// <summary>
-        /// Find the previous trading day from the current date
-        /// </summary>
-        /// <returns></returns>
-        private DateOnly FindPreviousTradingDay()
-        {
-            DateOnly prevDay = Date.AddDays(-1);
-            while (CheckIfTradingDay(prevDay) == false)
-            {
-                prevDay = prevDay.AddDays(-1);
-            }
-            return prevDay;
         }
     }
 }

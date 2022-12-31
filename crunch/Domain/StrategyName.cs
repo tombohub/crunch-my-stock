@@ -3,7 +3,7 @@
     /// <summary>
     /// Enumeration of available strategies.
     /// </summary>
-    enum StrategyName
+    public enum StrategyName
     {
         Overnight,
         Crametorium

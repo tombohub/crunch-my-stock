@@ -3,7 +3,7 @@
     /// <summary>
     /// Available price data intervals
     /// </summary>
-    enum PriceInterval
+    public enum PriceInterval
     {
         /// <summary>
         /// Daily price interval

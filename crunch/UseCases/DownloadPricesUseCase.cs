@@ -1,10 +1,9 @@
-﻿using Crunch.Database;
-using Crunch.DataSources;
-using Crunch.Domain;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Net;
 using System.Threading;
+using Crunch.Database;
+using Crunch.DataSources;
+using Crunch.Domain;
 
 namespace Crunch.UseCases
 {
@@ -17,7 +16,7 @@ namespace Crunch.UseCases
         /// <summary>
         /// Data source prices provider object
         /// </summary>
-        PriceDataSource _source = new PriceDataSource();
+        private PriceDataSource _source = new PriceDataSource();
 
         /// <summary>
         /// Period for which too download prices
@@ -30,7 +29,7 @@ namespace Crunch.UseCases
         private readonly PriceInterval _interval;
 
         /// <summary>
-        /// Pause between data source API request in miliseconds. 
+        /// Pause between data source API request in miliseconds.
         /// To avoid 'too many requests' error
         /// </summary>
         private readonly int _requestPause = 500;
@@ -52,10 +51,9 @@ namespace Crunch.UseCases
         public void Execute()
         {
             // get list of symbols
-            List<string> symbols = Helpers.GetSecuritySymbols();
+            var symbols = Helpers.GetSecuritySymbols();
 
-
-            foreach (string symbol in symbols)
+            foreach (var symbol in symbols)
             {
                 var thread = new Thread(() => ImportPrices(symbol));
                 Thread.Sleep(_requestPause);
@@ -68,7 +66,7 @@ namespace Crunch.UseCases
         /// so it can be used for threading process
         /// </summary>
         /// <param name="symbol"></param>
-        private void ImportPrices(string symbol)
+        private void ImportPrices(Symbol symbol)
         {
             DailyPriceSet priceSet = null;
 
@@ -94,8 +92,5 @@ namespace Crunch.UseCases
 
             Console.WriteLine($"{symbol} imported.");
         }
-
-
-
     }
 }
