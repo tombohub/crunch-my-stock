@@ -16,6 +16,7 @@ namespace CrunchImport.DataProviders
         public List<Security> GetListedSecurities()
         {
             return _fmpProvider.GetListedSecurities();
+            //return _alphavantageProvider.GetListedSecurities();
         }
 
         /// <summary>
