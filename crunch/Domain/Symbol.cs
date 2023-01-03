@@ -2,7 +2,7 @@
 
 namespace Crunch.Domain
 {
-    public class Symbol
+    public record Symbol
     {
         public string Value { get; init; }
 

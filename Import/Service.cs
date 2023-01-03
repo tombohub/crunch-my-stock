@@ -1,11 +1,13 @@
 ﻿using Crunch.Database;
 using Crunch.Domain;
-using CrunchImport.DataProviders.Fmp;
+using CrunchImport.DataProviders;
 
 namespace CrunchImport
 {
     internal static class Service
     {
+        private static DataProviderService _dataProvider = new DataProviderService();
+
         /// <summary>
         /// Import today's prices for all securities into database
         /// </summary>
@@ -39,8 +41,7 @@ namespace CrunchImport
         /// <param name="date">Price date</param>
         private static void ImportSymbolPrice(Symbol symbol, TradingDay tradingDay)
         {
-            var fmpApi = new Api();
-            SecurityPrice symbolPrice = fmpApi.GetSecurityDailyPrice(symbol, tradingDay);
+            SecurityPrice symbolPrice = _dataProvider.GetDailyPrice(symbol, tradingDay);
 
             Helpers.SaveDailyPrice(symbolPrice);
         }
@@ -49,15 +50,14 @@ namespace CrunchImport
         {
             Console.WriteLine("Updating securities...");
 
-            var fmpApi = new Api();
-            var securities = fmpApi.GetTradableSecurities();
+            var securities = _dataProvider.GetListedSecurities();
 
             // import to database
             foreach (var security in securities)
             {
-                Console.WriteLine($"Updating {security.Symbol}...");
+                Console.WriteLine($"Updating {security.Symbol.Value}...");
                 Helpers.SaveSecurity(security);
-                Console.WriteLine($"{security.Symbol} updated.");
+                Console.WriteLine($"{security.Symbol.Value} updated.");
             }
         }
     }

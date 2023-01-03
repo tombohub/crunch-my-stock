@@ -5,10 +5,10 @@ using CrunchImport.DataProviders.Fmp.Responses;
 
 namespace CrunchImport.DataProviders.Fmp
 {
-    internal class Api
+    internal class FmpProvider
     {
-        private string _fmpApiKey = "***REMOVED***";
-        private string _fmpDomain = "https://financialmodelingprep.com/";
+        private const string _fmpApiKey = "***REMOVED***";
+        private const string _fmpDomain = "https://financialmodelingprep.com/";
         private WebClient _webClient = new WebClient();
 
         public SecurityPrice GetSecurityDailyPrice(Symbol symbol, TradingDay tradingDay)
@@ -33,23 +33,44 @@ namespace CrunchImport.DataProviders.Fmp
             };
         }
 
-        public List<Security> GetTradableSecurities()
+        /// <summary>
+        /// Get securities listed on stock exchange
+        /// </summary>
+        /// <returns></returns>
+        public List<Security> GetListedSecurities()
         {
             var tradeableSecurities = RequestTradeableSecurities();
             var allAvailableSecurities = RequestAllAvailableSecurities();
 
             // join those 2 lists so we can have tradable symbols with type column
-            var securities = tradeableSecurities
+            var securitiesResponseCombined = tradeableSecurities
                 .Join(allAvailableSecurities, a => a.Symbol, b => b.Symbol,
-                    (a, b) => new Security
+                    (a, b) => new
                     {
-                        Symbol = new Symbol(a.Symbol),
-                        Type = new SecurityType(b.Type),
-                        Exchange = new Exchange(a.ExchangeShortName),
-                        IsTradable = true
+                        a.Symbol,
+                        b.Type,
+                        a.ExchangeShortName,
                     })
                 .ToList();
 
+            var securities = new List<Security>();
+            foreach (var security in securitiesResponseCombined)
+            {
+                try
+                {
+                    securities.Add(new Security
+                    {
+                        Symbol = new Symbol(security.Symbol),
+                        Type = new SecurityType(security.Type),
+                        Exchange = new Exchange(security.ExchangeShortName),
+                        IsTradable = true
+                    });
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
             return securities;
         }
 

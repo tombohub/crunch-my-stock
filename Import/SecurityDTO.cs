@@ -1,11 +1,7 @@
-﻿using Crunch.Domain;
-
-namespace CrunchImport
+﻿namespace CrunchImport
 {
     internal record SecurityDTO
-    (
-        string Symbol,
-        SecurityType Type,
-        string Exchange
-    );
+    {
+        public required string Symbol { get; init; }
+    }
 }
