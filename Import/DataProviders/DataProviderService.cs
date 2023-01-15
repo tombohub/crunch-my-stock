@@ -13,10 +13,35 @@ namespace CrunchImport.DataProviders
         /// Get securities listed on stock exchange
         /// </summary>
         /// <returns></returns>
-        public List<Security> GetListedSecurities()
+        public List<SecurityDTO> GetSecurities()
         {
-            return _fmpProvider.GetListedSecurities();
-            //return _alphavantageProvider.GetListedSecurities();
+            var listedSecurities = _alphavantageProvider.ListingStatusActive();
+            var delistedSecurities = _alphavantageProvider.ListingStatusDelisted();
+
+            var securities = new List<SecurityDTO>();
+
+            foreach (var security in listedSecurities)
+            {
+                securities.Add(new SecurityDTO
+                {
+                    Symbol = security.Symbol,
+                    Type = _alphavantageProvider.MapSecurityType(security.AssetType),
+                    Exchange = _alphavantageProvider.MapExchange(security.Exchange),
+                    Status = SecurityStatus.Active,
+                });
+            }
+
+            foreach (var security in delistedSecurities)
+            {
+                securities.Add(new SecurityDTO
+                {
+                    Symbol = security.Symbol,
+                    Type = _alphavantageProvider.MapSecurityType(security.AssetType),
+                    Exchange = _alphavantageProvider.MapExchange(security.Exchange),
+                    Status = SecurityStatus.Delisted,
+                });
+            }
+            return securities;
         }
 
         /// <summary>
