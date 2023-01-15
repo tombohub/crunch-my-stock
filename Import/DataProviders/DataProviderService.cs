@@ -28,6 +28,7 @@ namespace CrunchImport.DataProviders
                     Type = _alphavantageProvider.MapSecurityType(security.AssetType),
                     Exchange = _alphavantageProvider.MapExchange(security.Exchange),
                     Status = SecurityStatus.Active,
+                    IpoDate = security.IpoDate,
                 });
             }
 
@@ -39,6 +40,8 @@ namespace CrunchImport.DataProviders
                     Type = _alphavantageProvider.MapSecurityType(security.AssetType),
                     Exchange = _alphavantageProvider.MapExchange(security.Exchange),
                     Status = SecurityStatus.Delisted,
+                    IpoDate = security.IpoDate,
+                    DelistingDate = security.DelistingDate
                 });
             }
             return securities;

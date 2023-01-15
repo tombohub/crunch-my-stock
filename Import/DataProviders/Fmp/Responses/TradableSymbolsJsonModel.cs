@@ -2,7 +2,7 @@
 
 namespace CrunchImport.DataProviders.Fmp.Responses
 {
-    internal record TradeableSymbolsJsonModel
+    internal record TradableSymbolsJsonModel
     {
         [JsonPropertyName("symbol")]
         public string Symbol { get; init; }

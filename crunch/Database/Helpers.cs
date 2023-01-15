@@ -87,14 +87,35 @@ namespace Crunch.Database
         /// <param name="security"></param>
         public static void SaveSecurity(Domain.Security security)
         {
-            string sql = $@"INSERT INTO public.securities (symbol, type, exchange, updated_at)
-                            VALUES('{security.Symbol.Value}', '{security.Type.Value}', '{security.Exchange.Value}', '{DateTime.Now}')
+            string sql = $@"INSERT INTO public.securities (symbol, type, exchange, updated_at, status, ipo_date, delisting_date)
+                            VALUES(
+                                    @Symbol,
+                                    @Type,
+                                    @Exchange,
+                                    @UpdatedAt,
+                                    @Status,
+                                    @IpoDate,
+                                    @DelistingDate
+                                    )
                             ON CONFLICT ON CONSTRAINT securities_symbol_un
-                            DO UPDATE SET type = '{security.Type.Value}',
-                                           exchange = '{security.Exchange.Value}',
-                                           updated_at = '{DateTime.Now}'";
+                            DO UPDATE SET type = @Type,
+                                           exchange = @Exchange,
+                                           updated_at = @UpdatedAt,
+                                            status = @Status,
+                                            ipo_date = @IpoDate,
+                                            delisting_date = @DelistingDate";
+            var parameters = new
+            {
+                Symbol = security.Symbol.Value,
+                Type = security.Type.ToString(),
+                Exchange = security.Exchange.ToString(),
+                UpdatedAt = DateTime.UtcNow,
+                Status = security.Status.ToString(),
+                IpoDate = security.IpoDate,
+                DelistingDate = security.DelistingDate
+            };
             using var conn = DbConnections.CreatePsqlConnection();
-            conn.Execute(sql);
+            conn.Execute(sql, parameters);
         }
     }
 }

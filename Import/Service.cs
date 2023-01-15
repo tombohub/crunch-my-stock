@@ -9,7 +9,7 @@ namespace CrunchImport
         private static DataProviderService _dataProvider = new DataProviderService();
 
         /// <summary>
-        /// Import today's prices for all securities into database
+        /// Import today's prices for all securitiesDto into database
         /// </summary>
         public static void ImportPrices()
         {
@@ -50,7 +50,29 @@ namespace CrunchImport
         {
             Console.WriteLine("Updating securities...");
 
-            var securities = _dataProvider.GetListedSecurities();
+            List<SecurityDTO> securitiesDto = _dataProvider.GetSecurities();
+
+            // map dto to entity
+            var securities = new List<Security>();
+            foreach (var security in securitiesDto)
+            {
+                try
+                {
+                    securities.Add(new Security
+                    {
+                        Symbol = new Symbol(security.Symbol),
+                        Exchange = security.Exchange,
+                        Status = security.Status,
+                        Type = security.Type,
+                        IpoDate = security.IpoDate,
+                        DelistingDate = security.DelistingDate
+                    });
+                }
+                catch (ArgumentException e)
+                {
+                    Console.WriteLine($"Error: {e.Message}");
+                }
+            }
 
             // import to database
             foreach (var security in securities)

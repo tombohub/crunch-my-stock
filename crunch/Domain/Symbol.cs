@@ -10,7 +10,7 @@ namespace Crunch.Domain
         {
             if (value.Length > 4)
             {
-                throw new ArgumentException("Symbol cannot be more than 4 characters");
+                throw new ArgumentException($"Symbol {value} -> cannot be more than 4 characters");
             }
             this.Value = value.ToUpper();
         }

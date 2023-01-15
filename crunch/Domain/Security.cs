@@ -1,10 +1,14 @@
-﻿namespace Crunch.Domain
+﻿using System;
+
+namespace Crunch.Domain
 {
     public record Security
     {
-        public Symbol Symbol { get; init; }
-        public Exchange Exchange { get; init; }
-        public SecurityType Type { get; init; }
-        public bool IsTradable { get; init; }
+        public required Symbol Symbol { get; init; }
+        public required Exchange Exchange { get; init; }
+        public required SecurityType Type { get; init; }
+        public required SecurityStatus Status { get; init; }
+        public required DateOnly IpoDate { get; init; }
+        public DateOnly? DelistingDate { get; init; }
     }
 }
