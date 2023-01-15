@@ -7,7 +7,7 @@
             switch (args[0])
             {
                 case "prices":
-                    Service.ImportPrices();
+                    Service.ImportTodaysPrices();
                     break;
 
                 case "securities":
