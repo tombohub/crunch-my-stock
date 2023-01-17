@@ -1,28 +1,18 @@
-﻿using Crunch.Database.Models;
-using Crunch.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Crunch.Domain;
 using Dapper;
 
 namespace Crunch.Database
 {
     internal class DailyPriceSetRepository
     {
-        /// <summary>
-        /// Database context object
-        /// </summary>
-        private stock_analyticsContext _db;
-
-
         // TODO: unfinished method for inserting into prices_daily using Dapper
         public void SaveWithDapper(DailyPriceSet priceSet, PriceInterval interval)
         {
-            string sql = @"insert into 
-                public.prices_daily (date, symbol, open, high, low, close, volume, interval) 
+            string sql = @"insert into
+                public.prices_daily (date, symbol, open, high, low, close, volume, interval)
                 VALUES (@Date, @Symbol, @Open, @High, @Low, @Close, @Volume, @Interval)
                 ON CONFLICT ON CONSTRAINT date_symbol_un
-                DO UPDATE SET 
+                DO UPDATE SET
                               open = @Open,
                               high = @High,
                               low = @Low,
@@ -42,13 +32,10 @@ namespace Crunch.Database
                     Volume = price.Volume,
                     Interval = priceSet.Interval.ToString()
                 };
-                
+
                 conn.Execute(sql, parameters);
-            }  
-
+            }
         }
-
-
 
         //public DailyPriceSet Load(string symbol, PriceInterval interval, DateOnly start, DateOnly end)
         //{

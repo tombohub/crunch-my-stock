@@ -1,9 +1,9 @@
-﻿using Crunch.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text.Json;
+using Crunch.Domain;
 
 namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
 {
@@ -44,11 +44,9 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
             try
             {
                 jsonPricesData = JsonSerializer.Deserialize<HistoricalPricesJsonModel>(apiResponse);
-
             }
-            catch (Exception e)
+            catch
             {
-
                 File.WriteAllText("log.txt", apiResponse);
             }
             DailyPriceSet priceSet = MapJsonToPriceSet(symbol, interval, jsonPricesData);
@@ -75,14 +73,14 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
                     Low: jsonPrice.Low,
                     Close: jsonPrice.Close,
                     Volume: jsonPrice.Volume
-                    );
+                                          );
                 prices.Add(price);
             }
             var priceSet = new DailyPriceSet(
                 Symbol: symbol,
                 Interval: interval,
                 Prices: prices
-                );
+                                            );
 
             return priceSet;
         }
@@ -118,8 +116,5 @@ namespace Crunch.DataSources.Fmp.HistoricalPricesEndpoint
 
             return queryString;
         }
-
-
-
     }
 }
