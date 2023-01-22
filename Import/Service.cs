@@ -24,7 +24,7 @@ namespace CrunchImport
 
             // trading day value object throws exception if not trading day
             DateOnly date = DateOnly.FromDateTime(currentDateTime);
-            var tradingDay = new TradingDay(date);
+            var tradingDay = new TradingDay(new DateOnly(2021, 01, 19));
 
             // get symbols from database
             List<Symbol> symbols = Helpers.GetSecuritySymbols();
@@ -34,9 +34,8 @@ namespace CrunchImport
             var tasks = new List<Task>();
             foreach (var symbol in symbols)
             {
-                Console.WriteLine($"Importing prices for {symbol}...");
-                tasks.Add(ImportSymbolPrice(symbol, tradingDay));
-                Console.WriteLine("Prices imported.");
+                await Task.Delay(300);
+                tasks.Add(ImportSymbolPriceAsync(symbol, tradingDay));
             }
             await Task.WhenAll(tasks);
         }
@@ -46,11 +45,13 @@ namespace CrunchImport
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="date">Price date</param>
-        private static async Task ImportSymbolPrice(Symbol symbol, TradingDay tradingDay)
+        private static async Task ImportSymbolPriceAsync(Symbol symbol, TradingDay tradingDay)
         {
-            SecurityPrice symbolPrice = _dataProvider.GetDailyPrice(symbol, tradingDay);
+            Console.WriteLine($"Importing prices for {symbol}...");
+            SecurityPrice symbolPrice = await _dataProvider.GetDailyPriceAsync(symbol, tradingDay);
 
-            Helpers.SaveDailyPrice(symbolPrice);
+            await Helpers.SaveDailyPriceAsync(symbolPrice);
+            Console.WriteLine($"Prices imported for {symbol}");
         }
 
         public static void UpdateSecurities()

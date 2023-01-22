@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Crunch.Domain;
 using CrunchImport.DataProviders.Fmp.Responses;
 
@@ -9,11 +8,11 @@ namespace CrunchImport.DataProviders.Fmp
     {
         private const string _fmpApiKey = "***REMOVED***";
         private const string _fmpDomain = "https://financialmodelingprep.com/";
-        private WebClient _webClient = new WebClient();
+        private HttpClient _httpClient = new HttpClient();
 
-        public SecurityPrice GetSecurityDailyPrice(Symbol symbol, TradingDay tradingDay)
+        public async Task<SecurityPrice> GetSecurityDailyPriceAsync(Symbol symbol, TradingDay tradingDay)
         {
-            string priceApiResponse = RequestDailyPrice(symbol.Value, tradingDay.Date.ToString("yyyy-MM-dd"));
+            string priceApiResponse = await RequestDailyPriceAsync(symbol.Value, tradingDay.Date.ToString("yyyy-MM-dd"));
             var price = JsonSerializer.Deserialize<SymbolPricesJsonResponse>(priceApiResponse);
             if (price.Results.Count > 1)
             {
@@ -39,9 +38,9 @@ namespace CrunchImport.DataProviders.Fmp
         /// <param name="symbol">security symbol on exchange</param>
         /// <param name="date">date to get prices for</param>
         /// <returns>Day price data in OHLC format</returns>
-        private string RequestDailyPrice(string symbol, string date)
+        private async Task<string> RequestDailyPriceAsync(string symbol, string date)
         {
-            var response = RequestDailyPrice(symbol: symbol, startDate: date, endDate: date);
+            var response = await RequestDailyPriceAsync(symbol: symbol, startDate: date, endDate: date);
             return response;
         }
 
@@ -52,11 +51,11 @@ namespace CrunchImport.DataProviders.Fmp
         /// <param name="startDate">first day to get prices data</param>
         /// <param name="endDate">last day to get prices data</param>
         /// <returns>Daily prices data in OHLC format</returns>
-        private string RequestDailyPrice(string symbol, string startDate, string endDate)
+        private async Task<string> RequestDailyPriceAsync(string symbol, string startDate, string endDate)
         {
             string query = $"/api/v4/historical-price/{symbol}/1/day/{startDate}/{endDate}?apikey={_fmpApiKey}";
             string url = _fmpDomain + query;
-            string response = _webClient.DownloadString(url);
+            var response = await _httpClient.GetStringAsync(url);
             return response;
         }
     }

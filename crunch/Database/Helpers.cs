@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using Crunch.Database.Models;
 using Crunch.Domain;
 using Dapper;
@@ -63,7 +64,7 @@ namespace Crunch.Database
         /// then it will be updated.
         /// </summary>
         /// <param name="price"></param>
-        public static void SaveDailyPrice(SecurityPrice price)
+        public static async Task SaveDailyPriceAsync(SecurityPrice price)
         {
             string sql = @$"insert into
                  public.prices_daily (date, symbol, open, high, low, close, volume)
@@ -78,7 +79,7 @@ namespace Crunch.Database
                               volume = '{price.Volume}';";
 
             using var conn = DbConnections.CreatePsqlConnection();
-            conn.Execute(sql);
+            await conn.ExecuteAsync(sql);
         }
 
         /// <summary>
