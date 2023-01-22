@@ -11,16 +11,16 @@ namespace CrunchImport
         /// <summary>
         /// Import today's prices for all securities into database
         /// </summary>
-        public static void ImportTodaysPrices()
+        public static async Task ImportTodaysPrices()
         {
             var currentDateTime = DateTime.Now;
             Console.WriteLine($"Current date and time is: {currentDateTime}");
 
             // make sure the trading day is done
-            if (currentDateTime.Hour < 16)
-            {
-                throw new InvalidOperationException("Trading day is not over yet. Run after 16:00");
-            }
+            //if (currentDateTime.Hour < 16)
+            //{
+            //    throw new InvalidOperationException("Trading day is not over yet. Run after 16:00");
+            //}
 
             // trading day value object throws exception if not trading day
             DateOnly date = DateOnly.FromDateTime(currentDateTime);
@@ -31,14 +31,14 @@ namespace CrunchImport
 
             // loop over each symbol, get price for the day and save into database.
             // One OHLC price - one save to database
+            var tasks = new List<Task>();
             foreach (var symbol in symbols)
             {
                 Console.WriteLine($"Importing prices for {symbol}...");
-                var thread = new Thread(() => ImportSymbolPrice(symbol, tradingDay));
-                thread.Start();
-                Thread.Sleep(300);
+                tasks.Add(ImportSymbolPrice(symbol, tradingDay));
                 Console.WriteLine("Prices imported.");
             }
+            await Task.WhenAll(tasks);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace CrunchImport
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="date">Price date</param>
-        private static void ImportSymbolPrice(Symbol symbol, TradingDay tradingDay)
+        private static async Task ImportSymbolPrice(Symbol symbol, TradingDay tradingDay)
         {
             SecurityPrice symbolPrice = _dataProvider.GetDailyPrice(symbol, tradingDay);
 

@@ -2,12 +2,12 @@
 {
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             switch (args[0])
             {
                 case "prices":
-                    Service.ImportTodaysPrices();
+                    await Service.ImportTodaysPrices();
                     break;
 
                 case "securities":
