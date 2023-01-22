@@ -53,9 +53,9 @@ namespace CrunchImport.DataProviders
         /// <param name="symbol"></param>
         /// <param name="tradingDay"></param>
         /// <returns></returns>
-        public async Task<SecurityPrice> GetDailyPriceAsync(Symbol symbol, TradingDay tradingDay)
+        public SecurityPrice GetDailyPrice(Symbol symbol, TradingDay tradingDay)
         {
-            return await _fmpProvider.GetSecurityDailyPriceAsync(symbol, tradingDay);
+            return _fmpProvider.GetSecurityDailyPrice(symbol, tradingDay);
         }
     }
 }

@@ -10,9 +10,9 @@ namespace CrunchImport.DataProviders.Fmp
         private const string _fmpDomain = "https://financialmodelingprep.com/";
         private HttpClient _httpClient = new HttpClient();
 
-        public async Task<SecurityPrice> GetSecurityDailyPriceAsync(Symbol symbol, TradingDay tradingDay)
+        public SecurityPrice GetSecurityDailyPrice(Symbol symbol, TradingDay tradingDay)
         {
-            string priceApiResponse = await RequestDailyPriceAsync(symbol.Value, tradingDay.Date.ToString("yyyy-MM-dd"));
+            string priceApiResponse = RequestDailyPrice(symbol.Value, tradingDay.Date.ToString("yyyy-MM-dd"));
             var price = JsonSerializer.Deserialize<SymbolPricesJsonResponse>(priceApiResponse);
             if (price.Results.Count > 1)
             {
@@ -38,9 +38,9 @@ namespace CrunchImport.DataProviders.Fmp
         /// <param name="symbol">security symbol on exchange</param>
         /// <param name="date">date to get prices for</param>
         /// <returns>Day price data in OHLC format</returns>
-        private async Task<string> RequestDailyPriceAsync(string symbol, string date)
+        private string RequestDailyPrice(string symbol, string date)
         {
-            var response = await RequestDailyPriceAsync(symbol: symbol, startDate: date, endDate: date);
+            var response = RequestDailyPrice(symbol: symbol, startDate: date, endDate: date);
             return response;
         }
 
@@ -51,11 +51,11 @@ namespace CrunchImport.DataProviders.Fmp
         /// <param name="startDate">first day to get prices data</param>
         /// <param name="endDate">last day to get prices data</param>
         /// <returns>Daily prices data in OHLC format</returns>
-        private async Task<string> RequestDailyPriceAsync(string symbol, string startDate, string endDate)
+        private string RequestDailyPrice(string symbol, string startDate, string endDate)
         {
             string query = $"/api/v4/historical-price/{symbol}/1/day/{startDate}/{endDate}?apikey={_fmpApiKey}";
             string url = _fmpDomain + query;
-            var response = await _httpClient.GetStringAsync(url);
+            var response = _httpClient.GetStringAsync(url).GetAwaiter().GetResult();
             return response;
         }
     }

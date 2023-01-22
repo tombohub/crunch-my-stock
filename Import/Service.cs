@@ -34,10 +34,10 @@ namespace CrunchImport
             var tasks = new List<Task>();
             foreach (var symbol in symbols)
             {
-                await Task.Delay(300);
-                tasks.Add(ImportSymbolPriceAsync(symbol, tradingDay));
+                Thread.Sleep(300);
+                var thread = new Thread(() => ImportSymbolPrice(symbol, tradingDay));
+                thread.Start();
             }
-            await Task.WhenAll(tasks);
         }
 
         /// <summary>
@@ -45,13 +45,20 @@ namespace CrunchImport
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="date">Price date</param>
-        private static async Task ImportSymbolPriceAsync(Symbol symbol, TradingDay tradingDay)
+        private static void ImportSymbolPrice(Symbol symbol, TradingDay tradingDay)
         {
-            Console.WriteLine($"Importing prices for {symbol}...");
-            SecurityPrice symbolPrice = await _dataProvider.GetDailyPriceAsync(symbol, tradingDay);
+            try
+            {
+                Console.WriteLine($"Importing prices for {symbol}...");
+                SecurityPrice symbolPrice = _dataProvider.GetDailyPrice(symbol, tradingDay);
 
-            await Helpers.SaveDailyPriceAsync(symbolPrice);
-            Console.WriteLine($"Prices imported for {symbol}");
+                Helpers.SaveDailyPriceAsync(symbolPrice);
+                Console.WriteLine($"Prices imported for {symbol}");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"Error with symbol {symbol}");
+            }
         }
 
         public static void UpdateSecurities()
