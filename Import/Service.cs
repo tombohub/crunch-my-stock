@@ -24,7 +24,7 @@ namespace CrunchImport
 
             // trading day value object throws exception if not trading day
             DateOnly date = DateOnly.FromDateTime(currentDateTime);
-            var tradingDay = new TradingDay(new DateOnly(2021, 01, 19));
+            var tradingDay = new TradingDay(date);
 
             // get symbols from database
             List<Symbol> symbols = Helpers.GetSecuritySymbols();
