@@ -55,9 +55,9 @@ namespace CrunchImport
                 Helpers.SaveDailyPriceAsync(symbolPrice);
                 Console.WriteLine($"Prices imported for {symbol}");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Console.WriteLine($"Error with symbol {symbol}");
+                Console.WriteLine($"Error: {e.Message} with symbol {symbol}");
             }
         }
 
