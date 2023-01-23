@@ -11,7 +11,7 @@ namespace CrunchImport
         /// <summary>
         /// Import today's prices for all securities into database
         /// </summary>
-        public static async Task ImportTodaysPrices()
+        public static void ImportTodaysPrices()
         {
             var currentDateTime = DateTime.Now;
             Console.WriteLine($"Current date and time is: {currentDateTime}");
@@ -52,7 +52,7 @@ namespace CrunchImport
                 Console.WriteLine($"Importing prices for {symbol}...");
                 SecurityPrice symbolPrice = _dataProvider.GetDailyPrice(symbol, tradingDay);
 
-                Helpers.SaveDailyPriceAsync(symbolPrice);
+                Helpers.SaveDailyPrice(symbolPrice);
                 Console.WriteLine($"Prices imported for {symbol}");
             }
             catch (Exception e)

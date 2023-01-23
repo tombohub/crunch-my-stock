@@ -63,7 +63,7 @@ namespace Crunch.Database
         /// then it will be updated.
         /// </summary>
         /// <param name="price"></param>
-        public static void SaveDailyPriceAsync(SecurityPrice price)
+        public static void SaveDailyPrice(SecurityPrice price)
         {
             string sql = @$"insert into
                  public.prices_daily (date, symbol, open, high, low, close, volume)
