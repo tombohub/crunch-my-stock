@@ -11,19 +11,9 @@ namespace CrunchImport
         /// <summary>
         /// Import today's prices for all securities into database
         /// </summary>
-        public static void ImportTodaysPrices()
+        public static void ImportPrices(DateOnly date)
         {
-            var currentDateTime = DateTime.Now;
-            Console.WriteLine($"Current date and time is: {currentDateTime}");
-
-            // make sure the trading day is done
-            if (currentDateTime.Hour < 16)
-            {
-                throw new InvalidOperationException("Trading day is not over yet. Run after 16:00");
-            }
-
             // trading day value object throws exception if not trading day
-            DateOnly date = DateOnly.FromDateTime(currentDateTime);
             var tradingDay = new TradingDay(date);
 
             // get symbols from database
