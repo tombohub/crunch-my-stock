@@ -1,10 +1,8 @@
-﻿using CommandDotNet;
+﻿using System;
+using CommandDotNet;
 using Crunch.Domain;
 using Crunch.Strategies;
 using Crunch.Strategies.Overnight;
-using Crunch.UseCases;
-using System;
-
 
 namespace Crunch.CLI
 {
@@ -16,23 +14,7 @@ namespace Crunch.CLI
     internal class ArgumentParser
     {
         /// <summary>
-        /// Download prices CLI command
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="interval"></param>
-        public void Download([Option] DateOnly start, [Option] DateOnly end, [Option] PriceInterval interval)
-        {
-            Console.WriteLine(start);
-            Console.WriteLine(end);
-            Console.WriteLine(interval);
-            var period = new Period(start, end);
-            var useCase = new DownloadPricesUseCase(period, interval);
-            useCase.Execute();
-        }
-
-        /// <summary>
-        /// Run strategy analytics command. 
+        /// Run strategy analytics command.
         /// Selects target security already downloaded prices and saves into the database table.
         /// </summary>
         /// <param name="strategy"></param>
@@ -53,7 +35,6 @@ namespace Crunch.CLI
 
             var overnightDb = new OvernightDatabase();
             overnightDb.SavePrices(date, prevTradingDay);
-
         }
 
         /// <summary>
@@ -70,7 +51,6 @@ namespace Crunch.CLI
             // save as image file
             IStrategyService strategyService = StrategyServiceFactory.CreateService(strategy);
             strategyService.CreateStrategyMultiplot(date);
-
         }
     }
 }
