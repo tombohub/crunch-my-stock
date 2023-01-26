@@ -82,9 +82,20 @@ namespace CrunchImport
             // import to database
             foreach (var security in securities)
             {
-                Console.WriteLine($"Updating {security.Symbol.Value}...");
-                Helpers.SaveSecurity(security);
-                Console.WriteLine($"{security.Symbol.Value} updated.");
+                var thread = new Thread(() =>
+                {
+                    try
+                    {
+                        Console.WriteLine($"Updating {security.Symbol.Value}...");
+                        Helpers.SaveSecurity(security);
+                        Console.WriteLine($"{security.Symbol.Value} updated.");
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                });
+                thread.Start();
             }
         }
     }
