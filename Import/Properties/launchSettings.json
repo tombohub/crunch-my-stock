@@ -19,6 +19,10 @@
     "prices -h": {
       "commandName": "Project",
       "commandLineArgs": "prices -h"
+    },
+    "prices --today": {
+      "commandName": "Project",
+      "commandLineArgs": "prices --today"
     }
   }
 }

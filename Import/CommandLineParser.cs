@@ -1,14 +1,18 @@
-﻿namespace CrunchImport
+﻿using CommandDotNet;
+
+namespace CrunchImport
 {
     internal class CommandLineParser
     {
-        public void Prices()
+        public void Prices([Option] DateOnly? date, [Option] bool today)
         {
-            var currentDateTime = DateTime.Now;
-            Console.WriteLine($"Current date and time is: {currentDateTime}");
-            DateOnly date = DateOnly.FromDateTime(currentDateTime);
-
-            Service.ImportPrices(date);
+            if (today)
+            {
+                var currentDateTime = DateTime.Now;
+                Console.WriteLine($"Current date and time is: {currentDateTime}");
+                var todayDate = DateOnly.FromDateTime(currentDateTime);
+                Service.ImportPrices(todayDate);
+            }
         }
 
         public void Securities()
