@@ -55,8 +55,14 @@ namespace Crunch.Core
         public DateOnly Date { get; init; }
         public TradingDay(DateOnly date)
         {
-            CheckIfTradingDay(date);
+            Validate(date);
             Date = date;
+        }
+
+        private void Validate(DateOnly date)
+        {
+            if (!CheckIfTradingDay(date))
+                throw new ArgumentException($"Date {date} is not a trading day.", nameof(date));
         }
 
         /// <summary>
@@ -64,16 +70,28 @@ namespace Crunch.Core
         /// </summary>
         /// <param name="date">Date to check
         /// <returns></returns>
-        private void CheckIfTradingDay(DateOnly date)
+        private bool CheckIfTradingDay(DateOnly date)
         {
             if (
                 (date.DayOfWeek == DayOfWeek.Saturday) ||
                 (date.DayOfWeek == DayOfWeek.Sunday) ||
                 _holidays.Contains(date)
-               )
+               ) return false;
+            else return true;
+        }
+
+        /// <summary>
+        /// Find the previous trading day from the current date
+        /// </summary>
+        /// <returns></returns>
+        public DateOnly FindPreviousTradingDay()
+        {
+            DateOnly prevDay = Date.AddDays(-1);
+            while (CheckIfTradingDay(prevDay) == false)
             {
-                throw new ArgumentException($"Date {date} is not a trading day.", nameof(date));
+                prevDay = prevDay.AddDays(-1);
             }
+            return prevDay;
         }
     }
 }
