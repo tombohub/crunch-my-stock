@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
-using Npgsql;
-using Crunch.Database;
+﻿using System.Drawing;
+using Crunch.Core.Multiplots;
 using Crunch.Images;
-using Crunch.Domain.Multiplots;
 
 namespace Crunch.Strategies.Overnight.AreaContents
 {
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
-    internal class AvgRoiReport: IAreaContent
+    internal class AvgRoiReport : IAreaContent
     {
         /// <summary>
         /// Average roi metric in percentage

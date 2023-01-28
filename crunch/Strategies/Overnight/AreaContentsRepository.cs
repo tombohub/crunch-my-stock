@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Crunch.Strategies.Overnight;
+using Crunch.Core;
+using Crunch.Core.Multiplots;
 using Crunch.Database;
-using Dapper;
-using Crunch.Domain;
-using Crunch.Domain.Multiplots;
 using Crunch.Strategies.Overnight.AreaContents;
+using Dapper;
 
 namespace Crunch.Strategies.Overnight
 {
@@ -85,7 +81,7 @@ namespace Crunch.Strategies.Overnight
         public Bottom10Report CreateBottom10Report()
         {
             string sql = @"SELECT symbol, change_pct FROM overnight.bottom10_stocks WHERE date = @Date";
-            var parameters = new {Date = _date };
+            var parameters = new { Date = _date };
             var reportData = _connection.Query<SecurityPerformance>(sql, parameters).ToList();
             return new Bottom10Report(reportData);
         }
@@ -107,7 +103,7 @@ namespace Crunch.Strategies.Overnight
         public WinnersLosersByPriceReport CreateWinnersLosersByPriceReport()
         {
             string sql = @"SELECT winners_count, losers_count, price_range FROM overnight.winners_losers_count_by_price WHERE date = @Date";
-            var parameters = new {Date = _date};
+            var parameters = new { Date = _date };
             var reportData = _connection.Query<WinnersLosersCountByPrice>(sql, parameters).ToList();
             return new WinnersLosersByPriceReport(reportData);
         }

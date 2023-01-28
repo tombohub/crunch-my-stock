@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Crunch.Domain;
+﻿using System.Collections.Generic;
 using System.Drawing;
+using Crunch.Core;
+using Crunch.Core.Multiplots;
 using Crunch.Images;
-using Crunch.Domain.Multiplots;
 
 namespace Crunch.Strategies.Overnight.AreaContents
 {
@@ -30,5 +26,4 @@ namespace Crunch.Strategies.Overnight.AreaContents
             return plot;
         }
     }
-    
 }

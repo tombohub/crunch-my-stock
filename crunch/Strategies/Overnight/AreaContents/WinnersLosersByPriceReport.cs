@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using Crunch.Domain;
+using Crunch.Core;
+using Crunch.Core.Multiplots;
 using Crunch.Images;
-using Crunch.Domain.Multiplots;
 
 namespace Crunch.Strategies.Overnight.AreaContents
 {
-
-    internal class WinnersLosersByPriceReport: IAreaContent
+    internal class WinnersLosersByPriceReport : IAreaContent
     {
         private List<WinnersLosersCountByPrice> _reportData;
+
         public WinnersLosersByPriceReport(List<WinnersLosersCountByPrice> reportData)
         {
             _reportData = reportData;
         }
+
         ///<summary>
         ///Plot comparison of number of winners and losers securities by security price
         /// </summary>

@@ -14,12 +14,11 @@
     },
     "WSL": {
       "commandName": "WSL2",
-      "environmentVariables": {},
       "distributionName": ""
     },
     "help flag": {
       "commandName": "Project",
-      "commandLineArgs": "-h"
+      "commandLineArgs": "import prices -h"
     }
   }
 }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Drawing;
-using Crunch.Domain;
-using Crunch.Database;
-using Dapper;
+﻿using System.Drawing;
+using Crunch.Core;
+using Crunch.Core.Multiplots;
 using Crunch.Images;
-using Crunch.Domain.Multiplots;
 
 namespace Crunch.Strategies.Overnight.AreaContents
 {
@@ -30,7 +27,5 @@ namespace Crunch.Strategies.Overnight.AreaContents
             var plot = plotter.PlotWinnersLosersGroupBars(_reportData, width, height);
             return plot;
         }
-
-
     }
 }

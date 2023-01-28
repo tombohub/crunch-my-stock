@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Crunch.Core;
 using Crunch.Database.Models;
-using Crunch.Domain;
 using Dapper;
 
 namespace Crunch.Database
@@ -85,7 +85,7 @@ namespace Crunch.Database
         /// Save security to database. If security exists in database it will be updated.
         /// </summary>
         /// <param name="security"></param>
-        public static void SaveSecurity(Domain.Security security)
+        public static void SaveSecurity(Core.Security security)
         {
             string sql = $@"INSERT INTO public.securities (symbol, type, exchange, updated_at, status, ipo_date, delisting_date)
                             VALUES(

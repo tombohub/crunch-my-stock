@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-using Crunch.Database;
-using Dapper;
+﻿using System.Drawing;
+using Crunch.Core.Multiplots;
 using Crunch.Images;
-using Crunch.Domain.Multiplots;
-using Crunch.Strategies.Overnight.AreaContents;
 
 namespace Crunch.Strategies.Overnight.AreaContents
 {
-    internal class SpyRoiReport: IAreaContent
+    internal class SpyRoiReport : IAreaContent
     {
         /// <summary>
         /// SPY roi metric in percentage

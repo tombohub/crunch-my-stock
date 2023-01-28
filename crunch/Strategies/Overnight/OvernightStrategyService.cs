@@ -1,21 +1,15 @@
-﻿using Crunch.Database;
-using System;
-using System.Linq;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Drawing;
-using Crunch.Domain;
-using Crunch.Strategies.Overnight;
-using Crunch.Domain.Multiplots;
+﻿using System;
+using Crunch.Core;
+using Crunch.Core.Multiplots;
+using Crunch.Database;
 
 namespace Crunch.Strategies.Overnight
 {
     /// <summary>
     /// Services provided by Overnight strategy
     /// </summary>
-    class OvernightStrategyService : IStrategyService
+    internal class OvernightStrategyService : IStrategyService
     {
-
         public void CreateStrategyMultiplot(DateOnly date)
         {
             var repo = new MultiplotRepository(StrategyName.Overnight, date);

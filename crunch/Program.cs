@@ -1,15 +1,15 @@
 ﻿using CommandDotNet;
-using Crunch.CLI;
+using CommandDotNet.NameCasing;
 
 namespace Crunch
 {
-    class Program
+    internal class Program
     {
         private static void Main(string[] args)
         {
-            new AppRunner<ArgumentParser>().Run(args);
+            new AppRunner<CommandLineParser>()
+                .UseNameCasing(Case.LowerCase)
+                .Run(args);
         }
     }
 }
-
-

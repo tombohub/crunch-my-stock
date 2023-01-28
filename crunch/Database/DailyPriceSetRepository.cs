@@ -1,4 +1,4 @@
-﻿using Crunch.Domain;
+﻿using Crunch.Core;
 using Dapper;
 
 namespace Crunch.Database

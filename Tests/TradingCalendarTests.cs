@@ -1,7 +1,6 @@
 ﻿using Crunch.Strategies;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Crunch.Domain;
 
 namespace CrunchTests
 {

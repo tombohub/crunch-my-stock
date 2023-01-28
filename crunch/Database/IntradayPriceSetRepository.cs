@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Crunch.Core;
 using Crunch.Database.Models;
-using Crunch.Domain;
 
 namespace Crunch.Database
 {
@@ -14,7 +10,6 @@ namespace Crunch.Database
         /// Database context object
         /// </summary>
         private stock_analyticsContext _db;
-
 
         /// <summary>
         /// Save PriceSet object to the database
@@ -39,12 +34,11 @@ namespace Crunch.Database
                         Timestamp = price.Timestamp,
                         Interval = intervalDb
                     };
-                    //TODO: manage intraday and daily prices separatelly 
+                    //TODO: manage intraday and daily prices separatelly
                     _db.PricesIntradays.Add(priceDb);
                 }
                 _db.SaveChanges();
             }
-
         }
     }
 }

@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using Crunch.Domain;
-using ScottPlot.Plottable;
+using System.Linq;
+using Crunch.Core;
 using ScottPlot;
+using ScottPlot.Plottable;
 
 namespace Crunch.Images
 {
-
     internal class Plotter
     {
         // TODO: scale should be in constructor
@@ -57,7 +53,7 @@ namespace Crunch.Images
             _fontFamily = "Arial";
             _singleMetricFontSize = 20;
             _plotTitleFontSize = 18;
-            _tickLabelsFontSize = 16; 
+            _tickLabelsFontSize = 16;
             _legendFontSize = 16;
             _winnerColor = Color.ForestGreen;
             _loserColor = Color.Crimson;
@@ -120,15 +116,14 @@ namespace Crunch.Images
         /// <returns>Plot image</returns>
         public Bitmap PlotWinnersLosersBar(WinnersLosersCount reportData, int width, int height)
         {
-            var plt = new ScottPlot.Plot(width,height);
+            var plt = new ScottPlot.Plot(width, height);
             plt.Title("Winners Losers Total");
             SetFontSizes(plt);
 
-            double[] values = {reportData.WinnersCount, reportData.LosersCount};
+            double[] values = { reportData.WinnersCount, reportData.LosersCount };
             string[] labels = { "Winners", "Losers" };
-            
+
             var bar = plt.AddBar(values);
-            
 
             return plt.Render();
         }
@@ -156,8 +151,6 @@ namespace Crunch.Images
             return plt.Render();
         }
 
-
-
         /// <summary>
         /// Plot horizontal bars to the left showing bottom 10 securities
         /// </summary>
@@ -179,7 +172,6 @@ namespace Crunch.Images
             string[] labels = orderedBottom10
                 .Select(b => b.Symbol)
                 .ToArray();
-
 
             BarPlot bar = plt.AddBar(values, _loserColor);
             bar.FillColorNegative = bar.FillColor;
@@ -242,7 +234,6 @@ namespace Crunch.Images
                 .Select(t => t.Symbol)
                 .ToArray();
 
-
             BarPlot bar = plt.AddBar(values, color: _winnerColor);
             bar.Orientation = Orientation.Horizontal;
 
@@ -259,7 +250,6 @@ namespace Crunch.Images
             plt.XAxis.TickLabelFormat(AddPctToTick);
             plt.Legend();
 
-
             return plt.Render();
         }
 
@@ -275,7 +265,7 @@ namespace Crunch.Images
             var plt = new Plot(width, height);
             plt.Title("Winners vs Losers by price");
             SetFontSizes(plt);
-            
+
             string[] groupNames = reportData.Select(s => s.PriceRange).ToArray();
             string[] seriesName = { "Winners", "Losers" };
             double[] winnersCounts = reportData.Select(s => (double)s.WinnersCount).ToArray();
@@ -288,7 +278,7 @@ namespace Crunch.Images
             barPlots[1].FillColor = _loserColor;
 
             plt.YAxis.Label("Count");
-         
+
             var legend = plt.Legend();
             legend.Location = Alignment.UpperRight;
             legend.FontSize = _legendFontSize;
@@ -300,7 +290,7 @@ namespace Crunch.Images
         {
             plt.XAxis2.LabelStyle(fontSize: _plotTitleFontSize);
             plt.XAxis.TickLabelStyle(fontSize: _tickLabelsFontSize);
-            plt.YAxis.TickLabelStyle(fontSize:_tickLabelsFontSize);
+            plt.YAxis.TickLabelStyle(fontSize: _tickLabelsFontSize);
         }
     }
 }

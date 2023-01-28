@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Crunch.Database;
-using Crunch.Domain;
 using Dapper;
 
 namespace Crunch.Strategies.Overnight

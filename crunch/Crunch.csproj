@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="CommandDotNet" Version="7.0.2" />
+    <PackageReference Include="CommandDotNet.NameCasing" Version="4.0.2" />
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="DotNetEnv" Version="2.2.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.38" />
@@ -32,7 +34,6 @@
 
   <ItemGroup>
     <Folder Include="Database\Models\" />
-    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Strategies\Overnight\AreaContentRepositories\" />
   </ItemGroup>
 
