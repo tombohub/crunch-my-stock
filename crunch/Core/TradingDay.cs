@@ -50,7 +50,37 @@ namespace Crunch.Core
             new DateOnly(2022, 11, 24),
 
             // Christmass
-            new DateOnly(2022, 12,26)
+            new DateOnly(2022, 12,26),
+
+            // New years
+            new DateOnly(2023, 1,2),
+
+            // Martin Luther King Jr.
+            new DateOnly(2023, 1, 16),
+
+            // Washington's birthday
+            new DateOnly(2023, 2, 20),
+
+            // Good Friday
+            new DateOnly(2023, 4, 7),
+
+            // Memorial day
+            new DateOnly(2023, 5,29),
+
+            // Juneteenth National Independence Day
+            new DateOnly(2023,6,19),
+
+            // Independence Day
+            new DateOnly(2023,7,4),
+
+            // Labor day
+            new DateOnly(2023, 9,4),
+
+            // Thanksgiving
+            new DateOnly(2023, 11, 23),
+
+            // Christmas
+            new DateOnly(2023,12,25)
         };
         public DateOnly Date { get; init; }
         public TradingDay(DateOnly date)
@@ -84,14 +114,28 @@ namespace Crunch.Core
         /// Find the previous trading day from the current date
         /// </summary>
         /// <returns></returns>
-        public DateOnly FindPreviousTradingDay()
+        public TradingDay FindPreviousTradingDay()
         {
             DateOnly prevDay = Date.AddDays(-1);
             while (CheckIfTradingDay(prevDay) == false)
             {
                 prevDay = prevDay.AddDays(-1);
             }
-            return prevDay;
+            return new TradingDay(prevDay);
+        }
+
+        /// <summary>
+        /// Check if date is previous trading day
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public bool IsPreviousTradingDay(DateOnly date)
+        {
+            if (date == FindPreviousTradingDay().Date)
+            {
+                return true;
+            }
+            else return false;
         }
     }
 }

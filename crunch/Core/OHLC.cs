@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Crunch.Core
 {
+    /// <summary>
+    /// Represents OHLC price
+    /// </summary>
     public record OHLC
     {
         public decimal Open { get; init; }
@@ -17,6 +20,17 @@ namespace Crunch.Core
             Open = open;
             High = high;
             Low = low;
+            Close = close;
+        }
+
+        /// <summary>
+        /// Construct when only open and close is needed
+        /// </summary>
+        /// <param name="open"></param>
+        /// <param name="close"></param>
+        public OHLC(decimal open, decimal close)
+        {
+            Open = open;
             Close = close;
         }
 

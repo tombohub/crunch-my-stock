@@ -1,6 +1,4 @@
-﻿using Crunch.Strategies;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CrunchTests
 {
@@ -39,6 +37,4 @@ namespace CrunchTests
         //    Assert.IsTrue(isTradingDay);
         //}
     }
-
-
 }

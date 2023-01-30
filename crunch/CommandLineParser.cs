@@ -27,7 +27,7 @@ namespace Crunch
                     var currentDateTime = DateTime.Now;
                     Console.WriteLine($"Current date and time is: {currentDateTime}");
                     var todayDate = DateOnly.FromDateTime(currentDateTime);
-                    Service.ImportPrices(todayDate);
+                    ApplicationService.ImportPrices(todayDate);
                 }
             }
 
@@ -36,8 +36,13 @@ namespace Crunch
             /// </summary>
             public void Securities()
             {
-                Service.UpdateSecurities();
+                ApplicationService.UpdateSecurities();
             }
+        }
+
+        public void Analyze([Option] DateOnly date)
+        {
+            ApplicationService.Analyze(date);
         }
 
         /// <summary>

@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Crunch.Database.Models;
 
 namespace Crunch.Database.Models
 {
@@ -21,6 +25,8 @@ namespace Crunch.Database.Models
         public virtual DbSet<PricesIntraday> PricesIntradays { get; set; }
         public virtual DbSet<Security> Securities { get; set; }
         public virtual DbSet<SpyRoi> SpyRois { get; set; }
+        public virtual DbSet<Task> Tasks { get; set; }
+        public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<Top10Stock> Top10Stocks { get; set; }
         public virtual DbSet<WeeklyOvernightStat> WeeklyOvernightStats { get; set; }
         public virtual DbSet<WinnersLosersCount> WinnersLosersCounts { get; set; }
@@ -37,22 +43,26 @@ namespace Crunch.Database.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasPostgresEnum("price_interval", new[] { "OneDay", "ThirtyMinutes" })
-                .HasPostgresEnum("security_type", new[] { "Stock", "Etf" });
+            modelBuilder.HasPostgresEnum("exchange", new[] { "AMEX", "NYSE", "NASDAQ" })
+                .HasPostgresEnum("price_interval", new[] { "OneDay", "ThirtyMinutes" })
+                .HasPostgresEnum("security_type", new[] { "Stock", "Etf", "Trust" });
 
             modelBuilder.Entity<AverageRoi>(entity =>
             {
                 entity.HasNoKey();
 
-                entity.ToView("average_roi", "overnight");
+                entity.ToTable("average_roi", "overnight");
 
-                entity.HasComment("Daily average ROI for the strategy accross all securities. Value is in %");
-
-                entity.Property(e => e.AreaId).HasColumnName("area_id");
+                entity.HasComment("Daily average overnight ROI for the strategy accross all securities. Value is in %");
 
                 entity.Property(e => e.AverageRoi1).HasColumnName("average_roi");
 
                 entity.Property(e => e.Date).HasColumnName("date");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
             });
 
             modelBuilder.Entity<Bottom10Stock>(entity =>
@@ -228,11 +238,41 @@ namespace Crunch.Database.Models
 
                 entity.HasComment("List of available securities on market. Stocks and ETFs");
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.HasIndex(e => e.Symbol, "securities_symbol_un")
+                    .IsUnique();
+
+                entity.Property(e => e.DelistingDate)
+                    .HasColumnName("delisting_date")
+                    .HasComment("date when security was delisted, if delisted");
+
+                entity.Property(e => e.Exchange)
+                    .IsRequired()
+                    .HasColumnName("exchange");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
+
+                entity.Property(e => e.IpoDate)
+                    .HasColumnName("ipo_date")
+                    .HasComment("date of initial public offering");
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasColumnName("status")
+                    .HasComment("active or delisted");
 
                 entity.Property(e => e.Symbol)
+                    .IsRequired()
                     .HasMaxLength(4)
                     .HasColumnName("symbol");
+
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasColumnName("type");
+
+                entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
             });
 
             modelBuilder.Entity<SpyRoi>(entity =>
@@ -248,6 +288,42 @@ namespace Crunch.Database.Models
                 entity.Property(e => e.Date).HasColumnName("date");
 
                 entity.Property(e => e.SpyRoi1).HasColumnName("spy_roi");
+            });
+
+            modelBuilder.Entity<Task>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("tasks");
+
+                entity.HasComment("Tasks to be run periodically");
+
+                entity.Property(e => e.Description).HasColumnName("description");
+
+                entity.Property(e => e.Frequency).HasColumnName("frequency");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("id")
+                    .UseIdentityAlwaysColumn();
+
+                entity.Property(e => e.Task1)
+                    .IsRequired()
+                    .HasColumnName("task");
+            });
+
+            modelBuilder.Entity<Test>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("test");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("created_at")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.Str).HasColumnName("str");
             });
 
             modelBuilder.Entity<Top10Stock>(entity =>

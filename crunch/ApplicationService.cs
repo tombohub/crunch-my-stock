@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Crunch.Core;
 using Crunch.Database;
@@ -7,12 +8,12 @@ using CrunchImport.DataProviders;
 
 namespace Crunch
 {
-    internal static class Service
+    internal static class ApplicationService
     {
         private static DataProviderService _dataProvider = new DataProviderService();
 
         /// <summary>
-        /// Import today's prices for all securities into database
+        /// Import today's pricesToday for all securities into database
         /// </summary>
         public static void ImportPrices(DateOnly date)
         {
@@ -41,7 +42,7 @@ namespace Crunch
         {
             try
             {
-                Console.WriteLine($"Importing prices for {symbol}...");
+                Console.WriteLine($"Importing pricesToday for {symbol}...");
                 SecurityPrice symbolPrice = _dataProvider.GetDailyPrice(symbol, tradingDay);
 
                 Helpers.SaveDailyPrice(symbolPrice);
@@ -53,6 +54,9 @@ namespace Crunch
             }
         }
 
+        /// <summary>
+        /// Update securities in database
+        /// </summary>
         public static void UpdateSecurities()
         {
             Console.WriteLine("Updating securities...");
@@ -99,6 +103,42 @@ namespace Crunch
                 });
                 thread.Start();
             }
+        }
+
+        public static void Analyze(DateOnly date)
+        {
+            var tradingDay = new TradingDay(date);
+            var prevTradingDay = tradingDay.FindPreviousTradingDay();
+
+            // get prices from database for today and prev trading day
+            var pricesToday = Helpers.GetPrices(tradingDay)
+                .Select(price => MapSecurityPriceDtoToSecurityPrice(price))
+                .ToList();
+
+            var pricesPrevDay = Helpers.GetPrices(prevTradingDay)
+                .Select(price => MapSecurityPriceDtoToSecurityPrice(price))
+                .ToList();
+
+            var domainService = new DomainService();
+            var pricesOvernight = domainService.TransformToOvernightPrices(pricesPrevDay, pricesToday);
+
+            Console.WriteLine(pricesToday[0].Symbol);
+            // perform calculations
+            Analytics.WinnersLosers(pricesToday);
+            // save result to database
+            Helpers.SaveWinnersLosers();
+        }
+
+        private static SecurityPrice MapSecurityPriceDtoToSecurityPrice(SecurityPriceDTO pricesDto)
+        {
+            var securityPrice = new SecurityPrice
+            {
+                Symbol = new Symbol(pricesDto.Symbol),
+                Date = new TradingDay(pricesDto.Date),
+                Price = new OHLC(open: pricesDto.Open, high: pricesDto.High, low: pricesDto.Low, close: pricesDto.Close),
+                Volume = pricesDto.Volume,
+            };
+            return securityPrice;
         }
     }
 }

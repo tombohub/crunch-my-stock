@@ -19,6 +19,10 @@
     "help flag": {
       "commandName": "Project",
       "commandLineArgs": "import prices -h"
+    },
+    "analyze": {
+      "commandName": "Project",
+      "commandLineArgs": "analyze --date 2023-01-23"
     }
   }
 }

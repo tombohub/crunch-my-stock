@@ -11,7 +11,7 @@ namespace Crunch.Database
     /// <summary>
     /// General methods for performing various tasks
     /// </summary>
-    public static class Helpers
+    internal static class Helpers
     {
         /// <summary>
         /// Get list of all symbols from database
@@ -22,23 +22,6 @@ namespace Crunch.Database
             var db = new stock_analyticsContext();
             var symbols = db.Securities.Select(s => new Symbol(s.Symbol)).ToList();
             return symbols;
-        }
-
-        /// <summary>
-        /// Get string associated with PriceInterval Enum to use in database
-        /// </summary>
-        /// <param name="interval"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public static string PriceIntervalToString(PriceInterval interval)
-        {
-            string intervalAsString = interval switch
-            {
-                PriceInterval.OneDay => "1d",
-                PriceInterval.ThirtyMinutes => "30m",
-                _ => throw new ArgumentException("Interval is not supported", nameof(interval))
-            };
-            return intervalAsString;
         }
 
         /// <summary>
@@ -116,6 +99,49 @@ namespace Crunch.Database
             };
             using var conn = DbConnections.CreatePsqlConnection();
             conn.Execute(sql, parameters);
+        }
+
+        /// <summary>
+        /// Get all prices for overnight strategy
+        /// </summary>
+        /// <param name="tradingDay"></param>
+        /// <returns></returns>
+        public static List<SecurityPriceDTO> GetPrices(TradingDay tradingDay)
+        {
+            using var db = new stock_analyticsContext();
+
+            // get today prices
+            var prices = db.PricesDailies
+                .Where(x => x.Date == tradingDay.Date)
+                .Select(x => MapDbPriceToSecurityPriceDTO(x))
+                .ToList();
+
+            return prices;
+        }
+
+        /// <summary>
+        /// Map prices from database to pricesDTO required by application service
+        /// </summary>
+        /// <param name="pricesDb"></param>
+        /// <returns></returns>
+        private static SecurityPriceDTO MapDbPriceToSecurityPriceDTO(PricesDaily pricesDb)
+        {
+            var securityPriceDTO = new SecurityPriceDTO
+            {
+                Date = pricesDb.Date,
+                Symbol = pricesDb.Symbol,
+                Open = pricesDb.Open,
+                High = pricesDb.High,
+                Low = pricesDb.Low,
+                Close = pricesDb.Close,
+                Volume = (uint)pricesDb.Volume
+            };
+            return securityPriceDTO;
+        }
+
+        public static void SaveWinnersLosers()
+        {
+            Console.WriteLine("Saving winners losers to database");
         }
     }
 }
