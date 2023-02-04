@@ -12,13 +12,17 @@ namespace Crunch
     /// </summary>
     internal class CommandLineParser
     {
+        private readonly ApplicationService _app = new ApplicationService();
+
         [Subcommand]
         internal class Import
         {
+            private readonly ApplicationService _app = new ApplicationService();
+
             /// <summary>
             /// Import prices into the database command for all securities
             /// </summary>
-            /// <param name="date">Date for the prices</param>
+            /// <param name="date">TradingDay for the prices</param>
             /// <param name="today">Import today's prices</param>
             public void Prices([Option] DateOnly? date, [Option] bool today)
             {
@@ -27,8 +31,13 @@ namespace Crunch
                     var currentDateTime = DateTime.Now;
                     Console.WriteLine($"Current date and time is: {currentDateTime}");
                     var todayDate = DateOnly.FromDateTime(currentDateTime);
-                    ApplicationService.ImportPrices(todayDate);
+                    _app.ImportPrices(todayDate);
                 }
+            }
+
+            public void OvernightPrices(DateOnly date)
+            {
+                _app.ImportOvernightPrices(date);
             }
 
             /// <summary>
@@ -36,13 +45,13 @@ namespace Crunch
             /// </summary>
             public void Securities()
             {
-                ApplicationService.UpdateSecurities();
+                _app.UpdateSecurities();
             }
         }
 
         public void Analyze([Option] DateOnly date)
         {
-            ApplicationService.Analyze(date);
+            _app.Analyze(date);
         }
 
         /// <summary>

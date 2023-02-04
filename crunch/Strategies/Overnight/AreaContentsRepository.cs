@@ -11,7 +11,7 @@ namespace Crunch.Strategies.Overnight
     internal class AreaContentsRepository
     {
         /// <summary>
-        /// Date of the reports
+        /// TradingDay of the reports
         /// </summary>
         private DateOnly _date;
 
@@ -33,12 +33,12 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Gets Average ROI from the database for the Overnight strategy on the given date
         /// </summary>
-        /// <param name="date">Date for the Average ROI</param>
+        /// <param name="date">TradingDay for the Average ROI</param>
         /// <returns>Single metrics: average ROI in % for the strategy on the given date</returns>
         [Area(Name = "AvgRoi", Strategy = "Overnight")]
         public AvgRoiReport CreateAvgRoiStocksReport()
         {
-            string sql = "SELECT average_roi FROM overnight.average_roi WHERE date = @Date";
+            string sql = "SELECT average_roi FROM overnight.average_roi WHERE date = @TradingDay";
             var parameters = new { Date = _date };
 
             decimal avgRoi = _connection.ExecuteScalar<decimal>(sql, parameters);
@@ -48,12 +48,12 @@ namespace Crunch.Strategies.Overnight
         /// <summary>
         /// Gets SPY ROI from the database for the Overnight strategy on the given date
         /// </summary>
-        /// <param name="date">Date for the SPY ROI</param>
+        /// <param name="date">TradingDay for the SPY ROI</param>
         /// <returns>Single metrics: SPY ROI in % for the strategy on the given date</returns>
         [Area(Name = "SpyRoi", Strategy = "Overnight")]
         public SpyRoiReport CreateSpyRoiReport()
         {
-            string sql = "SELECT spy_roi FROM overnight.spy_roi WHERE date = @Date";
+            string sql = "SELECT spy_roi FROM overnight.spy_roi WHERE date = @TradingDay";
             var parameters = new { Date = _date };
 
             decimal spyRoi = _connection.ExecuteScalar<decimal>(sql, parameters);
@@ -67,7 +67,7 @@ namespace Crunch.Strategies.Overnight
         [Area(Name = "WinnersLosers", Strategy = "Overnight")]
         public WinnersLosersReport CreateWinnersLosersStocksReport()
         {
-            string sql = @"SELECT winners_count, losers_count FROM overnight.winners_losers_count WHERE date = @Date";
+            string sql = @"SELECT winners_count, losers_count FROM overnight.winners_losers_count WHERE date = @TradingDay";
             var parameters = new { Date = _date };
             var reportData = _connection.QuerySingle<WinnersLosersCount>(sql, parameters);
             return new WinnersLosersReport(reportData);
@@ -80,7 +80,7 @@ namespace Crunch.Strategies.Overnight
         [Area(Name = "Bottom10", Strategy = "Overnight")]
         public Bottom10Report CreateBottom10Report()
         {
-            string sql = @"SELECT symbol, change_pct FROM overnight.bottom10_stocks WHERE date = @Date";
+            string sql = @"SELECT symbol, change_pct FROM overnight.bottom10_stocks WHERE date = @TradingDay";
             var parameters = new { Date = _date };
             var reportData = _connection.Query<SecurityPerformance>(sql, parameters).ToList();
             return new Bottom10Report(reportData);
@@ -93,7 +93,7 @@ namespace Crunch.Strategies.Overnight
         [Area(Name = "Top10", Strategy = "Overnight")]
         public Top10Report CreateTop10Report()
         {
-            string sql = @"SELECT symbol, change_pct FROM overnight.top10_stocks WHERE date = @Date";
+            string sql = @"SELECT symbol, change_pct FROM overnight.top10_stocks WHERE date = @TradingDay";
             var parameters = new { Date = _date };
             var reportData = _connection.Query<SecurityPerformance>(sql, parameters).ToList();
             return new Top10Report(reportData);
@@ -102,7 +102,7 @@ namespace Crunch.Strategies.Overnight
         [Area(Name = "WinnersLosersByPrice", Strategy = "Overnight")]
         public WinnersLosersByPriceReport CreateWinnersLosersByPriceReport()
         {
-            string sql = @"SELECT winners_count, losers_count, price_range FROM overnight.winners_losers_count_by_price WHERE date = @Date";
+            string sql = @"SELECT winners_count, losers_count, price_range FROM overnight.winners_losers_count_by_price WHERE date = @TradingDay";
             var parameters = new { Date = _date };
             var reportData = _connection.Query<WinnersLosersCountByPrice>(sql, parameters).ToList();
             return new WinnersLosersByPriceReport(reportData);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Crunch.Database.Models;
 
 namespace Crunch.Database.Models
 {
@@ -8,11 +9,16 @@ namespace Crunch.Database.Models
     /// </summary>
     public partial class Security
     {
+        public Security()
+        {
+            PricesDailyOvernights = new HashSet<PricesDailyOvernight>();
+        }
+
         public string Symbol { get; set; }
         public string Type { get; set; }
         public string Exchange { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public long Id { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// active or delisted
         /// </summary>
@@ -25,5 +31,7 @@ namespace Crunch.Database.Models
         /// date when security was delisted, if delisted
         /// </summary>
         public DateOnly? DelistingDate { get; set; }
+
+        public virtual ICollection<PricesDailyOvernight> PricesDailyOvernights { get; set; }
     }
 }

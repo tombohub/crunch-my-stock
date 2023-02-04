@@ -8,9 +8,10 @@ namespace Crunch.Database.Models
     /// </summary>
     public partial class WinnersLosersCount
     {
-        public DateOnly? Date { get; set; }
-        public long? WinnersCount { get; set; }
-        public long? LosersCount { get; set; }
-        public int? AreaId { get; set; }
+        public long Id { get; set; }
+        public int WinnersCount { get; set; }
+        public int LosersCount { get; set; }
+        public DateOnly Date { get; set; }
+        public string SecurityType { get; set; }
     }
 }

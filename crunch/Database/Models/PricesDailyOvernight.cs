@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using Crunch.Database.Models;
 
 namespace Crunch.Database.Models
 {
-    public partial class OvernightDailyStat
+    public partial class PricesDailyOvernight
     {
         public int Id { get; set; }
         /// <summary>
-        /// Date of the strategy
+        /// TradingDay of the strategy
         /// </summary>
         public DateOnly Date { get; set; }
-        public string Symbol { get; set; }
         /// <summary>
         /// Previous trading day closing price
         /// </summary>
-        public decimal StartPrice { get; set; }
+        public decimal Open { get; set; }
         /// <summary>
         /// Strategy date opening price
         /// </summary>
-        public decimal EndPrice { get; set; }
-        /// <summary>
-        /// Change between previous day close and today open price in %
-        /// </summary>
-        public decimal ChangePct { get; set; }
+        public decimal Close { get; set; }
+        public int SecurityId { get; set; }
+
+        public virtual Security Security { get; set; }
     }
 }

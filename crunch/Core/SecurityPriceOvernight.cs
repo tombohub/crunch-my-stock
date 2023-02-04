@@ -3,14 +3,14 @@
 namespace Crunch.Core
 {
     /// <summary>
-    /// Security price for overnight price movement
+    /// Represents overnight price
     /// </summary>
-    public class SecurityPriceOvernight
+    public record SecurityPriceOvernight
     {
         public Symbol Symbol { get; init; }
-        public TradingDay Date { get; init; }
+        public TradingDay TradingDay { get; init; }
         public TradingDay PreviousTradingDay { get; init; }
-        public OHLC Price { get; init; }
+        public OHLC OHLC { get; init; }
         public uint Volume { get; init; }
 
         /// <summary>
@@ -22,9 +22,9 @@ namespace Crunch.Core
         {
             Validate(prevDayPrice, todayPrice);
             Symbol = prevDayPrice.Symbol;
-            Date = todayPrice.Date;
+            TradingDay = todayPrice.Date;
             PreviousTradingDay = prevDayPrice.Date;
-            Price = new OHLC(open: prevDayPrice.Price.Close, close: todayPrice.Price.Open);
+            OHLC = new OHLC(open: prevDayPrice.Price.Close, close: todayPrice.Price.Open);
             Volume = prevDayPrice.Volume;
         }
 

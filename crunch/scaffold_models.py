@@ -21,6 +21,7 @@ try:
 except Exception:
     print('no context file present')
 
+#NOTE: these tables are from another project
 tables_to_scaffold = ['prices', 'stores', 'tools', 'sources', 'tool_types', 'brands', 'prices_ranked']
 
 # these need to have space at the end of each part to create full command

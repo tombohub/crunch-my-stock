@@ -92,13 +92,13 @@ namespace Crunch.Core
         private void Validate(DateOnly date)
         {
             if (!CheckIfTradingDay(date))
-                throw new ArgumentException($"Date {date} is not a trading day.", nameof(date));
+                throw new ArgumentException($"TradingDay {date} is not a trading day.", nameof(date));
         }
 
         /// <summary>
         /// Check if stock market is open on the given date
         /// </summary>
-        /// <param name="date">Date to check
+        /// <param name="date">TradingDay to check
         /// <returns></returns>
         private bool CheckIfTradingDay(DateOnly date)
         {

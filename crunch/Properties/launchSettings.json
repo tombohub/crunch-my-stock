@@ -18,11 +18,15 @@
     },
     "help flag": {
       "commandName": "Project",
-      "commandLineArgs": "import prices -h"
+      "commandLineArgs": "import overnightprices -h"
     },
     "analyze": {
       "commandName": "Project",
       "commandLineArgs": "analyze --date 2023-01-23"
+    },
+    "import overnight prices": {
+      "commandName": "Project",
+      "commandLineArgs": "import overnightprices 2023-01-23"
     }
   }
 }
