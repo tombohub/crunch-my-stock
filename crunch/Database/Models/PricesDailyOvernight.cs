@@ -8,7 +8,7 @@ namespace Crunch.Database.Models
     {
         public int Id { get; set; }
         /// <summary>
-        /// TradingDay of the strategy
+        /// Date of the strategy
         /// </summary>
         public DateOnly Date { get; set; }
         /// <summary>

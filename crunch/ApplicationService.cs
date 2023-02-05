@@ -138,12 +138,13 @@ namespace Crunch
 
             // perform calculations
             var analytics = new AnalyticMethods();
-            WinnersLosersCount winnersLosers = analytics.WinnersLosers(pricesOvernight);
+            WinnersLosersCount winnersLosers = analytics.WinnersLosers(pricesOvernight, SecurityType.Stock);
+
             decimal avgRoi = analytics.AverageRoi(pricesOvernight);
             decimal spyRoi = analytics.AverageSpyRoi(pricesOvernight);
             Console.WriteLine(spyRoi);
-            // save result to database
-            // _db.SaveWinnersLosers(winnersLosers);
+            //save result to database
+            _db.SaveWinnersLosers(winnersLosers);
         }
     }
 }

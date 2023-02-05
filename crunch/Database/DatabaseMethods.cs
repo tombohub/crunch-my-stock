@@ -196,12 +196,18 @@ namespace Crunch.Database
             return securityPriceDTO;
         }
 
+        /// <summary>
+        /// Save Winners Losers stats to database
+        /// </summary>
+        /// <param name="winnersLosers"></param>
         public void SaveWinnersLosers(Core.WinnersLosersCount winnersLosers)
         {
             _db.WinnersLosersCounts.Add(new Models.WinnersLosersCount
             {
+                Date = winnersLosers.TradingDay.Date,
                 WinnersCount = winnersLosers.WinnersCount,
-                LosersCount = winnersLosers.LosersCount
+                LosersCount = winnersLosers.LosersCount,
+                SecurityType = winnersLosers.SecurityType.ToString(),
             });
             _db.SaveChanges();
         }

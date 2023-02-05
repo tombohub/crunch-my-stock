@@ -126,12 +126,19 @@ namespace Crunch.Database.Models
 
                 entity.Property(e => e.Open).HasColumnName("open");
 
+                entity.Property(e => e.SecurityId).HasColumnName("security_id");
+
                 entity.Property(e => e.Symbol)
                     .IsRequired()
                     .HasMaxLength(4)
                     .HasColumnName("symbol");
 
                 entity.Property(e => e.Volume).HasColumnName("volume");
+
+                entity.HasOne(d => d.Security)
+                    .WithMany(p => p.PricesDailies)
+                    .HasForeignKey(d => d.SecurityId)
+                    .HasConstraintName("prices_daily_fk");
             });
 
             modelBuilder.Entity<PricesDailyOvernight>(entity =>
@@ -148,7 +155,7 @@ namespace Crunch.Database.Models
 
                 entity.Property(e => e.Date)
                     .HasColumnName("date")
-                    .HasComment("TradingDay of the strategy");
+                    .HasComment("Date of the strategy");
 
                 entity.Property(e => e.Open)
                     .HasColumnName("open")

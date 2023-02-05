@@ -11,6 +11,7 @@ namespace Crunch.Database.Models
     {
         public Security()
         {
+            PricesDailies = new HashSet<PricesDaily>();
             PricesDailyOvernights = new HashSet<PricesDailyOvernight>();
         }
 
@@ -32,6 +33,7 @@ namespace Crunch.Database.Models
         /// </summary>
         public DateOnly? DelistingDate { get; set; }
 
+        public virtual ICollection<PricesDaily> PricesDailies { get; set; }
         public virtual ICollection<PricesDailyOvernight> PricesDailyOvernights { get; set; }
     }
 }

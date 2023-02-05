@@ -23,8 +23,8 @@ namespace CrunchImport.DataProviders.Fmp
             return new SecurityPrice
             {
                 Symbol = symbol,
-                Date = tradingDay,
-                Price = new OHLC(
+                TradingDay = tradingDay,
+                OHLC = new OHLC(
                     price.Results[0].Open,
                     price.Results[0].High,
                     price.Results[0].Low,

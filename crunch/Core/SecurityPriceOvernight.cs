@@ -5,9 +5,10 @@ namespace Crunch.Core
     /// <summary>
     /// Represents overnight price
     /// </summary>
-    public record SecurityPriceOvernight
+    public class SecurityPriceOvernight
     {
         public Symbol Symbol { get; init; }
+        public SecurityType SecurityType { get; init; }
         public TradingDay TradingDay { get; init; }
         public TradingDay PreviousTradingDay { get; init; }
         public OHLC OHLC { get; init; }
@@ -22,18 +23,22 @@ namespace Crunch.Core
         {
             Validate(prevDayPrice, todayPrice);
             Symbol = prevDayPrice.Symbol;
-            TradingDay = todayPrice.Date;
-            PreviousTradingDay = prevDayPrice.Date;
-            OHLC = new OHLC(open: prevDayPrice.Price.Close, close: todayPrice.Price.Open);
-            Volume = prevDayPrice.Volume;
+            TradingDay = todayPrice.TradingDay;
+            PreviousTradingDay = prevDayPrice.TradingDay;
+            OHLC = new OHLC(open: prevDayPrice.OHLC.Close, close: todayPrice.OHLC.Open);
+            Volume = (uint)prevDayPrice.Volume;
+        }
+
+        public SecurityPriceOvernight()
+        {
         }
 
         private void Validate(SecurityPrice prevDayPrice, SecurityPrice todayPrice)
         {
             // check trading day and previous trading day
-            if (!todayPrice.Date.IsPreviousTradingDay(prevDayPrice.Date.Date))
+            if (!todayPrice.TradingDay.IsPreviousTradingDay(prevDayPrice.TradingDay.Date))
             {
-                throw new ArgumentException($"{prevDayPrice.Date.Date} is not previous trading day for {todayPrice.Date.Date}");
+                throw new ArgumentException($"{prevDayPrice.TradingDay.Date} is not previous trading day for {todayPrice.TradingDay.Date}");
             }
 
             // check if symbols are same

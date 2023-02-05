@@ -33,6 +33,10 @@ namespace Crunch
                     var todayDate = DateOnly.FromDateTime(currentDateTime);
                     _app.ImportPrices(todayDate);
                 }
+                else if (date != null)
+                {
+                    _app.ImportPrices(date.Value);
+                }
             }
 
             public void OvernightPrices(DateOnly date)

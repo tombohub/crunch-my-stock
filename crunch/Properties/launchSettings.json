@@ -1,9 +1,5 @@
 {
   "profiles": {
-    "Crunch": {
-      "commandName": "Project",
-      "commandLineArgs": "Download --start 2021-10-12 --end 2021-12-25 --interval OneDay"
-    },
     "Run Strategy": {
       "commandName": "Project",
       "commandLineArgs": "Run --strategy Overnight --date 2022-02-15"
@@ -27,6 +23,10 @@
     "import overnight prices": {
       "commandName": "Project",
       "commandLineArgs": "import overnightprices 2023-01-23"
+    },
+    "import prices": {
+      "commandName": "Project",
+      "commandLineArgs": "import prices --date 2023-01-23"
     }
   }
 }

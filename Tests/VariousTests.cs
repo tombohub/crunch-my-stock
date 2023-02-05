@@ -13,16 +13,16 @@ namespace CrunchTests
             var prevDayPrices = new SecurityPrice
             {
                 Symbol = new Symbol("AAPL"),
-                Date = new TradingDay(new DateOnly(2023, 1, 20)),
-                Price = new OHLC(1, 2),
+                TradingDay = new TradingDay(new DateOnly(2023, 1, 20)),
+                OHLC = new OHLC(1, 2),
                 Volume = 100000
             };
 
             var todayPrice = new SecurityPrice
             {
                 Symbol = new Symbol("AAPL"),
-                Date = new TradingDay(new DateOnly(2023, 1, 23)),
-                Price = new OHLC(3, 4),
+                TradingDay = new TradingDay(new DateOnly(2023, 1, 23)),
+                OHLC = new OHLC(3, 4),
                 Volume = 120000
             };
 

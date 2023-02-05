@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Crunch.Database.Models;
 
 namespace Crunch.Database.Models
 {
@@ -15,5 +16,8 @@ namespace Crunch.Database.Models
         public long Volume { get; set; }
         public string Interval { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public int? SecurityId { get; set; }
+
+        public virtual Security Security { get; set; }
     }
 }

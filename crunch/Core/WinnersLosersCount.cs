@@ -6,7 +6,7 @@
     /// </summary>
     internal record WinnersLosersCount
     {
-        public TradingDay Date { get; init; }
+        public TradingDay TradingDay { get; init; }
         public SecurityType SecurityType { get; init; }
         /// <summary>
         /// Number of winning securities (positive gain)
