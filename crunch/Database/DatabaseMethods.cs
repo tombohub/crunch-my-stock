@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Crunch.Core;
 using Crunch.Database.Models;
 using Dapper;
@@ -67,20 +68,31 @@ namespace Crunch.Database
         /// <param name="price"></param>
         public void SaveDailyPrice(SecurityPrice price)
         {
-            string sql = @$"insert into
-                 public.prices_daily (date, symbol, open, high, low, close, volume)
-                VALUES ('{price.Date.Date}', '{price.Symbol.Value}', '{price.Price.Open}', '{price.Price.High}',
-                '{price.Price.Low}', '{price.Price.Close}', '{price.Volume}')
-                ON CONFLICT ON CONSTRAINT date_symbol_un
-                DO UPDATE SET
-                              open = '{price.Price.Open}',
-                              high = '{price.Price.High}',
-                              low = '{price.Price.High}',
-                              close = '{price.Price.Close}',
-                              volume = '{price.Volume}';";
+            var security = _db.Securities
+                .Where(x => x.Symbol == price.Symbol.Value)
+                .Single();
 
-            using var conn = DbConnections.CreatePsqlConnection();
-            conn.Execute(sql);
+            var priceDb = new PricesDaily
+            {
+                Date = price.TradingDay.Date,
+                Symbol = price.Symbol.Value,
+                Security = security,
+                Open = price.OHLC.Open,
+                High = price.OHLC.High,
+                Low = price.OHLC.Low,
+                Close = price.OHLC.Close,
+                Volume = price.Volume,
+            };
+            _db.PricesDailies
+                .Upsert(priceDb)
+               .On(x => new { x.SecurityId, x.Date })
+               .WhenMatched(x => new PricesDaily
+               {
+                   Open = price.OHLC.Open,
+                   High = price.OHLC.High,
+                   Low = price.OHLC.Low,
+                   Close = price.OHLC.Close
+               });
         }
 
         /// <summary>
@@ -132,8 +144,8 @@ namespace Crunch.Database
                 .Where(x => x.Date == tradingDay.Date)
                 .ToList();
 
-            var pricesDto = pricesDb.Select(price => MapDbPriceToSecurityPrice(price)).ToList();
-            return pricesDto;
+            var prices = pricesDb.Select(price => MapDbPriceToSecurityPrice(price)).ToList();
+            return prices;
         }
 
         public List<SecurityPriceDTO> GetPrices(TradingDay tradingDay, SecurityType securityType)
@@ -176,10 +188,10 @@ namespace Crunch.Database
         {
             var securityPriceDTO = new SecurityPrice
             {
-                Date = new TradingDay(pricesDb.Date),
+                TradingDay = new TradingDay(pricesDb.Date),
                 Symbol = new Symbol(pricesDb.Symbol),
-                Price = new OHLC(pricesDb.Open, pricesDb.High, pricesDb.Low, pricesDb.Close),
-                Volume = (uint)pricesDb.Volume
+                OHLC = new OHLC(pricesDb.Open, pricesDb.High, pricesDb.Low, pricesDb.Close),
+                Volume = (int)pricesDb.Volume
             };
             return securityPriceDTO;
         }
@@ -194,6 +206,30 @@ namespace Crunch.Database
             _db.SaveChanges();
         }
 
+        /// <summary>
+        /// Gets overnight security prices from database
+        /// </summary>
+        /// <param name="tradingDay"></param>
+        /// <returns>list of prices domain objects</returns>
+        public List<Core.SecurityPriceOvernight> GetOvernightPrices(TradingDay tradingDay)
+        {
+            var prices = _db.PricesDailyOvernights
+                .Where(x => x.Date == tradingDay.Date)
+                .Select(x => new SecurityPriceOvernight
+                {
+                    TradingDay = tradingDay,
+                    OHLC = new OHLC(x.Open, x.Close),
+                    Symbol = new Symbol(x.Security.Symbol)
+                })
+                .ToList();
+
+            return prices;
+        }
+
+        /// <summary>
+        /// Saves overnight prices into the database
+        /// </summary>
+        /// <param name="overnightPrices"></param>
         public void SaveOvernightPrices(List<SecurityPriceOvernight> overnightPrices)
         {
             foreach (var price in overnightPrices)
@@ -207,8 +243,8 @@ namespace Crunch.Database
                     Close = price.OHLC.Close,
                     Security = security
                 });
+                _db.SaveChanges();
             }
-            _db.SaveChanges();
         }
     }
 }
