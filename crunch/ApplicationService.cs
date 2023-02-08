@@ -137,10 +137,10 @@ namespace Crunch
             DailyPricesOvernight pricesOvernight = domainService.TransformToOvernightPrices(pricesPrevDay, pricesToday);
 
             // perform calculations
-            var analytics = new AnalyticMethods();
-            List<WinnersLosersCount> winnersLosers = analytics.WinnersLosers(pricesOvernight);
-            List<AverageRoi> averageRoi = analytics.AverageRoi(pricesOvernight);
-            SpyRoi spyRoi = analytics.AverageSpyRoi(pricesOvernight);
+            var analytics = new AnalyticMethods(pricesOvernight);
+            List<WinnersLosersCount> winnersLosers = analytics.WinnersLosers();
+            List<AverageRoi> averageRoi = analytics.AverageRoi();
+            SpyRoi spyRoi = analytics.AverageSpyRoi();
 
             //save result to database
             _db.SaveWinnersLosers(winnersLosers);

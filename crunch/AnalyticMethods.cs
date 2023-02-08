@@ -10,29 +10,35 @@ namespace Crunch
     /// </summary>
     internal class AnalyticMethods
     {
+        private DailyPricesOvernight _pricesOvernight;
+
+        public AnalyticMethods(DailyPricesOvernight pricesOvernight)
+        {
+            _pricesOvernight = pricesOvernight;
+        }
+
         /// <summary>
         /// Calculates number of winners and losers for the trading day by security type
         /// </summary>
-        /// <param name="prices"></param>
         /// <returns></returns>
-        public List<WinnersLosersCount> WinnersLosers(DailyPricesOvernight prices)
+        public List<WinnersLosersCount> WinnersLosers()
         {
             var winnersLosers = new List<WinnersLosersCount>();
             foreach (SecurityType securityType in Enum.GetValues(typeof(SecurityType)))
             {
-                var winners = prices.Prices
+                var winners = _pricesOvernight.Prices
                     .Where(x => x.SecurityType == securityType)
                     .Where(x => CalculateChangePercent(x.OHLC) > 0)
                     .Count();
 
-                var losers = prices.Prices
+                var losers = _pricesOvernight.Prices
                     .Where(x => x.SecurityType == securityType)
                     .Where(x => CalculateChangePercent(x.OHLC) < 0)
                     .Count();
 
                 winnersLosers.Add(new WinnersLosersCount
                 {
-                    TradingDay = prices.TradingDay,
+                    TradingDay = _pricesOvernight.TradingDay,
                     SecurityType = securityType,
                     WinnersCount = winners,
                     LosersCount = losers,
@@ -45,21 +51,20 @@ namespace Crunch
         /// <summary>
         /// Average roi accross all securities for trading day by security type
         /// </summary>
-        /// <param name="prices"></param>
         /// <returns></returns>
-        public List<AverageRoi> AverageRoi(DailyPricesOvernight prices)
+        public List<AverageRoi> AverageRoi()
         {
             var avgRois = new List<AverageRoi>();
             foreach (SecurityType securityType in Enum.GetValues(typeof(SecurityType)))
             {
-                decimal averageRoi = prices.Prices
+                decimal averageRoi = _pricesOvernight.Prices
                     .Where(x => x.SecurityType == securityType)
                     .Average(x => CalculateChangePercent(x.OHLC));
                 avgRois.Add(new Core.AverageRoi
                 {
                     Roi = Math.Round(averageRoi, 2),
                     SecurityType = securityType,
-                    TradingDay = prices.TradingDay
+                    TradingDay = _pricesOvernight.TradingDay
                 });
             }
 
@@ -69,17 +74,16 @@ namespace Crunch
         /// <summary>
         /// ROI for the SPY
         /// </summary>
-        /// <param name="prices"></param>
         /// <returns></returns>
-        public SpyRoi AverageSpyRoi(DailyPricesOvernight prices)
+        public SpyRoi AverageSpyRoi()
         {
-            var spyRoi = prices.Prices
+            var spyRoi = _pricesOvernight.Prices
                 .Where(x => x.Symbol.Value == "SPY")
                 .Average(x => CalculateChangePercent(x.OHLC));
 
             return new SpyRoi
             {
-                TradingDay = prices.TradingDay,
+                TradingDay = _pricesOvernight.TradingDay,
                 Roi = Math.Round(spyRoi, 2)
             };
         }
