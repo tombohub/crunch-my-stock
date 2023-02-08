@@ -23,9 +23,18 @@ namespace Crunch.Database
         /// Get list of all symbols from database
         /// </summary>
         /// <returns></returns>
-        public List<Symbol> GetSecuritySymbols()
+        public List<Core.Security> GetSecurities()
         {
-            var symbols = _db.Securities.Select(s => new Symbol(s.Symbol)).ToList();
+            var symbols = _db.Securities
+                .Where(x => x.Status == SecurityStatus.Active.ToString())
+                .Select(s => new Core.Security
+                {
+                    Exchange = Enum.Parse<Exchange>(s.Exchange),
+                    IpoDate = s.IpoDate,
+                    Status = Enum.Parse<SecurityStatus>(s.Status),
+                    Type = Enum.Parse<SecurityType>(s.Type),
+                    Symbol = new Symbol(s.Symbol),
+                }).ToList();
             return symbols;
         }
 
@@ -137,78 +146,51 @@ namespace Crunch.Database
         /// </summary>
         /// <param name="tradingDay"></param>
         /// <returns></returns>
-        public List<SecurityPrice> GetPrices(TradingDay tradingDay)
+        public DailyPricesRegular GetPrices(TradingDay tradingDay)
         {
             // get today pricesDb
             var pricesDb = _db.PricesDailies
+                .Include(x => x.Security)
                 .Where(x => x.Date == tradingDay.Date)
                 .ToList();
 
-            var prices = pricesDb.Select(price => MapDbPriceToSecurityPrice(price)).ToList();
-            return prices;
-        }
-
-        public List<SecurityPriceDTO> GetPrices(TradingDay tradingDay, SecurityType securityType)
-        {
-            string sql = @"SELECT
-	                            pd.date,
-	                            pd.symbol,
-	                            pd.""open"",
-	                            pd.high,
-	                            pd.low,
-	                            pd.""close"",
-	                            pd.volume
-                            FROM
-	                            public.prices_daily pd
-                            JOIN public.securities s
-		                            USING(symbol)
-                            WHERE
-	                            s.""type"" = @SecurityType
-                            AND
-                                pd.date = @TradingDay";
-
-            var parameters = new
+            var securityPrices = new List<SecurityPrice>();
+            foreach (var price in pricesDb)
             {
-                Date = tradingDay.Date,
-                SecurityType = securityType.ToString(),
+                securityPrices.Add(new SecurityPrice
+                {
+                    TradingDay = new TradingDay(price.Date),
+                    Symbol = new Symbol(price.Symbol),
+                    SecurityType = Enum.Parse<SecurityType>(price.Security.Type),
+                    OHLC = new OHLC(price.Open, price.High, price.Low, price.Close),
+                    Volume = (int)price.Volume
+                });
             };
 
-            using var conn = DbConnections.CreatePsqlConnection();
-            var prices = conn.Query<SecurityPriceDTO>(sql, parameters).ToList();
-
-            return prices;
-        }
-
-        /// <summary>
-        /// Map pricesDb from database to prices domain
-        /// </summary>
-        /// <param name="pricesDb"></param>
-        /// <returns></returns>
-        private SecurityPrice MapDbPriceToSecurityPrice(PricesDaily pricesDb)
-        {
-            var securityPriceDTO = new SecurityPrice
+            var dailyPrices = new DailyPricesRegular
             {
-                TradingDay = new TradingDay(pricesDb.Date),
-                Symbol = new Symbol(pricesDb.Symbol),
-                OHLC = new OHLC(pricesDb.Open, pricesDb.High, pricesDb.Low, pricesDb.Close),
-                Volume = (int)pricesDb.Volume
+                TradingDay = tradingDay,
+                SecurityPrices = securityPrices
             };
-            return securityPriceDTO;
+            return dailyPrices;
         }
 
         /// <summary>
         /// Save Winners Losers stats to database
         /// </summary>
         /// <param name="winnersLosers"></param>
-        public void SaveWinnersLosers(Core.WinnersLosersCount winnersLosers)
+        public void SaveWinnersLosers(List<Core.WinnersLosersCount> winnersLosers)
         {
-            _db.WinnersLosersCounts.Add(new Models.WinnersLosersCount
+            foreach (var item in winnersLosers)
             {
-                Date = winnersLosers.TradingDay.Date,
-                WinnersCount = winnersLosers.WinnersCount,
-                LosersCount = winnersLosers.LosersCount,
-                SecurityType = winnersLosers.SecurityType.ToString(),
-            });
+                _db.WinnersLosersCounts.Add(new Models.WinnersLosersCount
+                {
+                    Date = item.TradingDay.Date,
+                    WinnersCount = item.WinnersCount,
+                    LosersCount = item.LosersCount,
+                    SecurityType = item.SecurityType.ToString(),
+                });
+            }
             _db.SaveChanges();
         }
 
@@ -225,7 +207,8 @@ namespace Crunch.Database
                 {
                     TradingDay = tradingDay,
                     OHLC = new OHLC(x.Open, x.Close),
-                    Symbol = new Symbol(x.Security.Symbol)
+                    Symbol = new Symbol(x.Security.Symbol),
+                    SecurityType = Enum.Parse<SecurityType>(x.Security.Type),
                 })
                 .ToList();
 

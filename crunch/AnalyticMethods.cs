@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Crunch.Core;
 
@@ -9,26 +10,31 @@ namespace Crunch
     /// </summary>
     internal class AnalyticMethods
     {
-        public WinnersLosersCount WinnersLosers(List<SecurityPriceOvernight> prices, SecurityType securityType)
+        public List<WinnersLosersCount> WinnersLosers(DailyPricesOvernight prices)
         {
-            var winners = prices
-                .Where(x => x.SecurityType == securityType)
-                .Where(x => CalculateChangePercent(x.OHLC) > 0)
-                .Count();
-
-            var losers = prices
-                .Where(x => x.SecurityType == securityType)
-                .Where(x => CalculateChangePercent(x.OHLC) < 0)
-                .Count();
-
-            var tradingDay = prices[0].TradingDay;
-            return new WinnersLosersCount
+            var winnersLosers = new List<WinnersLosersCount>();
+            foreach (SecurityType securityType in Enum.GetValues(typeof(SecurityType)))
             {
-                TradingDay = tradingDay,
-                SecurityType = securityType,
-                WinnersCount = winners,
-                LosersCount = losers,
-            };
+                var winners = prices.Prices
+                    .Where(x => x.SecurityType == securityType)
+                    .Where(x => CalculateChangePercent(x.OHLC) > 0)
+                    .Count();
+
+                var losers = prices.Prices
+                    .Where(x => x.SecurityType == securityType)
+                    .Where(x => CalculateChangePercent(x.OHLC) < 0)
+                    .Count();
+
+                winnersLosers.Add(new WinnersLosersCount
+                {
+                    TradingDay = prices.TradingDay,
+                    SecurityType = securityType,
+                    WinnersCount = winners,
+                    LosersCount = losers,
+                });
+            }
+
+            return winnersLosers;
         }
 
         /// <summary>

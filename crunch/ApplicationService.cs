@@ -22,14 +22,14 @@ namespace Crunch
 
             // get symbols from database
             var db = new DatabaseMethods();
-            List<Symbol> symbols = db.GetSecuritySymbols();
+            List<Security> symbols = db.GetSecurities();
 
             // loop over each symbol, get price for the day and save into database.
             // One OHLC price - one save to database
             foreach (var symbol in symbols)
             {
                 Thread.Sleep(300);
-                var thread = new Thread(() => ImportSymbolPrice(symbol, tradingDay));
+                var thread = new Thread(() => ImportSecurityPrice(symbol, tradingDay));
                 thread.Start();
             }
         }
@@ -46,7 +46,7 @@ namespace Crunch
             var domainService = new DomainService();
             var overnightPrices = domainService.TransformToOvernightPrices(prevTradDayPrices, todayPrices);
 
-            db.SaveOvernightPrices(overnightPrices);
+            db.SaveOvernightPrices(overnightPrices.Prices);
         }
 
         /// <summary>
@@ -54,19 +54,19 @@ namespace Crunch
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="date">Price date</param>
-        private void ImportSymbolPrice(Symbol symbol, TradingDay tradingDay)
+        private void ImportSecurityPrice(Security security, TradingDay tradingDay)
         {
             try
             {
-                Console.WriteLine($"Importing pricesToday for {symbol}...");
-                SecurityPrice symbolPrice = _dataProvider.GetDailyPrice(symbol, tradingDay);
+                Console.WriteLine($"Importing pricesToday for {security.Symbol.Value}...");
+                SecurityPrice symbolPrice = _dataProvider.GetDailyPrice(security, tradingDay);
 
                 _db.SaveDailyPrice(symbolPrice);
-                Console.WriteLine($"Prices imported for {symbol}");
+                Console.WriteLine($"Prices imported for {security.Symbol.Value}");
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error: {e.Message} with symbol {symbol}");
+                Console.WriteLine($"Error: {e.Message} with symbol {security.Symbol.Value}");
             }
         }
 
@@ -134,15 +134,12 @@ namespace Crunch
 
             // make overnight prices out of today and prev trad day
             var domainService = new DomainService();
-            List<SecurityPriceOvernight> pricesOvernight = domainService.TransformToOvernightPrices(pricesPrevDay, pricesToday);
+            DailyPricesOvernight pricesOvernight = domainService.TransformToOvernightPrices(pricesPrevDay, pricesToday);
 
             // perform calculations
             var analytics = new AnalyticMethods();
-            WinnersLosersCount winnersLosers = analytics.WinnersLosers(pricesOvernight, SecurityType.Stock);
+            List<WinnersLosersCount> winnersLosers = analytics.WinnersLosers(pricesOvernight);
 
-            decimal avgRoi = analytics.AverageRoi(pricesOvernight);
-            decimal spyRoi = analytics.AverageSpyRoi(pricesOvernight);
-            Console.WriteLine(spyRoi);
             //save result to database
             _db.SaveWinnersLosers(winnersLosers);
         }

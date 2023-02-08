@@ -12,9 +12,9 @@ namespace CrunchImport.DataProviders.Fmp
         private const string _fmpDomain = "https://financialmodelingprep.com/";
         private HttpClient _httpClient = new HttpClient();
 
-        public SecurityPrice GetSecurityDailyPrice(Symbol symbol, TradingDay tradingDay)
+        public SecurityPrice GetSecurityDailyPrice(Security security, TradingDay tradingDay)
         {
-            string priceApiResponse = RequestDailyPrice(symbol.Value, tradingDay.Date.ToString("yyyy-MM-dd"));
+            string priceApiResponse = RequestDailyPrice(security.Symbol.Value, tradingDay.Date.ToString("yyyy-MM-dd"));
             var price = JsonSerializer.Deserialize<SymbolPricesJsonResponse>(priceApiResponse);
             if (price.Results.Count > 1)
             {
@@ -22,14 +22,15 @@ namespace CrunchImport.DataProviders.Fmp
             }
             return new SecurityPrice
             {
-                Symbol = symbol,
+                Symbol = security.Symbol,
+                SecurityType = security.Type,
                 TradingDay = tradingDay,
                 OHLC = new OHLC(
                     price.Results[0].Open,
                     price.Results[0].High,
                     price.Results[0].Low,
                     price.Results[0].Close
-                                ),
+                               ),
                 Volume = price.Results[0].Volume,
             };
         }

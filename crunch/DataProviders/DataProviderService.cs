@@ -55,9 +55,9 @@ namespace CrunchImport.DataProviders
         /// <param name="symbol"></param>
         /// <param name="tradingDay"></param>
         /// <returns></returns>
-        public SecurityPrice GetDailyPrice(Symbol symbol, TradingDay tradingDay)
+        public SecurityPrice GetDailyPrice(Security security, TradingDay tradingDay)
         {
-            return _fmpProvider.GetSecurityDailyPrice(symbol, tradingDay);
+            return _fmpProvider.GetSecurityDailyPrice(security, tradingDay);
         }
     }
 }
