@@ -57,7 +57,7 @@ namespace Crunch
                     .Average(x => CalculateChangePercent(x.OHLC));
                 avgRois.Add(new Core.AverageRoi
                 {
-                    Roi = averageRoi,
+                    Roi = Math.Round(averageRoi, 2),
                     SecurityType = securityType,
                     TradingDay = prices.TradingDay
                 });
@@ -71,15 +71,24 @@ namespace Crunch
         /// </summary>
         /// <param name="prices"></param>
         /// <returns></returns>
-        public decimal AverageSpyRoi(List<SecurityPriceOvernight> prices)
+        public SpyRoi AverageSpyRoi(DailyPricesOvernight prices)
         {
-            var avgSpyRoi = prices
-                .Where(x => x.Symbol.Value == "SPY").ToList()
+            var spyRoi = prices.Prices
+                .Where(x => x.Symbol.Value == "SPY")
                 .Average(x => CalculateChangePercent(x.OHLC));
 
-            return avgSpyRoi;
+            return new SpyRoi
+            {
+                TradingDay = prices.TradingDay,
+                Roi = Math.Round(spyRoi, 2)
+            };
         }
 
+        /// <summary>
+        /// Calculates price change between open and close in %
+        /// </summary>
+        /// <param name="price"></param>
+        /// <returns></returns>
         private decimal CalculateChangePercent(OHLC price)
         {
             var changePct = (price.Open - price.Close) / price.Close * 100;

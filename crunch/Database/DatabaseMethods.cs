@@ -229,6 +229,23 @@ namespace Crunch.Database
             }
         }
 
+        public void SaveSpyRoi(Core.SpyRoi spyRoi)
+        {
+            var spyRoiDb = new Models.SpyRoi
+            {
+                Date = spyRoi.TradingDay.Date,
+                Roi = spyRoi.Roi
+            };
+            _db.SpyRois
+                .Upsert(spyRoiDb)
+               .On(x => new { x.Date })
+               .WhenMatched(x => new Models.SpyRoi
+               {
+                   Roi = spyRoi.Roi
+               })
+               .Run();
+        }
+
         /// <summary>
         /// Gets overnight security prices from database
         /// </summary>
