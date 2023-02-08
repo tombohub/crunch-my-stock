@@ -54,12 +54,18 @@ public partial class stock_analyticsContext : DbContext
                 .HasNoKey()
                 .ToTable("average_roi", "overnight", tb => tb.HasComment("Daily average overnight ROI for the strategy accross all securities. Value is in %"));
 
+            entity.HasIndex(e => new { e.Date, e.SecurityType }, "average_roi_un").IsUnique();
+
             entity.Property(e => e.AverageRoi1).HasColumnName("average_roi");
             entity.Property(e => e.Date).HasColumnName("date");
             entity.Property(e => e.Id)
                 .ValueGeneratedOnAdd()
                 .UseIdentityAlwaysColumn()
                 .HasColumnName("id");
+            entity.Property(e => e.SecurityType)
+                .IsRequired()
+                .HasColumnType("character varying")
+                .HasColumnName("security_type");
         });
 
         modelBuilder.Entity<MultiplotCoordinate>(entity =>

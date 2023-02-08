@@ -13,4 +13,6 @@ public partial class AverageRoi
     public DateOnly Date { get; set; }
 
     public decimal AverageRoi1 { get; set; }
+
+    public string SecurityType { get; set; }
 }

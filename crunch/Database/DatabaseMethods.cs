@@ -204,6 +204,32 @@ namespace Crunch.Database
         }
 
         /// <summary>
+        /// Saves overnight average roi into the database
+        /// </summary>
+        /// <param name="averageRoi"></param>
+        public void SaveAverageRoi(List<Core.AverageRoi> averageRoi)
+        {
+            foreach (var item in averageRoi)
+            {
+                var averageRoiDb = new Models.AverageRoi
+                {
+                    Date = item.TradingDay.Date,
+                    AverageRoi1 = item.Roi,
+                    SecurityType = item.SecurityType.ToString(),
+                };
+
+                _db.AverageRois
+                    .Upsert(averageRoiDb)
+                   .On(x => new { x.Date, x.SecurityType })
+                   .WhenMatched(x => new Models.AverageRoi
+                   {
+                       AverageRoi1 = item.Roi
+                   })
+                   .Run();
+            }
+        }
+
+        /// <summary>
         /// Gets overnight security prices from database
         /// </summary>
         /// <param name="tradingDay"></param>

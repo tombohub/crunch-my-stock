@@ -139,9 +139,11 @@ namespace Crunch
             // perform calculations
             var analytics = new AnalyticMethods();
             List<WinnersLosersCount> winnersLosers = analytics.WinnersLosers(pricesOvernight);
+            List<AverageRoi> averageRoi = analytics.AverageRoi(pricesOvernight);
 
             //save result to database
             _db.SaveWinnersLosers(winnersLosers);
+            _db.SaveAverageRoi(averageRoi);
         }
     }
 }
