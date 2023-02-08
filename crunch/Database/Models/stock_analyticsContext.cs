@@ -25,6 +25,8 @@ public partial class stock_analyticsContext : DbContext
 
     public virtual DbSet<PricesIntraday> PricesIntradays { get; set; }
 
+    public virtual DbSet<PricesJoinSecurity> PricesJoinSecurities { get; set; }
+
     public virtual DbSet<Security> Securities { get; set; }
 
     public virtual DbSet<Task> Tasks { get; set; }
@@ -175,6 +177,25 @@ public partial class stock_analyticsContext : DbContext
             entity.Property(e => e.Volume).HasColumnName("volume");
         });
 
+        modelBuilder.Entity<PricesJoinSecurity>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("prices_join_securities", "overnight");
+
+            entity.Property(e => e.Close).HasColumnName("close");
+            entity.Property(e => e.Date).HasColumnName("date");
+            entity.Property(e => e.DelistingDate).HasColumnName("delisting_date");
+            entity.Property(e => e.Exchange).HasColumnName("exchange");
+            entity.Property(e => e.IpoDate).HasColumnName("ipo_date");
+            entity.Property(e => e.Open).HasColumnName("open");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.Symbol)
+                .HasMaxLength(4)
+                .HasColumnName("symbol");
+            entity.Property(e => e.Type).HasColumnName("type");
+        });
+
         modelBuilder.Entity<Security>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("securities_pk");
@@ -309,6 +330,8 @@ public partial class stock_analyticsContext : DbContext
             entity.HasKey(e => e.Id).HasName("winners_losers_count_pk");
 
             entity.ToTable("winners_losers_count", "overnight", tb => tb.HasComment("Report counting how many stocks were up overnight (winners) how many down (losers)"));
+
+            entity.HasIndex(e => new { e.Date, e.SecurityType }, "winners_losers_count_un").IsUnique();
 
             entity.Property(e => e.Id)
                 .UseIdentityAlwaysColumn()

@@ -101,7 +101,8 @@ namespace Crunch.Database
                    High = price.OHLC.High,
                    Low = price.OHLC.Low,
                    Close = price.OHLC.Close
-               });
+               })
+               .Run();
         }
 
         /// <summary>
@@ -183,15 +184,23 @@ namespace Crunch.Database
         {
             foreach (var item in winnersLosers)
             {
-                _db.WinnersLosersCounts.Add(new Models.WinnersLosersCount
+                var winnersLosersDb = new Models.WinnersLosersCount
                 {
                     Date = item.TradingDay.Date,
                     WinnersCount = item.WinnersCount,
                     LosersCount = item.LosersCount,
                     SecurityType = item.SecurityType.ToString(),
-                });
+                };
+                _db.WinnersLosersCounts
+                    .Upsert(winnersLosersDb)
+                   .On(x => new { x.Date, x.SecurityType })
+                   .WhenMatched(x => new Models.WinnersLosersCount
+                   {
+                       WinnersCount = item.WinnersCount,
+                       LosersCount = item.LosersCount
+                   })
+                   .Run();
             }
-            _db.SaveChanges();
         }
 
         /// <summary>
