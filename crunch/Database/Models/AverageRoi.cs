@@ -12,6 +12,9 @@ public partial class AverageRoi
 
     public DateOnly Date { get; set; }
 
+    /// <summary>
+    /// average roi in %
+    /// </summary>
     public decimal AverageRoi1 { get; set; }
 
     public string SecurityType { get; set; }

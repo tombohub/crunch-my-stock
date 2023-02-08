@@ -29,6 +29,8 @@ public partial class stock_analyticsContext : DbContext
 
     public virtual DbSet<Security> Securities { get; set; }
 
+    public virtual DbSet<SpyRoi> SpyRois { get; set; }
+
     public virtual DbSet<Task> Tasks { get; set; }
 
     public virtual DbSet<Test> Tests { get; set; }
@@ -56,7 +58,9 @@ public partial class stock_analyticsContext : DbContext
 
             entity.HasIndex(e => new { e.Date, e.SecurityType }, "average_roi_un").IsUnique();
 
-            entity.Property(e => e.AverageRoi1).HasColumnName("average_roi");
+            entity.Property(e => e.AverageRoi1)
+                .HasComment("average roi in %")
+                .HasColumnName("average_roi");
             entity.Property(e => e.Date).HasColumnName("date");
             entity.Property(e => e.Id)
                 .ValueGeneratedOnAdd()
@@ -234,6 +238,20 @@ public partial class stock_analyticsContext : DbContext
                 .IsRequired()
                 .HasColumnName("type");
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+        });
+
+        modelBuilder.Entity<SpyRoi>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("spy_roi", "overnight", tb => tb.HasComment("SPY roi (pct change) for a benchmark"));
+
+            entity.Property(e => e.Date).HasColumnName("date");
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("id");
+            entity.Property(e => e.Roi).HasColumnName("roi");
         });
 
         modelBuilder.Entity<Task>(entity =>
