@@ -246,6 +246,8 @@ public partial class stock_analyticsContext : DbContext
                 .HasNoKey()
                 .ToTable("spy_roi", "overnight", tb => tb.HasComment("SPY roi (pct change) for a benchmark"));
 
+            entity.HasIndex(e => e.Date, "spy_roi_un").IsUnique();
+
             entity.Property(e => e.Date).HasColumnName("date");
             entity.Property(e => e.Id)
                 .ValueGeneratedOnAdd()
