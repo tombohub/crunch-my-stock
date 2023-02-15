@@ -203,6 +203,26 @@ namespace Crunch.Database
             }
         }
 
+        public List<Core.WinnersLosersCount> GetWinnersLosers(TradingDay tradingDay)
+        {
+            var winnersLosersDb = _db.WinnersLosersCounts
+                .Where(x => x.Date == tradingDay.Date)
+                .ToList();
+
+            var winnersLosers = new List<Core.WinnersLosersCount>();
+            foreach (var item in winnersLosersDb)
+            {
+                winnersLosers.Add(new Core.WinnersLosersCount
+                {
+                    TradingDay = new TradingDay(item.Date),
+                    WinnersCount = item.WinnersCount,
+                    LosersCount = item.LosersCount,
+                    SecurityType = Enum.Parse<SecurityType>(item.SecurityType)
+                });
+            }
+            return winnersLosers;
+        }
+
         /// <summary>
         /// Saves overnight average roi into the database
         /// </summary>

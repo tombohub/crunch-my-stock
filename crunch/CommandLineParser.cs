@@ -1,7 +1,5 @@
 ﻿using System;
 using CommandDotNet;
-using Crunch.Core;
-using Crunch.Strategies;
 
 namespace Crunch
 {
@@ -63,15 +61,9 @@ namespace Crunch
         /// </summary>
         /// <param name="strategy"></param>
         /// <param name="date"></param>
-        public void Plot([Option] StrategyName strategy, [Option] DateOnly date)
+        public void Plot([Option] DateOnly date)
         {
-            // get data from database for each report
-            // create individual plot
-            // get coordinates for each plot to add in multiplot
-            // create multiplot using individual plots and coordinates
-            // save as image file
-            IStrategyService strategyService = StrategyServiceFactory.CreateService(strategy);
-            strategyService.CreateStrategyMultiplot(date);
+            _app.Plot(date);
         }
     }
 }

@@ -10,11 +10,6 @@ namespace Crunch.Core.Multiplots
     internal record Area
     {
         /// <summary>
-        /// Unique area identifier
-        /// </summary>
-        public int Id { get; init; }
-
-        /// <summary>
         /// X coordinate of area
         /// </summary>
         public int X { get; init; }
@@ -33,17 +28,6 @@ namespace Crunch.Core.Multiplots
         /// Height of area
         /// </summary>
         public int Height { get; init; }
-
-        /// <summary>
-        /// Rectangle representing the location and dimensions
-        /// of area inside multiplot
-        /// </summary>
-        internal Rectangle Rect { get; init; }
-
-        /// <summary>
-        /// Image which is rendered in the current Area
-        /// </summary>
-        internal Bitmap Image { get; set; }
 
         /// <summary>
         /// Object containing area content. It renders image to attach to area.

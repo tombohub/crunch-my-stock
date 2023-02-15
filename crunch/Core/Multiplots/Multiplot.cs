@@ -35,8 +35,12 @@ namespace Crunch.Core.Multiplots
             _areas = areas;
         }
 
-        public Multiplot(StrategyName strategy, DateOnly date)
+        public Multiplot()
+        { }
+
+        public void AddArea(Area area)
         {
+            _areas.Add(area);
         }
 
         /// <summary>
