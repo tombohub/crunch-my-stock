@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Threading;
 using Crunch.Core;
 using Crunch.Database;
@@ -161,7 +160,7 @@ namespace Crunch
         /// Creates plot out of the stats for overnight strategy
         /// </summary>
         /// <param name="date"></param>
-        public void Plot(DateOnly date)
+        public void Plot(DateOnly date, SecurityType securityType)
         {
             // get data from database for each report
             // create individual plot
@@ -170,21 +169,10 @@ namespace Crunch
             // save as image file
             //IStrategyService strategyService = StrategyServiceFactory.CreateService(strategy);
             //strategyService.CreateStrategyMultiplot(date);
-            var winnersLosers = _db.GetWinnersLosers(new TradingDay(date));
+            var winnersLosers = _db.GetWinnersLosers(new TradingDay(date), securityType);
+            var plots = new PlottingMethods();
+            var plotImage = plots.WinnersLosersPlot(winnersLosers);
 
-            var plt = new ScottPlot.Plot(600, 400);
-            double[] positions = { 0, 1 };
-            string[] labels = { "Losers", "Winners" };
-            var barLosers = plt.AddBar(new double[] { winnersLosers[0].LosersCount }, new double[] { 0 }, Color.DarkRed);
-            var barWinners = plt.AddBar(new double[] { winnersLosers[0].WinnersCount }, new double[] { 1 }, Color.DarkGreen);
-            plt.XTicks(positions, labels);
-            barLosers.ShowValuesAboveBars = true;
-            barWinners.ShowValuesAboveBars = true;
-
-            // adjust axis limits so there is no padding below the bar graph
-            plt.SetAxisLimits(yMin: 0);
-
-            Bitmap plotImage = plt.Render();
             plotImage.Save("C:/Users/Shmukaluka/Downloads/kloko.png");
         }
     }

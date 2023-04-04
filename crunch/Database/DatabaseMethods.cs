@@ -203,23 +203,21 @@ namespace Crunch.Database
             }
         }
 
-        public List<Core.WinnersLosersCount> GetWinnersLosers(TradingDay tradingDay)
+        public Core.WinnersLosersCount GetWinnersLosers(TradingDay tradingDay, SecurityType securityType)
         {
             var winnersLosersDb = _db.WinnersLosersCounts
                 .Where(x => x.Date == tradingDay.Date)
-                .ToList();
+                .Where(x => x.SecurityType == securityType.ToString())
+                .Single();
 
-            var winnersLosers = new List<Core.WinnersLosersCount>();
-            foreach (var item in winnersLosersDb)
+            var winnersLosers = new Core.WinnersLosersCount
             {
-                winnersLosers.Add(new Core.WinnersLosersCount
-                {
-                    TradingDay = new TradingDay(item.Date),
-                    WinnersCount = item.WinnersCount,
-                    LosersCount = item.LosersCount,
-                    SecurityType = Enum.Parse<SecurityType>(item.SecurityType)
-                });
-            }
+                TradingDay = new TradingDay(winnersLosersDb.Date),
+                WinnersCount = winnersLosersDb.WinnersCount,
+                LosersCount = winnersLosersDb.LosersCount,
+                SecurityType = Enum.Parse<SecurityType>(winnersLosersDb.SecurityType)
+            };
+
             return winnersLosers;
         }
 

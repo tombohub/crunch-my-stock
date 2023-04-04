@@ -1,5 +1,6 @@
-﻿using System;
-using CommandDotNet;
+﻿using CommandDotNet;
+using Crunch.Core;
+using System;
 
 namespace Crunch
 {
@@ -37,6 +38,11 @@ namespace Crunch
                 }
             }
 
+            public void Prices(string ko)
+            {
+                Console.WriteLine(ko);
+            }
+
             public void OvernightPrices(DateOnly date)
             {
                 _app.ImportOvernightPrices(date);
@@ -59,11 +65,11 @@ namespace Crunch
         /// <summary>
         /// Plot strategy reports all in one image
         /// </summary>
-        /// <param name="strategy"></param>
         /// <param name="date"></param>
-        public void Plot([Option] DateOnly date)
+        /// <param name="securityType"></param>
+        public void Plot([Option] DateOnly date, [Option] SecurityType securityType)
         {
-            _app.Plot(date);
+            _app.Plot(date, securityType);
         }
     }
 }

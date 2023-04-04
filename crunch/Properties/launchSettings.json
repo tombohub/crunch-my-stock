@@ -26,7 +26,7 @@
     },
     "plot": {
       "commandName": "Project",
-      "commandLineArgs": "plot --date 2023-01-23"
+      "commandLineArgs": "plot --date 2023-01-23 --securitytype Stock"
     }
   }
 }
