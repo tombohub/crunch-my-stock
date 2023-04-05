@@ -27,6 +27,13 @@
     "plot": {
       "commandName": "Project",
       "commandLineArgs": "plot --date 2023-01-23 --securitytype Stock"
+    },
+    "crunch": {
+      "commandName": "Project"
+    },
+    "crunch help": {
+      "commandName": "Project",
+      "commandLineArgs": "--help"
     }
   }
 }

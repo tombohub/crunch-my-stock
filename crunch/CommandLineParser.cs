@@ -38,10 +38,7 @@ namespace Crunch
                 }
             }
 
-            public void Prices(string ko)
-            {
-                Console.WriteLine(ko);
-            }
+
 
             public void OvernightPrices(DateOnly date)
             {
