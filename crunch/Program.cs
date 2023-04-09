@@ -1,4 +1,5 @@
 ﻿using CommandDotNet;
+using CommandDotNet.DataAnnotations;
 using CommandDotNet.NameCasing;
 
 namespace Crunch
@@ -9,6 +10,7 @@ namespace Crunch
         {
             new AppRunner<CommandLineParser>()
                 .UseNameCasing(Case.LowerCase)
+                .UseDataAnnotationValidations()
                 .Run(args);
         }
     }

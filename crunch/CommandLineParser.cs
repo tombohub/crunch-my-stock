@@ -1,6 +1,8 @@
 ﻿using CommandDotNet;
 using Crunch.Core;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Crunch
 {
@@ -23,18 +25,18 @@ namespace Crunch
             /// </summary>
             /// <param name="date">TradingDay for the prices</param>
             /// <param name="today">Import today's prices</param>
-            public void Prices([Option] DateOnly? date, [Option] bool today)
+            public void Prices(PeriodOptions periodOptions)
             {
-                if (today)
+                if (periodOptions.Today)
                 {
                     var currentDateTime = DateTime.Now;
                     Console.WriteLine($"Current date and time is: {currentDateTime}");
                     var todayDate = DateOnly.FromDateTime(currentDateTime);
                     _app.ImportPrices(todayDate);
                 }
-                else if (date != null)
+                else if (periodOptions.Date != null)
                 {
-                    _app.ImportPrices(date.Value);
+                    _app.ImportPrices(periodOptions.Date.Value);
                 }
             }
 
@@ -69,4 +71,36 @@ namespace Crunch
             _app.Plot(date, securityType);
         }
     }
+
+    public class PeriodOptions : IArgumentModel, IValidatableObject
+    {
+        [Option]
+        public DateOnly? Date { get; set; }
+
+        [Option]
+        public bool Today { get; set; }
+
+        [Option]
+        public DateOnly? Start { get; set; }
+
+        [Option]
+        public DateOnly? End { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if ((Date != null) && Today)
+            {
+                yield return new ValidationResult("Cannot choose the date and today at the same time");
+            }
+            else if ((Date != null) && (Start != null || End != null))
+            {
+                yield return new ValidationResult("Choose either date or period (start, end)");
+            }
+            else if (Today && (Start != null || End != null))
+            {
+                yield return new ValidationResult("Choose either today or period (start, end)");
+            }
+        }
+    }
+
 }
