@@ -25,18 +25,32 @@ namespace Crunch
             /// </summary>
             /// <param name="date">TradingDay for the prices</param>
             /// <param name="today">Import today's prices</param>
-            public void Prices(PeriodOptions periodOptions)
+            public void Prices(ImportPricesOptions importPricesOptions)
             {
-                if (periodOptions.Today)
+                if (importPricesOptions.Today)
                 {
                     var currentDateTime = DateTime.Now;
                     Console.WriteLine($"Current date and time is: {currentDateTime}");
                     var todayDate = DateOnly.FromDateTime(currentDateTime);
                     _app.ImportPrices(todayDate);
                 }
-                else if (periodOptions.Date != null)
+                else if (importPricesOptions.Date != null)
                 {
-                    _app.ImportPrices(periodOptions.Date.Value);
+                    _app.ImportPrices(importPricesOptions.Date.Value);
+                }
+                else if (importPricesOptions.PeriodOptions.Start.HasValue && importPricesOptions.PeriodOptions.End.HasValue)
+                {
+                    var start = importPricesOptions.PeriodOptions.Start;
+                    var end = importPricesOptions.PeriodOptions.End;
+
+                    Console.WriteLine($"start: {start} end: {end}");
+                }
+                else if (importPricesOptions.PeriodOptions.Start.HasValue && importPricesOptions.PeriodOptions.End == null)
+                {
+                    var start = importPricesOptions.PeriodOptions.Start;
+                    var end = importPricesOptions.PeriodOptions.End;
+
+                    Console.WriteLine($"start: {start}, end: {end}");
                 }
             }
 
@@ -72,35 +86,55 @@ namespace Crunch
         }
     }
 
-    public class PeriodOptions : IArgumentModel, IValidatableObject
+    public class ImportPricesOptions : IArgumentModel, IValidatableObject
     {
         [Option]
-        public DateOnly? Date { get; set; }
+        public DateOnly? Date { get; set; } = null;
 
         [Option]
-        public bool Today { get; set; }
+        public bool Today { get; set; } = false;
 
         [Option]
-        public DateOnly? Start { get; set; }
-
-        [Option]
-        public DateOnly? End { get; set; }
+        public PeriodOptions PeriodOptions { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if ((Date != null) && Today)
+            if (Date.HasValue && (Today || PeriodOptions.Start.HasValue || PeriodOptions.End.HasValue))
             {
-                yield return new ValidationResult("Cannot choose the date and today at the same time");
+                yield return new ValidationResult("Choose only date, today or period (start, end)1");
+                yield break;
             }
-            else if ((Date != null) && (Start != null || End != null))
+            else if (Today && (Date.HasValue || PeriodOptions.Start.HasValue || PeriodOptions.End.HasValue))
             {
-                yield return new ValidationResult("Choose either date or period (start, end)");
+                yield return new ValidationResult("Choose only date, today or period (start, end)2");
+                yield break;
             }
-            else if (Today && (Start != null || End != null))
+            else if (PeriodOptions.Start.HasValue && (Date.HasValue || Today))
             {
-                yield return new ValidationResult("Choose either today or period (start, end)");
+                yield return new ValidationResult("Choose only date, today or period (start, end)3");
+                yield break;
             }
+            else if (PeriodOptions.End.HasValue && PeriodOptions.Start == null)
+            {
+                yield return new ValidationResult("Have to use --start together with --end");
+                yield break;
+            }
+            else if (PeriodOptions.Start > PeriodOptions.End)
+            {
+                yield return new ValidationResult("--start has to be earlier than --end");
+                yield break;
+            }
+
         }
+
+    }
+    public class PeriodOptions : IArgumentModel
+    {
+        [Option]
+        public DateOnly? Start { get; set; } = null;
+
+        [Option]
+        public DateOnly? End { get; set; } = null;
     }
 
 }

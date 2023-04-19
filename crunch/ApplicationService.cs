@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using Crunch.Core;
+﻿using Crunch.Core;
 using Crunch.Database;
 using CrunchImport.DataProviders;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Crunch
 {
@@ -18,6 +18,8 @@ namespace Crunch
 
         /// <summary>
         /// Import today's pricesToday for all securities into database
+        /// 
+        /// Uses threads
         /// </summary>
         public void ImportPrices(DateOnly date)
         {
@@ -38,6 +40,18 @@ namespace Crunch
             }
         }
 
+        public void ImportPrices(DateOnly start, DateOnly end)
+        {
+
+        }
+
+        /// <summary>
+        /// Saves overnight prices to database.
+        /// 
+        /// Overnight prices are saved into separate table because it's
+        /// easier to do analytics that way.
+        /// </summary>
+        /// <param name="date">Date when the market opens</param>
         public void ImportOvernightPrices(DateOnly date)
         {
             var tradingDay = new TradingDay(date);
@@ -54,7 +68,7 @@ namespace Crunch
         }
 
         /// <summary>
-        /// Imports price for a symbol from a data source into the database.
+        /// Imports price for a single security on a given date into the database.
         /// </summary>
         /// <param name="symbol">Symbol</param>
         /// <param name="date">Price date</param>
@@ -63,7 +77,23 @@ namespace Crunch
             try
             {
                 Console.WriteLine($"Importing pricesToday for {security.Symbol.Value}...");
-                SecurityPrice symbolPrice = _dataProvider.GetDailyPrice(security, tradingDay);
+                SecurityPrice symbolPrice = _dataProvider.GetSecurityPrice(security, tradingDay);
+
+                _db.SaveDailyPrice(symbolPrice);
+                Console.WriteLine($"Prices imported for {security.Symbol.Value}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error: {e.Message} with symbol {security.Symbol.Value}");
+            }
+        }
+
+        private void ImportSecurityPrice(Security security, TimePeriod period)
+        {
+            try
+            {
+                Console.WriteLine($"Importing pricesToday for {security.Symbol.Value}...");
+                List<SecurityPrice> symbolPrice = _dataProvider.GetSecurityPrices(security, period);
 
                 _db.SaveDailyPrice(symbolPrice);
                 Console.WriteLine($"Prices imported for {security.Symbol.Value}");
@@ -75,7 +105,9 @@ namespace Crunch
         }
 
         /// <summary>
-        /// Update securities in database
+        /// Update securities in database.
+        /// 
+        /// Inserts new securities, updates listed delisted status
         /// </summary>
         public void UpdateSecurities()
         {

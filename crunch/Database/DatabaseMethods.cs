@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Crunch.Core;
+using Crunch.Database.Models;
+using Dapper;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Crunch.Core;
-using Crunch.Database.Models;
-using Dapper;
 
 namespace Crunch.Database
 {
@@ -104,6 +104,7 @@ namespace Crunch.Database
                })
                .Run();
         }
+
 
         /// <summary>
         /// Save security to database. If security exists in database it will be updated.

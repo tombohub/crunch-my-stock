@@ -11,6 +11,7 @@ namespace Crunch
             new AppRunner<CommandLineParser>()
                 .UseNameCasing(Case.LowerCase)
                 .UseDataAnnotationValidations()
+                .UseParseDirective()
                 .Run(args);
         }
     }

@@ -34,6 +34,10 @@
     "crunch help": {
       "commandName": "Project",
       "commandLineArgs": "--help"
+    },
+    "import prices -h": {
+      "commandName": "Project",
+      "commandLineArgs": "[parse] import prices -h"
     }
   }
 }
