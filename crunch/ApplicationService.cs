@@ -182,10 +182,7 @@ namespace Crunch
             List<AverageRoi> averageRoi = analytics.AverageRoi();
             SpyRoi spyRoi = analytics.AverageSpyRoi();
 
-            //save result to database
-            _db.SaveWinnersLosers(winnersLosers);
-            _db.SaveAverageRoi(averageRoi);
-            _db.SaveSpyRoi(spyRoi);
+
         }
 
         /// <summary>

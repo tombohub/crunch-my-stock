@@ -105,6 +105,14 @@ namespace Crunch.Database
                .Run();
         }
 
+        public void SaveDailyPrice(List<SecurityPrice> prices)
+        {
+            foreach (SecurityPrice price in prices)
+            {
+                SaveDailyPrice(price);
+            }
+        }
+
 
         /// <summary>
         /// Save security to database. If security exists in database it will be updated.
@@ -222,69 +230,6 @@ namespace Crunch.Database
             return winnersLosers;
         }
 
-        /// <summary>
-        /// Saves overnight average roi into the database
-        /// </summary>
-        /// <param name="averageRoi"></param>
-        public void SaveAverageRoi(List<Core.AverageRoi> averageRoi)
-        {
-            foreach (var item in averageRoi)
-            {
-                var averageRoiDb = new Models.AverageRoi
-                {
-                    Date = item.TradingDay.Date,
-                    AverageRoi1 = item.Roi,
-                    SecurityType = item.SecurityType.ToString(),
-                };
-
-                _db.AverageRois
-                    .Upsert(averageRoiDb)
-                   .On(x => new { x.Date, x.SecurityType })
-                   .WhenMatched(x => new Models.AverageRoi
-                   {
-                       AverageRoi1 = item.Roi
-                   })
-                   .Run();
-            }
-        }
-
-        public void SaveSpyRoi(Core.SpyRoi spyRoi)
-        {
-            var spyRoiDb = new Models.SpyRoi
-            {
-                Date = spyRoi.TradingDay.Date,
-                Roi = spyRoi.Roi
-            };
-            _db.SpyRois
-                .Upsert(spyRoiDb)
-               .On(x => new { x.Date })
-               .WhenMatched(x => new Models.SpyRoi
-               {
-                   Roi = spyRoi.Roi
-               })
-               .Run();
-        }
-
-        /// <summary>
-        /// Gets overnight security prices from database
-        /// </summary>
-        /// <param name="tradingDay"></param>
-        /// <returns>list of prices domain objects</returns>
-        public List<Core.SecurityPriceOvernight> GetOvernightPrices(TradingDay tradingDay)
-        {
-            var prices = _db.PricesDailyOvernights
-                .Where(x => x.Date == tradingDay.Date)
-                .Select(x => new SecurityPriceOvernight
-                {
-                    TradingDay = tradingDay,
-                    OHLC = new OHLC(x.Open, x.Close),
-                    Symbol = new Symbol(x.Security.Symbol),
-                    SecurityType = Enum.Parse<SecurityType>(x.Security.Type),
-                })
-                .ToList();
-
-            return prices;
-        }
 
         /// <summary>
         /// Saves overnight prices into the database
@@ -296,12 +241,13 @@ namespace Crunch.Database
             {
                 Console.WriteLine($"saving {price.Symbol.Value}");
                 var security = _db.Securities.Where(x => x.Symbol == price.Symbol.Value).Single();
-                _db.PricesDailyOvernights.Add(new PricesDailyOvernight
+                _db.DailyOvernightPerformances.Add(new DailyOvernightPerformance
                 {
                     Date = price.TradingDay.Date,
                     Open = price.OHLC.Open,
                     Close = price.OHLC.Close,
-                    Security = security
+                    Security = security,
+                    ChangePct = (price.OHLC.Close - price.OHLC.Open) / price.OHLC.Open * 100,
                 });
                 _db.SaveChanges();
             }

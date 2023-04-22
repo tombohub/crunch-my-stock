@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Crunch.Database.Models;
 
 namespace Crunch.Database.Models;
 
-public partial class PricesDailyOvernight
+public partial class DailyOvernightPerformance
 {
     public int Id { get; set; }
 
@@ -23,6 +24,11 @@ public partial class PricesDailyOvernight
     public decimal Close { get; set; }
 
     public int SecurityId { get; set; }
+
+    /// <summary>
+    /// difference between closing and opening price in percent %
+    /// </summary>
+    public decimal ChangePct { get; set; }
 
     public virtual Security Security { get; set; }
 }

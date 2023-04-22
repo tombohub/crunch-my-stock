@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Crunch.Database.Models;
 
 namespace Crunch.Database.Models;
 
@@ -17,5 +18,7 @@ public partial class AverageRoi
     /// </summary>
     public decimal AverageRoi1 { get; set; }
 
-    public string SecurityType { get; set; }
+    public int SecurityId { get; set; }
+
+    public virtual Security Security { get; set; }
 }

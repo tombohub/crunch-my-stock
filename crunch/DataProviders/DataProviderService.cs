@@ -85,7 +85,7 @@ namespace CrunchImport.DataProviders
         /// <param name="security"></param>
         /// <param name="timePeriod"></param>
         /// <returns></returns>
-        public SecurityPrice GetSecurityPrices(Security security, TimePeriod timePeriod)
+        public List<SecurityPrice> GetSecurityPrices(Security security, TimePeriod timePeriod)
         {
             var response = _fmpProvider.GetSecurityDailyPrice(security.Symbol.Value, timePeriod.Start, timePeriod.End);
 

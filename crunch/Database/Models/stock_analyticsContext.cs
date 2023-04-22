@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Crunch.Database.Models;
 
 namespace Crunch.Database.Models;
 
@@ -17,11 +18,11 @@ public partial class stock_analyticsContext : DbContext
 
     public virtual DbSet<AverageRoi> AverageRois { get; set; }
 
+    public virtual DbSet<DailyOvernightPerformance> DailyOvernightPerformances { get; set; }
+
     public virtual DbSet<MultiplotCoordinate> MultiplotCoordinates { get; set; }
 
     public virtual DbSet<PricesDaily> PricesDailies { get; set; }
-
-    public virtual DbSet<PricesDailyOvernight> PricesDailyOvernights { get; set; }
 
     public virtual DbSet<PricesIntraday> PricesIntradays { get; set; }
 
@@ -32,8 +33,6 @@ public partial class stock_analyticsContext : DbContext
     public virtual DbSet<SpyRoi> SpyRois { get; set; }
 
     public virtual DbSet<Task> Tasks { get; set; }
-
-    public virtual DbSet<Test> Tests { get; set; }
 
     public virtual DbSet<WeeklyOvernightStat> WeeklyOvernightStats { get; set; }
 
@@ -52,24 +51,52 @@ public partial class stock_analyticsContext : DbContext
 
         modelBuilder.Entity<AverageRoi>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("average_roi", "overnight", tb => tb.HasComment("Daily average overnight ROI for the strategy accross all securities. Value is in %"));
+            entity.HasKey(e => e.Id).HasName("average_roi_pk");
 
-            entity.HasIndex(e => new { e.Date, e.SecurityType }, "average_roi_un").IsUnique();
+            entity.ToTable("average_roi", "overnight", tb => tb.HasComment("Daily average overnight ROI for the strategy accross all securities. Value is in %"));
 
+            entity.Property(e => e.Id)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("id");
             entity.Property(e => e.AverageRoi1)
                 .HasComment("average roi in %")
                 .HasColumnName("average_roi");
             entity.Property(e => e.Date).HasColumnName("date");
+            entity.Property(e => e.SecurityId).HasColumnName("security_id");
+
+            entity.HasOne(d => d.Security).WithMany(p => p.AverageRois)
+                .HasForeignKey(d => d.SecurityId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("average_roi_fk");
+        });
+
+        modelBuilder.Entity<DailyOvernightPerformance>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("overnight_daily_stats_pk");
+
+            entity.ToTable("daily_overnight_performance", "overnight");
+
             entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
                 .UseIdentityAlwaysColumn()
                 .HasColumnName("id");
-            entity.Property(e => e.SecurityType)
-                .IsRequired()
-                .HasColumnType("character varying")
-                .HasColumnName("security_type");
+            entity.Property(e => e.ChangePct)
+                .HasComment("difference between closing and opening price in percent %")
+                .HasColumnName("change_pct");
+            entity.Property(e => e.Close)
+                .HasComment("Strategy date opening price")
+                .HasColumnName("close");
+            entity.Property(e => e.Date)
+                .HasComment("Date of the strategy")
+                .HasColumnName("date");
+            entity.Property(e => e.Open)
+                .HasComment("Previous trading day closing price")
+                .HasColumnName("open");
+            entity.Property(e => e.SecurityId).HasColumnName("security_id");
+
+            entity.HasOne(d => d.Security).WithMany(p => p.DailyOvernightPerformances)
+                .HasForeignKey(d => d.SecurityId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("prices_daily_overnight_fk");
         });
 
         modelBuilder.Entity<MultiplotCoordinate>(entity =>
@@ -104,7 +131,9 @@ public partial class stock_analyticsContext : DbContext
 
             entity.ToTable("prices_daily");
 
-            entity.HasIndex(e => new { e.Symbol, e.Date }, "date_symbol_un").IsUnique();
+            entity.HasIndex(e => new { e.Date, e.Symbol }, "date_symbol_un").IsUnique();
+
+            entity.HasIndex(e => new { e.Date, e.SecurityId }, "prices_daily__security_id_date_un").IsUnique();
 
             entity.Property(e => e.Id)
                 .UseIdentityAlwaysColumn()
@@ -135,44 +164,20 @@ public partial class stock_analyticsContext : DbContext
                 .HasConstraintName("prices_daily_fk");
         });
 
-        modelBuilder.Entity<PricesDailyOvernight>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("overnight_daily_stats_pk");
-
-            entity.ToTable("prices_daily_overnight", "overnight");
-
-            entity.Property(e => e.Id)
-                .UseIdentityAlwaysColumn()
-                .HasColumnName("id");
-            entity.Property(e => e.Close)
-                .HasComment("Strategy date opening price")
-                .HasColumnName("close");
-            entity.Property(e => e.Date)
-                .HasComment("Date of the strategy")
-                .HasColumnName("date");
-            entity.Property(e => e.Open)
-                .HasComment("Previous trading day closing price")
-                .HasColumnName("open");
-            entity.Property(e => e.SecurityId).HasColumnName("security_id");
-
-            entity.HasOne(d => d.Security).WithMany(p => p.PricesDailyOvernights)
-                .HasForeignKey(d => d.SecurityId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("prices_daily_overnight_fk");
-        });
-
         modelBuilder.Entity<PricesIntraday>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("prices_intraday");
+            entity.HasKey(e => e.Id).HasName("prices_intraday_pk");
 
+            entity.ToTable("prices_intraday");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
             entity.Property(e => e.Close).HasColumnName("close");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("created_at");
             entity.Property(e => e.High).HasColumnName("high");
-            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Interval)
                 .HasMaxLength(10)
                 .HasColumnName("interval");
@@ -242,58 +247,46 @@ public partial class stock_analyticsContext : DbContext
 
         modelBuilder.Entity<SpyRoi>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("spy_roi", "overnight", tb => tb.HasComment("SPY roi (pct change) for a benchmark"));
+            entity.HasKey(e => e.Id).HasName("spy_roi_pk");
+
+            entity.ToTable("spy_roi", "overnight", tb => tb.HasComment("SPY roi (pct change) for a benchmark"));
 
             entity.HasIndex(e => e.Date, "spy_roi_un").IsUnique();
 
-            entity.Property(e => e.Date).HasColumnName("date");
             entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
                 .UseIdentityAlwaysColumn()
                 .HasColumnName("id");
+            entity.Property(e => e.Date).HasColumnName("date");
             entity.Property(e => e.Roi).HasColumnName("roi");
         });
 
         modelBuilder.Entity<Task>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("tasks", tb => tb.HasComment("Tasks to be run periodically"));
+            entity.HasKey(e => e.Id).HasName("tasks_pk");
 
-            entity.Property(e => e.Description).HasColumnName("description");
-            entity.Property(e => e.Frequency).HasColumnName("frequency");
+            entity.ToTable("tasks", tb => tb.HasComment("Tasks to be run periodically"));
+
             entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
                 .UseIdentityAlwaysColumn()
                 .HasColumnName("id");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Frequency).HasColumnName("frequency");
             entity.Property(e => e.Task1)
                 .IsRequired()
                 .HasColumnName("task");
         });
 
-        modelBuilder.Entity<Test>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("test");
-
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("created_at");
-            entity.Property(e => e.Str).HasColumnName("str");
-        });
-
         modelBuilder.Entity<WeeklyOvernightStat>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("weekly_overnight_stats", "overnight");
+            entity.HasKey(e => e.Id).HasName("weekly_overnight_stats_pk");
+
+            entity.ToTable("weekly_overnight_stats", "overnight");
 
             entity.HasIndex(e => new { e.Symbol, e.Strategy, e.WeekNum }, "symbol_strategy_week_UNIQUE").IsUnique();
 
+            entity.Property(e => e.Id)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("id");
             entity.Property(e => e.AvgDay).HasColumnName("avg_day");
             entity.Property(e => e.AvgLossPerLosingTrade).HasColumnName("avg_loss_per_losing_trade");
             entity.Property(e => e.AvgPctGainPerTrade).HasColumnName("avg_pct_gain_per_trade");
@@ -308,10 +301,6 @@ public partial class stock_analyticsContext : DbContext
             entity.Property(e => e.EndingBalance).HasColumnName("ending_balance");
             entity.Property(e => e.GrossLoss).HasColumnName("gross_loss");
             entity.Property(e => e.GrossProfit).HasColumnName("gross_profit");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .UseIdentityAlwaysColumn()
-                .HasColumnName("id");
             entity.Property(e => e.LargestLossLosingTrade).HasColumnName("largest_loss_losing_trade");
             entity.Property(e => e.LargestPctLosingTrade).HasColumnName("largest_pct_losing_trade");
             entity.Property(e => e.LargestPctWinningTrade).HasColumnName("largest_pct_winning_trade");
