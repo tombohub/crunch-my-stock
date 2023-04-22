@@ -23,8 +23,7 @@ namespace Crunch
             /// <summary>
             /// Import prices into the database command for all securities
             /// </summary>
-            /// <param name="date">TradingDay for the prices</param>
-            /// <param name="today">Import today's prices</param>
+            /// <param name="importPricesOptions"></param>
             public void Prices(ImportPricesOptions importPricesOptions)
             {
                 if (importPricesOptions.Today)
@@ -32,12 +31,15 @@ namespace Crunch
                     var currentDateTime = DateTime.Now;
                     Console.WriteLine($"Current date and time is: {currentDateTime}");
                     var todayDate = DateOnly.FromDateTime(currentDateTime);
+
                     _app.ImportPrices(todayDate);
                 }
+
                 else if (importPricesOptions.Date != null)
                 {
                     _app.ImportPrices(importPricesOptions.Date.Value);
                 }
+
                 else if (importPricesOptions.PeriodOptions.Start.HasValue && importPricesOptions.PeriodOptions.End.HasValue)
                 {
                     var start = importPricesOptions.PeriodOptions.Start;
@@ -52,13 +54,6 @@ namespace Crunch
 
                     Console.WriteLine($"start: {start}, end: {end}");
                 }
-            }
-
-
-
-            public void OvernightPrices(DateOnly date)
-            {
-                _app.ImportOvernightPrices(date);
             }
 
             /// <summary>
@@ -88,12 +83,21 @@ namespace Crunch
 
     public class ImportPricesOptions : IArgumentModel, IValidatableObject
     {
+        /// <summary>
+        /// Specific trading day 
+        /// </summary>
         [Option]
         public DateOnly? Date { get; set; } = null;
 
+        /// <summary>
+        /// Today's date
+        /// </summary>
         [Option]
         public bool Today { get; set; } = false;
 
+        /// <summary>
+        /// Date period with start date and end date
+        /// </summary>
         [Option]
         public PeriodOptions PeriodOptions { get; set; }
 
