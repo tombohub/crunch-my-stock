@@ -65,6 +65,11 @@ namespace Crunch
             }
         }
 
+        public void SaveOvernightPrices(DateOnly date)
+        {
+            _app.SaveOvernightPrices(date);
+        }
+
         public void Analyze([Option] DateOnly date)
         {
             _app.Analyze(date);

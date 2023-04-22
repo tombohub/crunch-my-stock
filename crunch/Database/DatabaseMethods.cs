@@ -12,7 +12,7 @@ namespace Crunch.Database
     /// <summary>
     /// General methods for performing various tasks
     /// </summary>
-    internal class DatabaseMethods
+    public class DatabaseMethods
     {
         /// <summary>
         /// Entity framework database context
@@ -85,7 +85,7 @@ namespace Crunch.Database
             {
                 Date = price.TradingDay.Date,
                 Symbol = price.Symbol.Value,
-                Security = security,
+                SecurityId = security.Id,
                 Open = price.OHLC.Open,
                 High = price.OHLC.High,
                 Low = price.OHLC.Low,
@@ -167,12 +167,16 @@ namespace Crunch.Database
             var securityPrices = new List<SecurityPrice>();
             foreach (var price in pricesDb)
             {
+                Symbol symbol = new Symbol(price.Symbol);
+                SecurityType securityType = Enum.Parse<SecurityType>(price.Security.Type);
+                OHLC ohlc = new OHLC(price.Open, price.High, price.Low, price.Close);
+
                 securityPrices.Add(new SecurityPrice
                 {
-                    TradingDay = new TradingDay(price.Date),
-                    Symbol = new Symbol(price.Symbol),
-                    SecurityType = Enum.Parse<SecurityType>(price.Security.Type),
-                    OHLC = new OHLC(price.Open, price.High, price.Low, price.Close),
+                    TradingDay = tradingDay,
+                    Symbol = symbol,
+                    SecurityType = securityType,
+                    OHLC = ohlc,
                     Volume = (int)price.Volume
                 });
             };

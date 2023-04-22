@@ -4,7 +4,7 @@
     /// Represents number of winning vs number of losing securities
     /// for the strategy.
     /// </summary>
-    internal record WinnersLosersCount
+    public record WinnersLosersCount
     {
         public TradingDay TradingDay { get; init; }
         public SecurityType SecurityType { get; init; }

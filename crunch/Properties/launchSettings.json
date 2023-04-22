@@ -18,7 +18,7 @@
     },
     "import overnight prices": {
       "commandName": "Project",
-      "commandLineArgs": "import overnightprices 2023-01-23"
+      "commandLineArgs": "saveovernightprices 2023-03-08"
     },
     "import prices": {
       "commandName": "Project",

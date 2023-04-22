@@ -161,6 +161,7 @@ public partial class stock_analyticsContext : DbContext
 
             entity.HasOne(d => d.Security).WithMany(p => p.PricesDailies)
                 .HasForeignKey(d => d.SecurityId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("prices_daily_fk");
         });
 

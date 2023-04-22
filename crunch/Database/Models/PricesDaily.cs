@@ -26,7 +26,7 @@ public partial class PricesDaily
 
     public DateTime? CreatedAt { get; set; }
 
-    public int? SecurityId { get; set; }
+    public int SecurityId { get; set; }
 
     public virtual Security Security { get; set; }
 }

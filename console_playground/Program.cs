@@ -1,25 +1,24 @@
-﻿namespace console_playground
+﻿using Crunch.Core;
+using Crunch.Database;
+
+namespace console_playground
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            var k = new TimePeriod(new DateOnly(2022, 3, 6), new DateOnly(2022, 3, 5));
-            Console.WriteLine(k);
-        }
-    }
-
-    internal record TimePeriod
-    {
-        public DateOnly Start { get; init; }
-        public DateOnly End { get; }
-
-        public TimePeriod(DateOnly start, DateOnly end)
-        {
-            if (start > end)
+            var db = new DatabaseMethods();
+            var price = new SecurityPrice
             {
-                throw new ArgumentException("Start date cannot be later than end date");
-            }
+                Symbol = new Symbol("AAPL"),
+                OHLC = new OHLC(2, 4, 1, 2),
+                SecurityType = SecurityType.Stock,
+                TradingDay = new TradingDay(new DateOnly(2023, 3, 8)),
+                Volume = 32222
+            };
+            db.SaveDailyPrice(price);
         }
     }
+
+
 }
