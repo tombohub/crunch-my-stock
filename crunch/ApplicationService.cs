@@ -52,7 +52,7 @@ namespace Crunch
         /// easier to do analytics that way.
         /// </summary>
         /// <param name="date">Date when the market opens</param>
-        public void ImportOvernightPrices(DateOnly date)
+        public void SaveOvernightPrices(DateOnly date)
         {
             var tradingDay = new TradingDay(date);
             var prevTradingDay = tradingDay.FindPreviousTradingDay();
@@ -79,7 +79,10 @@ namespace Crunch
                 Console.WriteLine($"Importing pricesToday for {security.Symbol.Value}...");
                 SecurityPrice symbolPrice = _dataProvider.GetSecurityPrice(security, tradingDay);
 
-                _db.SaveDailyPrice(symbolPrice);
+                // new instance to work properly in threading. DbContext need
+                // new instance for each thread.
+                var db = new DatabaseMethods();
+                db.SaveDailyPrice(symbolPrice);
                 Console.WriteLine($"Prices imported for {security.Symbol.Value}");
             }
             catch (Exception e)
