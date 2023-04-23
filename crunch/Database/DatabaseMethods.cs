@@ -241,6 +241,7 @@ namespace Crunch.Database
         /// <param name="overnightPrices"></param>
         public void SaveOvernightPrices(List<SecurityPriceOvernight> overnightPrices)
         {
+            var performancesDb = new List<DailyOvernightPerformance>();
             foreach (var price in overnightPrices)
             {
                 Console.WriteLine($"saving {price.Symbol.Value}");
@@ -250,17 +251,17 @@ namespace Crunch.Database
                     Date = price.TradingDay.Date,
                     Open = price.OHLC.Open,
                     Close = price.OHLC.Close,
-                    Security = security,
+                    SecurityId = security.Id,
                     ChangePct = (price.OHLC.Close - price.OHLC.Open) / price.OHLC.Open * 100,
                 };
-                //_db.DailyOvernightPerformances.Add(perfDb);
-                //_db.SaveChanges();
+                performancesDb.Add(perfDb);
 
-                _db.DailyOvernightPerformances
-                    .Upsert(perfDb)
+
+            }
+            _db.DailyOvernightPerformances
+                    .UpsertRange(performancesDb)
                     .On(x => new { x.SecurityId, x.Date })
                     .Run();
-            }
         }
     }
 }
