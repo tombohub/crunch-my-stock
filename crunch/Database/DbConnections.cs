@@ -1,7 +1,7 @@
-﻿using System;
-using System.Data;
-using Dapper;
+﻿using Dapper;
 using Npgsql;
+using System;
+using System.Data;
 
 namespace Crunch.Database
 {

@@ -34,7 +34,7 @@ namespace Crunch
             // One OHLC price - one save to database
             foreach (var symbol in symbols)
             {
-                Thread.Sleep(300);
+                Thread.Sleep(250);
                 var thread = new Thread(() => ImportSecurityPrice(symbol, tradingDay));
                 thread.Start();
             }
