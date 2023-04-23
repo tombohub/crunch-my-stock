@@ -245,15 +245,21 @@ namespace Crunch.Database
             {
                 Console.WriteLine($"saving {price.Symbol.Value}");
                 var security = _db.Securities.Where(x => x.Symbol == price.Symbol.Value).Single();
-                _db.DailyOvernightPerformances.Add(new DailyOvernightPerformance
+                var perfDb = new DailyOvernightPerformance
                 {
                     Date = price.TradingDay.Date,
                     Open = price.OHLC.Open,
                     Close = price.OHLC.Close,
                     Security = security,
                     ChangePct = (price.OHLC.Close - price.OHLC.Open) / price.OHLC.Open * 100,
-                });
-                _db.SaveChanges();
+                };
+                //_db.DailyOvernightPerformances.Add(perfDb);
+                //_db.SaveChanges();
+
+                _db.DailyOvernightPerformances
+                    .Upsert(perfDb)
+                    .On(x => new { x.SecurityId, x.Date })
+                    .Run();
             }
         }
     }
