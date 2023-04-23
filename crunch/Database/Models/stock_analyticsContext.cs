@@ -76,6 +76,8 @@ public partial class stock_analyticsContext : DbContext
 
             entity.ToTable("daily_overnight_performance", "overnight");
 
+            entity.HasIndex(e => new { e.Date, e.SecurityId }, "daily_overnight_performance_un").IsUnique();
+
             entity.Property(e => e.Id)
                 .UseIdentityAlwaysColumn()
                 .HasColumnName("id");
