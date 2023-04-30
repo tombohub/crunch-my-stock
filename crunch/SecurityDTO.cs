@@ -1,9 +1,9 @@
-﻿using System;
-using Crunch.Core;
+﻿using Crunch.Core;
+using System;
 
 namespace Crunch
 {
-    internal record SecurityDTO
+    public record SecurityDTO
     {
         public required string Symbol { get; init; }
         public required SecurityStatus Status { get; init; }

@@ -1,7 +1,7 @@
 ﻿using System;
 using CsvHelper.Configuration.Attributes;
 
-namespace CrunchImport.DataProviders.Alphavantage.Responses
+namespace Crunch.DataProviders.Alphavantage.Responses
 {
     internal class ListingStatusDelistedResponse
     {

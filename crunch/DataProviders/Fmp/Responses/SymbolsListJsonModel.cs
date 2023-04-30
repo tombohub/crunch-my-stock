@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CrunchImport.DataProviders.Fmp.Responses
+namespace Crunch.DataProviders.Fmp.Responses
 {
     internal record SymbolsListJsonModel
     {

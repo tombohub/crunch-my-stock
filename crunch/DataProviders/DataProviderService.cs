@@ -1,13 +1,12 @@
-﻿using Crunch;
-using Crunch.Core;
-using CrunchImport.DataProviders.Alphavantage;
-using CrunchImport.DataProviders.Fmp;
+﻿using Crunch.Core;
+using Crunch.DataProviders.Alphavantage;
+using Crunch.DataProviders.Fmp;
 using System;
 using System.Collections.Generic;
 
-namespace CrunchImport.DataProviders
+namespace Crunch.DataProviders
 {
-    internal class DataProviderService
+    public class DataProviderService
     {
         private FmpProvider _fmpProvider = new FmpProvider();
         private AlphavantageProvider _alphavantageProvider = new AlphavantageProvider();

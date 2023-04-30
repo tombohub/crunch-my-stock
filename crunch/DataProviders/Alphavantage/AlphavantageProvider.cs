@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using Crunch.Core;
-using CrunchImport.DataProviders.Alphavantage.Responses;
+using Crunch.DataProviders.Alphavantage.Responses;
 using CsvHelper;
 
-namespace CrunchImport.DataProviders.Alphavantage
+namespace Crunch.DataProviders.Alphavantage
 {
     internal class AlphavantageProvider
     {

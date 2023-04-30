@@ -1,9 +1,9 @@
-﻿using CrunchImport.DataProviders.Fmp.Responses;
+﻿using Crunch.DataProviders.Fmp.Responses;
 using System;
 using System.Net.Http;
 using System.Text.Json;
 
-namespace CrunchImport.DataProviders.Fmp
+namespace Crunch.DataProviders.Fmp
 {
     internal class FmpProvider
     {

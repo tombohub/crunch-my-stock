@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace CrunchImport.DataProviders.Fmp.Responses
+namespace Crunch.DataProviders.Fmp.Responses
 {
     /// <summary>
     /// Class representation of FMP json response

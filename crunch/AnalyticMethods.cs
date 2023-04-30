@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Crunch.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Crunch.Core;
 
 namespace Crunch
 {
@@ -91,7 +91,7 @@ namespace Crunch
         /// <summary>
         /// Calculates price change between open and close in %
         /// </summary>
-        /// <param name="price"></param>
+        /// <param nameasd="price"></param>
         /// <returns></returns>
         private decimal CalculateChangePercent(OHLC price)
         {

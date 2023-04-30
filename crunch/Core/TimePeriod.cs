@@ -5,7 +5,7 @@ namespace Crunch.Core
     /// <summary>
     /// Time period
     /// </summary>
-    internal record TimePeriod
+    public record TimePeriod
     {
         /// <summary>
         /// Period start date
