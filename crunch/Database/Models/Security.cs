@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Crunch.Database.Models;
 
 namespace Crunch.Database.Models;
 
@@ -34,9 +33,9 @@ public partial class Security
     /// </summary>
     public DateOnly? DelistingDate { get; set; }
 
-    public virtual ICollection<AverageRoi> AverageRois { get; } = new List<AverageRoi>();
+    public virtual ICollection<AverageRoi> AverageRois { get; set; } = new List<AverageRoi>();
 
-    public virtual ICollection<DailyOvernightPerformance> DailyOvernightPerformances { get; } = new List<DailyOvernightPerformance>();
+    public virtual ICollection<DailyOvernightPerformance> DailyOvernightPerformances { get; set; } = new List<DailyOvernightPerformance>();
 
-    public virtual ICollection<PricesDaily> PricesDailies { get; } = new List<PricesDaily>();
+    public virtual ICollection<PricesDaily> PricesDailies { get; set; } = new List<PricesDaily>();
 }

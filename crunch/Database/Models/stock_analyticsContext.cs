@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Crunch.Database.Models;
 
 namespace Crunch.Database.Models;
 
@@ -82,17 +81,18 @@ public partial class stock_analyticsContext : DbContext
                 .UseIdentityAlwaysColumn()
                 .HasColumnName("id");
             entity.Property(e => e.ChangePct)
-                .HasComment("difference between closing and opening price in percent %")
+                .HasPrecision(10, 2)
+                .HasComputedColumnSql("(((open - prev_day_close) / prev_day_close) * (100)::numeric)", true)
                 .HasColumnName("change_pct");
-            entity.Property(e => e.Close)
-                .HasComment("Strategy date opening price")
-                .HasColumnName("close");
             entity.Property(e => e.Date)
                 .HasComment("Date of the strategy")
                 .HasColumnName("date");
             entity.Property(e => e.Open)
-                .HasComment("Previous trading day closing price")
+                .HasComment("Strategy date opening price")
                 .HasColumnName("open");
+            entity.Property(e => e.PrevDayClose)
+                .HasComment("Previous trading day closing price")
+                .HasColumnName("prev_day_close");
             entity.Property(e => e.SecurityId).HasColumnName("security_id");
 
             entity.HasOne(d => d.Security).WithMany(p => p.DailyOvernightPerformances)

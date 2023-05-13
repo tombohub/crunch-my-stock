@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Crunch.Database.Models;
 
 namespace Crunch.Database.Models;
 
@@ -16,19 +15,16 @@ public partial class DailyOvernightPerformance
     /// <summary>
     /// Previous trading day closing price
     /// </summary>
-    public decimal Open { get; set; }
+    public decimal PrevDayClose { get; set; }
 
     /// <summary>
     /// Strategy date opening price
     /// </summary>
-    public decimal Close { get; set; }
+    public decimal Open { get; set; }
 
     public int SecurityId { get; set; }
 
-    /// <summary>
-    /// difference between closing and opening price in percent %
-    /// </summary>
-    public decimal ChangePct { get; set; }
+    public decimal? ChangePct { get; set; }
 
     public virtual Security Security { get; set; }
 }
