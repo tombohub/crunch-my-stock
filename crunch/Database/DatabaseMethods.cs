@@ -263,7 +263,7 @@ namespace Crunch.Database
                 {
                     Date = price.TradingDay.Date,
                     Open = price.OHLC.Open,
-                    Close = price.OHLC.Close,
+                    PrevDayClose = price.OHLC.Close,
                     SecurityId = security.Id,
                     ChangePct = (price.OHLC.Close - price.OHLC.Open) / price.OHLC.Open * 100,
                 };
