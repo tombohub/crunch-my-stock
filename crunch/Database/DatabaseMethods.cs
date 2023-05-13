@@ -71,6 +71,19 @@ namespace Crunch.Database
         }
 
         /// <summary>
+        /// Returns list of dates for which there is daily price data in database
+        /// </summary>
+        /// <returns></returns>
+        public List<DateOnly> priceDates()
+        {
+            var dates = _db.PricesDailies
+                .Select(x => x.Date)
+                .Distinct()
+                .ToList();
+            return dates;
+        }
+
+        /// <summary>
         /// Save daily price pricesDto to database. If price for that day/symbol exists
         /// then it will be updated.
         /// </summary>

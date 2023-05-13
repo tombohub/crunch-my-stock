@@ -11,6 +11,9 @@ namespace Crunch
     /// </summary>
     internal class CommandLineParser
     {
+        /// <summary>
+        /// Service
+        /// </summary>
         private readonly ApplicationService _app = new ApplicationService();
 
         [Subcommand]
@@ -29,9 +32,16 @@ namespace Crunch
             }
         }
 
-        public void SaveOvernightPrices(DateOnly date)
+        public void SaveOvernightPrices([Option] DateOnly? date)
         {
-            _app.SaveOvernightPrices(date);
+            if (date.HasValue)
+            {
+                _app.SaveOvernightPrices(date.Value);
+            }
+            else
+            {
+                _app.SaveOvernightPrices();
+            }
         }
 
         public void Analyze([Option] DateOnly date)

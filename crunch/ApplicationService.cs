@@ -40,6 +40,19 @@ namespace Crunch
             db.SaveOvernightPrices(overnightPrices.Prices);
         }
 
+        public void SaveOvernightPrices()
+        {
+            var db = new DatabaseMethods();
+            List<DateOnly> dates = db.priceDates();
+            for (var i = 0; i < dates.Count; i++)
+            {
+                // skip first one because for overnight price we need previous trading day
+                if (i == 0) continue;
+                var date = dates[i];
+                SaveOvernightPrices(date);
+            }
+        }
+
 
 
         /// <summary>
