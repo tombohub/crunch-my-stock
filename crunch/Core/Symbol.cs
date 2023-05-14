@@ -12,6 +12,10 @@ namespace Crunch.Core
             {
                 throw new ArgumentException($"Symbol {value} -> cannot be more than 4 characters");
             }
+            if (value.Contains('-'))
+            {
+                throw new ArgumentException($"Symbol {value} -> cannot contain dash");
+            }
             this.Value = value.ToUpper();
         }
     }
