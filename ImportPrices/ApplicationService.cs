@@ -17,7 +17,7 @@ namespace ImportPrices
         /// </summary>
         public void ImportPrices(DateOnly date)
         {
-            ImportPrices(start: date, end: date);
+            ImportPrices(date, date);
         }
 
         public void ImportPrices(DateOnly start, DateOnly end)
