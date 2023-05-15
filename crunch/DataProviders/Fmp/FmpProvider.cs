@@ -12,21 +12,6 @@ namespace Crunch.DataProviders.Fmp
         private readonly HttpClient _httpClient = new();
         private readonly string _dateFormat = "yyyy-MM-dd";
 
-        /// <summary>
-        /// Get single security price for given security on a given trading day.
-        /// </summary>
-        /// <param name="symbol">Symbol ticker, ex: AAPL</param>
-        /// <param name="date">Date for which to get price</param>
-        /// <returns>Single price on a given trading day</returns>
-        /// <exception cref="Exception"></exception>
-        public SymbolPricesJsonResponse GetSecurityDailyPrice(string symbol, DateOnly date)
-        {
-            string priceApiResponse = RequestDailyPrice(symbol,
-                date.ToString(_dateFormat));
-
-            return JsonSerializer.Deserialize<SymbolPricesJsonResponse>(priceApiResponse);
-
-        }
 
         /// <summary>
         /// Get historical prices for a security during the given period
@@ -38,20 +23,6 @@ namespace Crunch.DataProviders.Fmp
         {
             string priceApiResponse = RequestDailyPrice(symbol, start.ToString(_dateFormat), end.ToString(_dateFormat));
             return JsonSerializer.Deserialize<SymbolPricesJsonResponse>(priceApiResponse);
-
-
-        }
-
-        /// <summary>
-        /// Send an API request for symbol prices on particular day
-        /// </summary>
-        /// <param name="symbol">security symbol on exchange</param>
-        /// <param name="date">date to get prices for</param>
-        /// <returns>Day price data in OHLC format</returns>
-        private string RequestDailyPrice(string symbol, string date)
-        {
-            var response = RequestDailyPrice(symbol: symbol, startDate: date, endDate: date);
-            return response;
         }
 
         /// <summary>

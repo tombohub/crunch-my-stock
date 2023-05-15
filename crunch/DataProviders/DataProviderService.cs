@@ -50,67 +50,34 @@ namespace Crunch.DataProviders
         }
 
         /// <summary>
-        /// Get security price data for the trading day
+        /// Get security price data for between the start date inclusive and end date inclusive
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="tradingDay"></param>
         /// <returns></returns>
-        public SecurityPrice GetSecurityPrice(Security security, TradingDay tradingDay)
+        public List<DataProviderDailyPriceDataDTO> GetSecurityPrice(Security security, TradingDay start, TradingDay end)
         {
-            var response = _fmpProvider.GetSecurityDailyPrice(security.Symbol.Value, tradingDay.Date);
-            if (response.TotalResults > 1)
+            var response = _fmpProvider.GetSecurityDailyPrice(security.Symbol.Value, start.Date, end.Date);
+
+            var secPriceDtos = new List<DataProviderDailyPriceDataDTO>();
+            foreach (var item in response.Results)
             {
-                throw new Exception("There's more than one result from security daily price request");
-            }
-            return new SecurityPrice
-            {
-                Symbol = security.Symbol,
-                SecurityType = security.Type,
-                TradingDay = tradingDay,
-                OHLC = new OHLC(
-                    response.Results[0].Open,
-                    response.Results[0].High,
-                    response.Results[0].Low,
-                    response.Results[0].Close
-                               ),
-                Volume = response.Results[0].Volume,
-            };
-        }
+                DateOnly date = DateOnly.ParseExact(item.Timestamp, "yyyy-MM-dd HH:mm:ss");
 
-
-        /// <summary>
-        /// Get security price data for the given period
-        /// </summary>
-        /// <param name="security"></param>
-        /// <param name="timePeriod"></param>
-        /// <returns></returns>
-        public List<SecurityPrice> GetSecurityPrices(Security security, TimePeriod timePeriod)
-        {
-            var response = _fmpProvider.GetSecurityDailyPrice(security.Symbol.Value, timePeriod.Start, timePeriod.End);
-
-            var securityPrices = new List<SecurityPrice>();
-            foreach (var price in response.Results)
-            {
-                TradingDay tradingDay = new TradingDay(DateOnly.Parse(price.Timestamp));
-
-                SecurityPrice securityPrice = new SecurityPrice
+                var secPriceDto = new DataProviderDailyPriceDataDTO
                 {
-                    Symbol = security.Symbol,
-                    SecurityType = security.Type,
-                    TradingDay = tradingDay,
-                    Volume = price.Volume,
-                    OHLC = new OHLC
-                    (
-                        open: price.Open,
-                        high: price.High,
-                        low: price.Low,
-                        close: price.Close
-                    )
+                    Symbol = response.Symbol,
+                    Date = date,
+                    Open = item.Open,
+                    High = item.High,
+                    Low = item.Low,
+                    Close = item.Close,
+                    Volume = item.Volume,
                 };
-                securityPrices.Add(securityPrice);
+                secPriceDtos.Add(secPriceDto);
             }
 
-            return securityPrices;
+            return secPriceDtos;
         }
     }
 }

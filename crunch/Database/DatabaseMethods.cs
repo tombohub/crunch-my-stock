@@ -276,5 +276,16 @@ namespace Crunch.Database
                     .On(x => new { x.SecurityId, x.Date })
                     .Run();
         }
+
+        public SecurityType GetSymbolSecurityType(Symbol symbol)
+        {
+            var secTypeDb = _db.Securities
+                .Where(x => x.Symbol == symbol.Value)
+                .Select(x => x.Type)
+                .Single();
+
+            SecurityType secType = Enum.Parse<SecurityType>(secTypeDb);
+            return secType;
+        }
     }
 }
