@@ -97,7 +97,6 @@ public partial class stock_analyticsContext : DbContext
 
             entity.HasOne(d => d.Security).WithMany(p => p.DailyOvernightPerformances)
                 .HasForeignKey(d => d.SecurityId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("prices_daily_overnight_fk");
         });
 
@@ -147,11 +146,6 @@ public partial class stock_analyticsContext : DbContext
                 .HasColumnName("created_at");
             entity.Property(e => e.Date).HasColumnName("date");
             entity.Property(e => e.High).HasColumnName("high");
-            entity.Property(e => e.Interval)
-                .IsRequired()
-                .HasMaxLength(10)
-                .HasDefaultValueSql("'OneDay'::character varying")
-                .HasColumnName("interval");
             entity.Property(e => e.Low).HasColumnName("low");
             entity.Property(e => e.Open).HasColumnName("open");
             entity.Property(e => e.SecurityId).HasColumnName("security_id");
@@ -163,7 +157,6 @@ public partial class stock_analyticsContext : DbContext
 
             entity.HasOne(d => d.Security).WithMany(p => p.PricesDailies)
                 .HasForeignKey(d => d.SecurityId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("prices_daily_fk");
         });
 

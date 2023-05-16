@@ -21,8 +21,6 @@ public partial class PricesDaily
 
     public long Volume { get; set; }
 
-    public string Interval { get; set; }
-
     public DateTime? CreatedAt { get; set; }
 
     public int SecurityId { get; set; }

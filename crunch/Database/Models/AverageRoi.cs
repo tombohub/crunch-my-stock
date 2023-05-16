@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace Crunch.Database.Models;
 
 /// <summary>
