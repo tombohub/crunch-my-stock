@@ -52,12 +52,20 @@ namespace ImportPrices
             Console.WriteLine($"Importing pricesToday for {security.Symbol.Value}...");
             var priceDataDTOs = _dataProvider.GetSecurityPrice(security, start, end);
 
-            var secPrices = priceDataDTOs.Select(x => MapDtoToSecurityPrice(x)).ToList();
+            try
+            {
+                var secPrices = priceDataDTOs.Select(x => MapDtoToSecurityPrice(x)).ToList();
+                // new instance to work properly in threading. DbContext need
+                // new instance for each thread.
+                var db = new DatabaseMethods();
+                secPrices.ForEach(x => db.SaveDailyPrice(x));
 
-            // new instance to work properly in threading. DbContext need
-            // new instance for each thread.
-            var db = new DatabaseMethods();
-            secPrices.ForEach(x => db.SaveDailyPrice(x));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
             Console.WriteLine($"Prices imported for {security.Symbol.Value}");
         }
 
