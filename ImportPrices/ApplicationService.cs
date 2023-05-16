@@ -50,7 +50,16 @@ namespace ImportPrices
         {
 
             Console.WriteLine($"Importing pricesToday for {security.Symbol.Value}...");
-            var priceDataDTOs = _dataProvider.GetSecurityPrice(security, start, end);
+            var priceDataDTOs = new List<DataProviderDailyPriceDataDTO>();
+            try
+            {
+                priceDataDTOs = _dataProvider.GetSecurityPrice(security, start, end);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message} for symbol: {security.Symbol.Value}");
+            }
 
             try
             {
