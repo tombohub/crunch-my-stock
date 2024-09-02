@@ -11,11 +11,11 @@
         /// <summary>
         /// Number of winning securities (positive gain)
         /// </summary>
-        public int WinnersCount { get; init; }
+        public required int WinnersCount { get; init; }
 
         /// <summary>
         /// Number of losing securities(negative gain aka loss)
         /// </summary>
-        public int LosersCount { get; init; }
+        public required int LosersCount { get; init; }
     }
 }

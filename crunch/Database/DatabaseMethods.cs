@@ -202,32 +202,6 @@ namespace Crunch.Database
             return dailyPrices;
         }
 
-        /// <summary>
-        /// Save Winners Losers stats to database
-        /// </summary>
-        /// <param name="winnersLosers"></param>
-        public void SaveWinnersLosers(List<Core.WinnersLosersCount> winnersLosers)
-        {
-            foreach (var item in winnersLosers)
-            {
-                var winnersLosersDb = new Models.WinnersLosersCount
-                {
-                    Date = item.TradingDay.Date,
-                    WinnersCount = item.WinnersCount,
-                    LosersCount = item.LosersCount,
-                    SecurityType = item.SecurityType.ToString(),
-                };
-                _db.WinnersLosersCounts
-                    .Upsert(winnersLosersDb)
-                   .On(x => new { x.Date, x.SecurityType })
-                   .WhenMatched(x => new Models.WinnersLosersCount
-                   {
-                       WinnersCount = item.WinnersCount,
-                       LosersCount = item.LosersCount
-                   })
-                   .Run();
-            }
-        }
 
         public Core.WinnersLosersCount GetWinnersLosers(TradingDay tradingDay, SecurityType securityType)
         {
@@ -247,6 +221,22 @@ namespace Crunch.Database
             return winnersLosers;
         }
 
+        public Core.WinnersLosersCount WinnersLosersCount(TradingDay tradingDay)
+        {
+            var winnersCount = _db.DailyOvernightPerformances
+                .Count(x => x.Date == tradingDay.Date && x.ChangePct > 0);
+
+            var losersCount = _db.DailyOvernightPerformances
+                .Count(x => x.Date == tradingDay.Date && x.ChangePct < 0);
+
+            return new Core.WinnersLosersCount
+            {
+                TradingDay = tradingDay,
+                WinnersCount = winnersCount,
+                LosersCount = losersCount
+            };
+        }
+
 
         /// <summary>
         /// Saves overnight prices into the database
@@ -262,8 +252,8 @@ namespace Crunch.Database
                 var perfDb = new DailyOvernightPerformance
                 {
                     Date = price.TradingDay.Date,
-                    Open = price.OHLC.Open,
-                    PrevDayClose = price.OHLC.Close,
+                    Open = price.OHLC.Close,
+                    PrevDayClose = price.OHLC.Open,
                     SecurityId = security.Id,
                     ChangePct = (price.OHLC.Close - price.OHLC.Open) / price.OHLC.Open * 100,
                 };
@@ -286,6 +276,34 @@ namespace Crunch.Database
 
             SecurityType secType = Enum.Parse<SecurityType>(secTypeDb);
             return secType;
+        }
+
+        /// <summary>
+        /// Gets the last recorded date in overnight prices table
+        /// </summary>
+        /// <returns></returns>
+        public DateOnly GetLastRecordedOvernightDate()
+        {
+            DateOnly lastDate = _db.DailyOvernightPerformances
+                .OrderBy(x => x.Date)
+                .Select(x => x.Date)
+                .Last();
+            return lastDate;
+        }
+
+        /// <summary>
+        /// Get average roi accross all securities on the given date
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public decimal GetAverageRoi(DateOnly date)
+        {
+            decimal avgRoi = _db.DailyOvernightPerformances
+                .Where(x => x.Date == date)
+                .Average(x => x.ChangePct)
+                .Value;
+
+            return avgRoi;
         }
     }
 }

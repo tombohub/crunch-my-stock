@@ -17,36 +17,6 @@ namespace Crunch
             _pricesOvernight = pricesOvernight;
         }
 
-        /// <summary>
-        /// Calculates number of winners and losers for the trading day by security type
-        /// </summary>
-        /// <returns></returns>
-        public List<WinnersLosersCount> WinnersLosers()
-        {
-            var winnersLosers = new List<WinnersLosersCount>();
-            foreach (SecurityType securityType in Enum.GetValues(typeof(SecurityType)))
-            {
-                var winners = _pricesOvernight.Prices
-                    .Where(x => x.SecurityType == securityType)
-                    .Where(x => CalculateChangePercent(x.OHLC) > 0)
-                    .Count();
-
-                var losers = _pricesOvernight.Prices
-                    .Where(x => x.SecurityType == securityType)
-                    .Where(x => CalculateChangePercent(x.OHLC) < 0)
-                    .Count();
-
-                winnersLosers.Add(new WinnersLosersCount
-                {
-                    TradingDay = _pricesOvernight.TradingDay,
-                    SecurityType = securityType,
-                    WinnersCount = winners,
-                    LosersCount = losers,
-                });
-            }
-
-            return winnersLosers;
-        }
 
         /// <summary>
         /// Average roi accross all securities for trading day by security type

@@ -1,43 +1,43 @@
 {
-  "profiles": {
-    "Run Strategy": {
-      "commandName": "Project",
-      "commandLineArgs": "Run --strategy Overnight --date 2022-02-15"
-    },
-    "WSL": {
-      "commandName": "WSL2",
-      "distributionName": ""
-    },
-    "help flag": {
-      "commandName": "Project",
-      "commandLineArgs": "import overnightprices -h"
-    },
-    "analyze": {
-      "commandName": "Project",
-      "commandLineArgs": "analyze --date 2023-01-23"
-    },
-    "import overnight prices": {
-      "commandName": "Project",
-      "commandLineArgs": "saveovernightprices 2023-03-08"
-    },
-    "import prices": {
-      "commandName": "Project",
-      "commandLineArgs": "import prices --date 2023-01-23"
-    },
-    "plot": {
-      "commandName": "Project",
-      "commandLineArgs": "plot --date 2023-01-23 --securitytype Stock"
-    },
-    "crunch": {
-      "commandName": "Project"
-    },
-    "crunch help": {
-      "commandName": "Project",
-      "commandLineArgs": "--help"
-    },
-    "import prices -h": {
-      "commandName": "Project",
-      "commandLineArgs": "[parse] import prices -h"
-    }
-  }
+	"profiles": {
+		"Run Strategy": {
+			"commandName": "Project",
+			"commandLineArgs": "Run --strategy Overnight --date 2022-02-15"
+		},
+		"WSL": {
+			"commandName": "WSL2",
+			"distributionName": ""
+		},
+		"help flag": {
+			"commandName": "Project",
+			"commandLineArgs": "-h"
+		},
+		"analyze": {
+			"commandName": "Project",
+			"commandLineArgs": "analyze --date 2023-01-23"
+		},
+		"import overnight prices": {
+			"commandName": "Project",
+			"commandLineArgs": "saveovernightprices 2023-03-08"
+		},
+		"import prices": {
+			"commandName": "Project",
+			"commandLineArgs": "import prices --date 2023-01-23"
+		},
+		"plot": {
+			"commandName": "Project",
+			"commandLineArgs": "plot --date 2023-01-23 --securitytype Stock"
+		},
+		"crunch": {
+			"commandName": "Project"
+		},
+		"crunch help": {
+			"commandName": "Project",
+			"commandLineArgs": "--help"
+		},
+		"import prices -h": {
+			"commandName": "Project",
+			"commandLineArgs": "[parse] import prices -h"
+		}
+	}
 }

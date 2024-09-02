@@ -1,11 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <StartupObject>Crunch.Program</StartupObject>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="CommandDotNet" Version="7.0.2" />
     <PackageReference Include="CommandDotNet.DataAnnotations" Version="3.0.2" />
@@ -25,14 +23,11 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
     <PackageReference Include="ScottPlot" Version="4.1.60" />
   </ItemGroup>
-
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Database\Models\" />
     <Folder Include="Strategies\Overnight\AreaContentRepositories\" />
   </ItemGroup>
-
 </Project>

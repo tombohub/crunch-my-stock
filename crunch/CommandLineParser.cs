@@ -44,11 +44,6 @@ namespace Crunch
             }
         }
 
-        public void Analyze([Option] DateOnly date)
-        {
-            _app.Analyze(date);
-        }
-
         /// <summary>
         /// Plot strategy reports all in one image
         /// </summary>

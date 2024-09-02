@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Crunch.Core
 {
-    internal class DomainService
+    public class DomainService
     {
         public DailyPricesOvernight TransformToOvernightPrices(DailyPricesRegular previousDayPrices, DailyPricesRegular todayPrices)
         {

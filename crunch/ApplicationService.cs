@@ -40,6 +40,7 @@ namespace Crunch
             db.SaveOvernightPrices(overnightPrices.Prices);
         }
 
+
         public void SaveOvernightPrices()
         {
             var db = new DatabaseMethods();
@@ -108,33 +109,6 @@ namespace Crunch
             }
         }
 
-        /// <summary>
-        /// Calculates stats for overnight strategy
-        /// </summary>
-        /// <param name="date"></param>
-        public void Analyze(DateOnly date)
-        {
-            var tradingDay = new TradingDay(date);
-            var prevTradingDay = tradingDay.FindPreviousTradingDay();
-
-            // get prices from database for today
-            var pricesToday = _db.GetPrices(tradingDay);
-
-            // get prices for previous trading day
-            var pricesPrevDay = _db.GetPrices(prevTradingDay);
-
-            // make overnight prices out of today and prev trad day
-            var domainService = new DomainService();
-            DailyPricesOvernight pricesOvernight = domainService.TransformToOvernightPrices(pricesPrevDay, pricesToday);
-
-            // perform calculations
-            var analytics = new AnalyticMethods(pricesOvernight);
-            List<WinnersLosersCount> winnersLosers = analytics.WinnersLosers();
-            List<AverageRoi> averageRoi = analytics.AverageRoi();
-            SpyRoi spyRoi = analytics.AverageSpyRoi();
-
-
-        }
 
         /// <summary>
         /// Creates plot out of the stats for overnight strategy

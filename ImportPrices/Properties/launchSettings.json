@@ -1,15 +1,15 @@
 {
-  "profiles": {
-    "ImportPrices": {
-      "commandName": "Project"
-    },
-    "help": {
-      "commandName": "Project",
-      "commandLineArgs": "--help"
-    },
-    "today": {
-      "commandName": "Project",
-      "commandLineArgs": "--today"
-    }
-  }
+	"profiles": {
+		"ImportPrices": {
+			"commandName": "Project"
+		},
+		"help": {
+			"commandName": "Project",
+			"commandLineArgs": "--help"
+		},
+		"today": {
+			"commandName": "Project",
+			"commandLineArgs": "--today"
+		}
+	}
 }
